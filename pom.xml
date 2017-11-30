@@ -10,11 +10,11 @@
     </prerequisites>
 
     <groupId>nl.m</groupId>
-    <artifactId>Test1</artifactId>
+    <artifactId>WebEduApi</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>Test1</name>
+    <name>WebEduApi</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
