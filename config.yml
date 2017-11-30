@@ -4,7 +4,7 @@ assets:
   mappings:
     /assets: /
   overrides:
-    /: ../WebEduWebsite/
+    /: ../IPSEN3-frontend/dist/
 
 server:
   rootPath: /api/*

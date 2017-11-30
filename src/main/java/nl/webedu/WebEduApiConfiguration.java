@@ -1,19 +1,15 @@
 package nl.webedu;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import io.dropwizard.Configuration;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.dropwizard.bundles.assets.AssetsBundleConfiguration;
 import io.dropwizard.bundles.assets.AssetsConfiguration;
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.*;
+import javax.validation.constraints.*;
 
-/**
- *
- * @author Peter van Vliet
- */
-public class ApiConfiguration extends Configuration implements AssetsBundleConfiguration
-{
+public class WebEduApiConfiguration extends Configuration implements AssetsBundleConfiguration{
+
     @NotEmpty
     @JsonProperty
     private String apiName;
