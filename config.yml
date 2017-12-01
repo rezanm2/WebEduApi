@@ -15,3 +15,9 @@ server:
   adminConnectors:
     - type: http
       port: 8081
+
+database:
+  driverClass: org.postgresql.Driver
+  user: postgres
+  password: root
+  url: jdbc:postgresql://localhost:5432/webedu

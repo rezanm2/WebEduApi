@@ -18,7 +18,7 @@ public class WebEduApiApplication extends Application<WebEduApiConfiguration> {
     /**
      * Deze methode returnt de apiName
      * De apiName krijgt hij van e WebEduApiConfiguration Klasse
-     * @return -> apiName
+     * @return apiName
      */
     @Override
     public String getName() {
