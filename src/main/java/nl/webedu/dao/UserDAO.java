@@ -4,6 +4,8 @@ import nl.webedu.models.UserModel;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import nl.webedu.models.ProjectModel;
 
 public class UserDAO {
     /**
@@ -11,20 +13,24 @@ public class UserDAO {
      * @param id user id to return result set from
      * @return  userModel
      */
-    public UserModel getUser(int id){
+    public ArrayList<UserModel> getEmployees(){
         try {
             Connection connect = new ConnectDAO().makeConnection();
-            String getUserQuery = "SELECT * FROM employee_version WHERE employee_version_employee_fk = ?";
+            String getUserQuery = "SELECT * FROM employee_version where employee_version_current = true";
             PreparedStatement getUserStatement = connect.prepareStatement(getUserQuery);
-            getUserStatement.setInt(1, id);
             ResultSet userSet = getUserStatement.executeQuery();
-
-            if(userSet.next()){
-                return new UserModel(userSet.getInt("employee_version_employee_fk"),
-                        userSet.getString("employee_version_firstname"),
-                        userSet.getString("employee_version_lastname"));
+            ArrayList<UserModel> data = new ArrayList<UserModel>();
+            while(userSet.next()){
+                UserModel employee =  new UserModel();
+                employee.setUserId(userSet.getInt( "employee_version_employee_fk"));
+                employee.setUserFirstName(userSet.getString("employee_version_firstname"));
+                employee.setUserLastName(userSet.getString("employee_version_lastname"));
+                employee.setEmail(userSet.getString("employee_version_email"));
+                employee.setPassword(userSet.getString("employee_version_password"));
+                data.add(employee);
             }
             userSet.close();
+            return data;
         } catch (Exception e) {
             e.printStackTrace();
         }

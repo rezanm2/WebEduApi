@@ -1,5 +1,6 @@
 package nl.webedu.resources;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.ArrayList;
 import javax.ws.rs.Consumes;
 import nl.webedu.dao.UserDAO;
 
@@ -15,11 +16,8 @@ public class UserResource {
     @JsonProperty
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public UserModel UserName(){
+    public ArrayList<UserModel> UserName(){
         UserDAO userDAO = new UserDAO();
-        return new UserModel(
-                userDAO.getUser(8).getUserId(), userDAO.getUser(8).getUserFirstName(),
-                userDAO.getUser(8).getUserLastName()
-        );
+        return userDAO.getEmployees();
     }
 }

@@ -19,7 +19,7 @@ public class ProjectDAO {
     public ArrayList<ProjectModel> getProjects(){
         try {
             Connection connect = new ConnectDAO().makeConnection();
-            String getUserQuery = "SELECT * FROM project_version";
+            String getUserQuery = "SELECT * FROM project_version where project_version_current = true";
             PreparedStatement getUserStatement = connect.prepareStatement(getUserQuery);
             ResultSet userSet = getUserStatement.executeQuery();
             ArrayList<ProjectModel> data = new ArrayList<ProjectModel>();
