@@ -5,6 +5,8 @@ import io.dropwizard.ConfiguredBundle;
 import io.dropwizard.bundles.assets.ConfiguredAssetsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import nl.webedu.resources.ProjectResource;
+import nl.webedu.resources.UserResource;
 /**
  * Deze klasse is de startpunt van de api
  * @author rezanaser
@@ -40,6 +42,8 @@ public class WebEduApiApplication extends Application<WebEduApiConfiguration> {
     @Override
     public void run(final WebEduApiConfiguration configuration,
                     final Environment environment) {
+        environment.jersey().register(new UserResource());
+        environment.jersey().register(new ProjectResource());
         /**
          * Hier krijgt de variabele 'naam' de apiName van de WebEduApiConfiguration
          * @author rezanaser

@@ -116,7 +116,7 @@
   </dependencyManagement>
   <properties>
     <dropwizard.version>1.3.0-rc1</dropwizard.version>
-    <mainClass>nl.m.test1.Test1Application</mainClass>
+    <mainClass>nl.webedu.WebEduApiApplication</mainClass>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
