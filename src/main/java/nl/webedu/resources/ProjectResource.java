@@ -9,13 +9,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import nl.webedu.dao.ProjectDAO;
-import nl.webedu.dao.UserDAO;
 import nl.webedu.models.ProjectModel;
-import nl.webedu.models.UserModel;
 
 /**
  *
@@ -30,5 +29,14 @@ public class ProjectResource {
     public ArrayList<ProjectModel> ProjectName(){
         ProjectDAO projectDAO = new ProjectDAO();
         return projectDAO.getProjects();
+    }
+    
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+        public String confirmation(){
+        ProjectDAO projectDAO = new ProjectDAO();
+        projectDAO.createProject();
+        return "Gelukt";
     }
 }

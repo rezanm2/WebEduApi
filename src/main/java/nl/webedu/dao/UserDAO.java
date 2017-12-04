@@ -10,7 +10,6 @@ import nl.webedu.models.ProjectModel;
 public class UserDAO {
     /**
      * @author nach7vs
-     * @param id user id to return result set from
      * @return  userModel
      */
     public ArrayList<UserModel> getEmployees(){
