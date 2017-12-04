@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import nl.webedu.dao.ProjectDAO;
 
 /**
+ * Date 9-10-2017
  * 
  * @author Robert
- * @date 9-10-2017
  */
 public class SprintModel {
 	private int sprintId;

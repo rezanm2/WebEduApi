@@ -13,10 +13,9 @@ public class CustomerDAO {
 	ConnectDAO connect = new ConnectDAO();
         /**
 	 * Deze methode maakt een stored procedure aan die een nieuwe klant kan toevoegen zonder onderbroken te worden
-	 * door een andere gebruiker (atomicity).
+	 * door een andere gebruiker (atomicity). Date: 30-10-2017
 	 *
 	 * @author Robert den Blaauwen
-	 * @date 30-10-2017
 	 */
 	public void createAddCustomerFunction(){
 		String project_list_sql = "CREATE OR REPLACE FUNCTION add_customer(name TEXT, description TEXT) " +
@@ -71,10 +70,10 @@ public class CustomerDAO {
 		return null;
 	}
 	
-	/**
+	/**Date:13-10-2017
+         * 
 	 * @author Robert
-	 * @date 13-10-2017
-	 * @return
+	 * @return Customers
 	 */
 	public ArrayList<CustomerModel> getCustomerList(){
 //		String login_sql = "SELECT * FROM customer c INNER JOIN customer_version cv ON c.customer_id=cv.customer_version_customer_fk";
@@ -123,11 +122,14 @@ public class CustomerDAO {
 		}
 	}
 	
-	/**
-	 * Deze methode wijzigt de geselcteerde klant 
-	 * @author rezanaser
-	 */
-
+        /**
+         * Deze methode wijzigt de geselcteerde klant 
+         * 
+         * @param cID           lol
+         * @param name          lol
+         * @param description   lol
+         * @author rezanaser
+         */
 	public void modifyCustomer(int cID, String name, String description) {
 		String changePreviousVersion = "UPDATE customer_version set customer_version_current = false "
 				+ "WHERE customer_version_customer_fk = ?";
@@ -153,7 +155,10 @@ public class CustomerDAO {
 	
 	/**
 	 * Deze methode zet de customer op inactive
-	 * @param cId > meegekregen van CustomerManagementViewController
+         * 
+         * cId wordt meegekregen van CustomerManagementViewController
+         * 
+	 * @param cId   customer id
 	 * @author rezanaser
 	 */
 
@@ -194,11 +199,11 @@ public class CustomerDAO {
 			System.out.println(e);
 			//e.printStackTrace();
 		}
-		
 	}
 	/**
 	 * De volgende voegt een nieuwe klant toe aan de klant tabel
 	 * @author rezanaser
+         * @return id
 	 */
 	public int createNewCustomer() {
 		int id = 0;

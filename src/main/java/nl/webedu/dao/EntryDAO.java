@@ -19,8 +19,7 @@ public class EntryDAO {
     /**
 	 * Deze methode laat een lijst zien van entries die de status queued hebben.
 	 * @author rezanaser
-	 * @param e_id
-	 * @return
+	 * @return entry_alist lijst van alle entry's
 	 */
 	public ArrayList<EntryModel> entry_all_list(){
 		ArrayList<EntryModel> entry_alist = new ArrayList<EntryModel>();
@@ -79,8 +78,8 @@ public class EntryDAO {
     /**
 	 * Deze methode laat een lijst zien van entries die de status queued hebben.
 	 * @author rezanaser
-	 * @param e_id
-	 * @return
+	 * @param e_id dunno lol
+	 * @return entry_alist lijst van alle entry's die in de wachtrij staan
 	 */
 	public ArrayList<EntryModel> entry_queued_list(int e_id){
 		ArrayList<EntryModel> entry_alist = new ArrayList<EntryModel>();
@@ -112,10 +111,18 @@ public class EntryDAO {
 		}
 		return entry_alist;
 	}
-    /**
-	 * Deze methode voegt een nieuwe entry toe
-	 * @param entryStartTime 
-	 */
+        /**
+         * Deze methode voegt een nieuwe entry toe
+         * 
+         * @param employeeId    lol
+         * @param pId           lol
+         * @param spId          lol
+         * @param date          lol
+         * @param description   lol
+         * @param startTime     lol
+         * @param endTime       lol
+         * @param userId        lol
+         */
 	public void addEntry(int employeeId, int pId, int spId, Date date, String description, Time startTime, Time endTime, int userId){
 		PreparedStatement insertProject;
 		String insertUser_sql = "insert into entry_version (entry_version_entry_fk, entry_version_project_fk,entry_version_sprint_fk, entry_version_description, entry_version_current, entry_version_date"
@@ -165,6 +172,8 @@ public class EntryDAO {
     	/**
 	 * De volgende voegt een nieuwe entry toe aan de entry tabel
 	 * @author rezanaser
+         * @param employeeId id van bijbehorende employee
+         * @return id geeft id terug van aangemaakte entry
 	 */
 	public int createNewEntry(int employeeId) {
 		int id = 0;
@@ -191,12 +200,18 @@ public class EntryDAO {
 		return id;
 	}
 	
-	/**
-	 * Deze methode wijzigt de geselcteerde entry
-	 * @param eId > Entry ID
-	 * @author rezanaser
-	 */
-
+        /**
+         * Deze methode wijzigt de geselcteerde entry
+         * 
+         * @param entryId       Entry ID
+         * @param pId           lol
+         * @param spId          lol
+         * @param date          lol
+         * @param description   lol
+         * @param startTime     lol
+         * @param endTime       lol
+         * @param userId        lol
+         */
 	public void modifyEntry(int entryId, int pId, int spId, Date date, String description, Time startTime, Time endTime, int userId) {
 		String changePreviousVersion = "UPDATE entry_version set entry_version_current = false "
 				+ "WHERE entry_version_entry_fk = ? ";
@@ -244,11 +259,13 @@ public class EntryDAO {
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
-		
 	}
     
         /**
 	 * Return a list of entries belonging to user.
+         * 
+         * @param e_id entry employee
+         * @return entry_alist lijst van entry's van een bepaalde employee
 	 */
 	public ArrayList<EntryModel> entry_list(int e_id){
 		//Empty list to return

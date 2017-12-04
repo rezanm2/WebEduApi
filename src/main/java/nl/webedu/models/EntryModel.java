@@ -1,9 +1,8 @@
 package nl.webedu.models;
 
 /**
- * 
+ * Date: 9-10-2017
  * @author Robert
- * @date 9-10-2017
  */
 public class EntryModel {
 	private int entryId;

@@ -17,10 +17,14 @@ public class CreateUserModel {
 	private String role;
 	private String email;
 
-	/**
-	 * @param args
-	 */
-	
+        /**
+         * 
+         * @param firstName lol
+         * @param lastName  lol
+         * @param email     lol
+         * @param password  lol
+         * @param role      lol
+         */
 	public CreateUserModel(String firstName, String lastName, String email, String password, String role) {
 		setFirstName(firstName);
 		setLastName(lastName);

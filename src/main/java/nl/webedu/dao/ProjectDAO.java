@@ -22,10 +22,9 @@ public class ProjectDAO {
     ConnectDAO connect = new ConnectDAO();
     /**
 	 * Deze methode maakt een stored procedure aan die een nieuw project kan toevoegen zonder onderbroken te worden
-	 * door een andere gebruiker (atomicity).
+	 * door een andere gebruiker (atomicity). Date:30-10-2017
 	 *
 	 * @author Robert den Blaauwen
-	 * @date 30-10-2017
 	 */
 	public void createAddProjectFunction(){
 		String project_list_sql = "CREATE OR REPLACE FUNCTION add_project(name TEXT, description TEXT, customer INT4) " +
@@ -155,8 +154,8 @@ public class ProjectDAO {
 
 	/**
 	 * Deze methode geeft een overzicht van alle projecten die de employee aan deelneemt
-	 * @param customerModel
-	 * @return
+	 * @param employeeId    id van de employee
+	 * @return proj_list    lijst van projecten
 	 * @author Fardin Samandar
 	 */
 	public ArrayList<ProjectModel> project_list_employee(int employeeId){
@@ -190,6 +189,8 @@ public class ProjectDAO {
 
 	/**
 	 * De volgende voegt een nieuwe project toe aan de project tabel
+         * 
+         * @return id   de id van het project dat net gemaakt is.
 	 * @author rezanaser
 	 */
 	public int createNewProject() {
@@ -215,15 +216,15 @@ public class ProjectDAO {
 		}
 		
 		return id;
-	}
-
-	/**
-	 * De volgende voegt een nieuwe project toe aan de project_version tabel
-	 * @param pId Project ID
-	 * @param projectName De naam van het project
-	 * @param projectDes beschrijving van het project
-	 * @author rezanaser
-	 */
+	}      
+        /**
+         * De volgende voegt een nieuwe project toe aan de project_version tabel
+         * 
+         * @param projectName   De naam van het project
+         * @param projectDes    beschrijving van het project
+         * @param customerId    id van de customer
+         * @author rezanaser
+         */
 	public void addProjectToDatabase(String projectName, String projectDes, int customerId){
 		PreparedStatement insertProject;
 		String insertUser_sql = "insert into project_version (project_version_project_fk, project_version_name, project_version_description, project_version_current, project_version_customer_fk) "
@@ -249,9 +250,9 @@ public class ProjectDAO {
 	 * Voegt een nieuw project toe, maakt gebruik van de stored procedure die gemaakt wordt in createAddProjectFunction()
 	 *
 	 * @author Robert den Blaauwen
-	 * @param name
-	 * @param description
-	 * @param customerID
+	 * @param name          naam van project
+	 * @param description   description van project
+	 * @param customerID    id van bijbehorende klant
 	 */
 	public void addProject(String name, String description, int customerID) {
 		String login_sql = "SELECT add_project('"+name+"','"+description+"','"+customerID+"')";
@@ -266,12 +267,14 @@ public class ProjectDAO {
 			e.printStackTrace();
 		}
 	}
-	
-	/**
-	 * Deze methode wijzigt het geselcteerde project project
-	 * @author rezanaser
-	 */
-
+        /**
+         * Deze methode wijzigt het geselcteerde project project
+         * 
+         * @param pId           project id
+         * @param name          project naam
+         * @param description   project description
+         * @author rezanaser
+         */
 	public void modifyProject(int pId, String name, String description) {
 		String changePreviousVersion = "UPDATE project_version set project_version_current = 'n' "
 				+ "WHERE project_version_project_fk = ? AND project_version_current= true";
@@ -297,10 +300,10 @@ public class ProjectDAO {
 	
 	/**
 	 * Deze methode zet het project op inactive
-	 * @param projectId > meegekregen van ProjectBeherenViewController
+         * 
+	 * @param projectId meegekregen van ProjectBeherenViewController
 	 * @author rezanaser
 	 */
-	
 	public void removeProject(int projectId) {
 		String remove_project = "UPDATE project "
 				+ "SET project_isdeleted = true "
@@ -312,6 +315,5 @@ public class ProjectDAO {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
 	}
 }
