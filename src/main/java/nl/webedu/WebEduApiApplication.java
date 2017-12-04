@@ -42,8 +42,12 @@ public class WebEduApiApplication extends Application<WebEduApiConfiguration> {
     @Override
     public void run(final WebEduApiConfiguration configuration,
                     final Environment environment) {
+        /**
+         * Load resources into environment
+         */
         environment.jersey().register(new UserResource());
         environment.jersey().register(new ProjectResource());
+
         /**
          * Hier krijgt de variabele 'naam' de apiName van de WebEduApiConfiguration
          * @author rezanaser

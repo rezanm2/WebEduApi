@@ -1,5 +1,8 @@
 package nl.webedu.models;
 
+/**
+ * User database representation
+ */
 public class UserModel {
 
     private int userId;
@@ -7,6 +10,14 @@ public class UserModel {
     private String userLastName;
     private String email;
     private String password;
+
+    public UserModel(){}
+
+    public UserModel(int id, String fName, String lName){
+        this.userId = id;
+        this.userFirstName = fName;
+        this.userLastName = lName;
+    }
 
     public String getEmail() {
         return email;
@@ -24,15 +35,6 @@ public class UserModel {
         this.password = password;
     }
 
-    public UserModel(int id, String fName, String lName){
-        this.userId = id;
-        this.userFirstName = fName;
-        this.userLastName = lName;
-    }
-    public UserModel()
-    {
-        
-    }
     public int getUserId() {
         return userId;
     }

@@ -16,7 +16,11 @@ import nl.webedu.models.ProjectModel;
  * @author rezanaser
  */
 public class ProjectDAO {
-    public ArrayList<ProjectModel> getProjects(){
+    /**
+     * Get all projects stored in database
+     * @return array list of type Project Model to display to user
+     */
+    public ArrayList<ProjectModel> getAllProjects(){
         try {
             Connection connect = new ConnectDAO().makeConnection();
             String getUserQuery = "SELECT * FROM project_version where project_version_current = true";
@@ -37,4 +41,7 @@ public class ProjectDAO {
         // No user found with the id given
         return null;
     }
+
+
+
 }

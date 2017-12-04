@@ -29,6 +29,6 @@ public class ProjectResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public ArrayList<ProjectModel> ProjectName(){
         ProjectDAO projectDAO = new ProjectDAO();
-        return projectDAO.getProjects();
+        return projectDAO.getAllProjects();
     }
 }

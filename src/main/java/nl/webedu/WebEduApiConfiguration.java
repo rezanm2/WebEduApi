@@ -35,7 +35,8 @@ public class WebEduApiConfiguration extends Configuration implements AssetsBundl
     {
         return assets;
     }
-        @Valid
+
+    @Valid
     @NotNull
     private DataSourceFactory dataSourceFactory = new DataSourceFactory();
 

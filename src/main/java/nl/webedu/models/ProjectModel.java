@@ -18,8 +18,8 @@ public class ProjectModel {
 	private int projectEntryFk;
 	private int projectUserStoryFk;
 	private int projectSprintFk;
-	private int projectCustomerFk
-;	
+	private int projectCustomerFk;
+
 	public int getProjectId() {
 		return projectId;
 	}

@@ -9,9 +9,8 @@ import nl.webedu.models.ProjectModel;
 
 public class UserDAO {
     /**
-     * @author nach7vs
-     * @param id user id to return result set from
-     * @return  userModel
+     * @author nach7vos
+     * @return userModel
      */
     public ArrayList<UserModel> getEmployees(){
         try {
@@ -21,7 +20,7 @@ public class UserDAO {
             ResultSet userSet = getUserStatement.executeQuery();
             ArrayList<UserModel> data = new ArrayList<UserModel>();
             while(userSet.next()){
-                UserModel employee =  new UserModel();
+                UserModel employee = new UserModel();
                 employee.setUserId(userSet.getInt( "employee_version_employee_fk"));
                 employee.setUserFirstName(userSet.getString("employee_version_firstname"));
                 employee.setUserLastName(userSet.getString("employee_version_lastname"));
