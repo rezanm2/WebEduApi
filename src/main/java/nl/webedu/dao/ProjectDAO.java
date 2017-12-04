@@ -41,22 +41,5 @@ public class ProjectDAO {
         // No user found with the id given
         return null;
     }
-<<<<<<< HEAD
 
-
-
-=======
-    
-    public void createProject()
-    {
-            try {
-            Connection connect = new ConnectDAO().makeConnection();
-            String getUserQuery = "INSERT INTO project_version(project_version_project_fk, project_version_name, project_version_description, project_version_customer_fk)VALUES(25, 'DROPWIZARD', 'DIT IS TEST', 17)";
-            PreparedStatement getUserStatement = connect.prepareStatement(getUserQuery);
-            ResultSet userSet = getUserStatement.executeQuery();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
->>>>>>> d450f27a4c8db8b4ade75e0f60deb29cc2258610
 }

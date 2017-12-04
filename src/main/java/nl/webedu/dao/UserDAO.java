@@ -9,13 +9,8 @@ import nl.webedu.models.ProjectModel;
 
 public class UserDAO {
     /**
-<<<<<<< HEAD
      * @author nach7vos
      * @return userModel
-=======
-     * @author nach7vs
-     * @return  userModel
->>>>>>> d450f27a4c8db8b4ade75e0f60deb29cc2258610
      */
     public ArrayList<UserModel> getEmployees(){
         try {
