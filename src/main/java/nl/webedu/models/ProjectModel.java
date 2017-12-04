@@ -1,14 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package nl.webedu.models;
 
-/**
- *
- * @author rezanaser
- */
 public class ProjectModel {
 	
 	private int projectId;
@@ -21,8 +12,8 @@ public class ProjectModel {
 	private int projectEntryFk;
 	private int projectUserStoryFk;
 	private int projectSprintFk;
-	private int projectCustomerFk;
-
+	private int projectCustomerFk
+;	
 	public int getProjectId() {
 		return projectId;
 	}
@@ -62,4 +53,5 @@ public class ProjectModel {
 	public void setProjectCustomerFk(int projectCustomerFk) {
 		this.projectCustomerFk = projectCustomerFk;
 	}
+
 }
