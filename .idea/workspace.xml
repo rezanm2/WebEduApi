@@ -1,20 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="33973016-32c5-494b-955e-cf54945221fc" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/nl/webedu/dao/EntryDAO.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/nl/webedu/dao/SprintDAO.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/nl/webedu/models/EntryModel.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/nl/webedu/models/SprintModel.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/nl/webedu/models/UserStoryModel.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/nl/webedu/WebEduApiApplication.java" afterPath="$PROJECT_DIR$/src/main/java/nl/webedu/WebEduApiApplication.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/nl/webedu/WebEduApiConfiguration.java" afterPath="$PROJECT_DIR$/src/main/java/nl/webedu/WebEduApiConfiguration.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/nl/webedu/dao/ProjectDAO.java" afterPath="$PROJECT_DIR$/src/main/java/nl/webedu/dao/ProjectDAO.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/nl/webedu/dao/UserDAO.java" afterPath="$PROJECT_DIR$/src/main/java/nl/webedu/dao/UserDAO.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/nl/webedu/models/ProjectModel.java" afterPath="$PROJECT_DIR$/src/main/java/nl/webedu/models/ProjectModel.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/nl/webedu/models/UserModel.java" afterPath="$PROJECT_DIR$/src/main/java/nl/webedu/models/UserModel.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/nl/webedu/resources/ProjectResource.java" afterPath="$PROJECT_DIR$/src/main/java/nl/webedu/resources/ProjectResource.java" />
-    </list>
+    <list default="true" id="33973016-32c5-494b-955e-cf54945221fc" name="Default" comment="" />
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -485,12 +472,12 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1512379470518</updated>
-      <workItem from="1512379476087" duration="4694000" />
+      <workItem from="1512379476087" duration="4748000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="4694000" />
+    <option name="totallyTimeSpent" value="4748000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="54" y="-8" width="1320" height="784" extended-state="6" />
