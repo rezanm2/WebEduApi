@@ -15,7 +15,12 @@ import java.sql.Time;
 import java.util.ArrayList;
 
 public class EntryDAO {
-    ConnectDAO connect = new ConnectDAO();
+    private ConnectDAO connect;
+
+    public EntryDAO(){
+    	this.connect = new ConnectDAO();
+	}
+
     /**
 	 * Deze methode laat een lijst zien van entries die de status queued hebben.
 	 * @author rezanaser
@@ -26,7 +31,7 @@ public class EntryDAO {
 		String employee_entry_sql = "SELECT  * from entry ";
 				//+ "AND entry_version_current = 'y' ";
 		try {
-			PreparedStatement entries_statement = connect.makeConnection().prepareStatement(employee_entry_sql);
+			PreparedStatement entries_statement = this.connect.makeConnection().prepareStatement(employee_entry_sql);
 			
 			ResultSet entry_set = entries_statement.executeQuery();
 			while(entry_set.next()) {
@@ -48,31 +53,24 @@ public class EntryDAO {
 	 * @param id is de id van de entry.
 	 * @author rezanaser
 	 */
-	public void approveHours(int id)
-	{
+	public void approveHours(int id) throws Exception {
 		String employee_entry_sql = "UPDATE entry SET entry_status = 'approved' WHERE entry_id = ? ";
-			try {
-				PreparedStatement entries_statement;
-				entries_statement = connect.makeConnection().prepareStatement(employee_entry_sql);
-				entries_statement.setInt(1, id);
-				entries_statement.executeUpdate();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			
+		PreparedStatement entries_statement;
+		entries_statement = this.connect.makeConnection().prepareStatement(employee_entry_sql);
+		entries_statement.setInt(1, id);
+		entries_statement.executeUpdate();
 	}
-        public void rejectHours(int id)
-	{
+
+	public void rejectHours(int id) {
 		String employee_entry_sql = "UPDATE entry SET entry_status = 'rejected' WHERE entry_id = ? ";
-			try {
-				PreparedStatement entries_statement;
-				entries_statement = connect.makeConnection().prepareStatement(employee_entry_sql);
-				entries_statement.setInt(1, id);
-				entries_statement.executeUpdate();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			
+		try {
+			PreparedStatement entries_statement;
+			entries_statement = this.connect.makeConnection().prepareStatement(employee_entry_sql);
+			entries_statement.setInt(1, id);
+			entries_statement.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
         
     /**
@@ -88,7 +86,7 @@ public class EntryDAO {
 				+ "WHERE entry_version.entry_version_entry_fk = entry.entry_id AND entry.entry_status = 'queued' "
 				+ "AND entry_version_current = true ";
 		try {
-			PreparedStatement entries_statement = connect.makeConnection().prepareStatement(employee_entry_sql);
+			PreparedStatement entries_statement = this.connect.makeConnection().prepareStatement(employee_entry_sql);
 			
 			ResultSet entry_set = entries_statement.executeQuery();
 			while(entry_set.next()) {
@@ -111,17 +109,17 @@ public class EntryDAO {
 		}
 		return entry_alist;
 	}
-        /**
-         * Deze methode voegt een nieuwe entry toe
-         * 
-         * @param employeeId    lol
-         * @param pId           lol
-         * @param spId          lol
-         * @param date          lol
-         * @param description   lol
-         * @param startTime     lol
-         * @param endTime       lol
-         * @param userId        lol
+	/**
+	 * Deze methode voegt een nieuwe entry toe
+	 *
+	 * @param employeeId    employee id
+	 * @param pId           project id
+	 * @param spId          sprint id
+	 * @param date          date
+	 * @param description   entry description
+	 * @param startTime     entry start time
+	 * @param endTime       entry end time
+	 * @param userId
          */
 	public void addEntry(int employeeId, int pId, int spId, Date date, String description, Time startTime, Time endTime, int userId){
 		PreparedStatement insertProject;
@@ -129,7 +127,7 @@ public class EntryDAO {
 				+ ",entry_version_starttime, entry_version_endtime, entry_version_userstory_fk) "
 				+ "VALUES (?, ?, ?, ?, ?, ?,?,?,?)";
 		try {
-			insertProject = connect.makeConnection().prepareStatement(insertUser_sql);
+			insertProject = this.connect.makeConnection().prepareStatement(insertUser_sql);
 			
 			insertProject.setInt(1, createNewEntry(employeeId));
 			if(pId == 0)
@@ -183,7 +181,7 @@ public class EntryDAO {
 		
 		try {
 			
-			createEntry = connect.makeConnection().prepareStatement(insertEntry_sql, Statement.RETURN_GENERATED_KEYS);
+			createEntry = this.connect.makeConnection().prepareStatement(insertEntry_sql, Statement.RETURN_GENERATED_KEYS);
 			
 			createEntry.setInt(1, employeeId);
 			createEntry.executeUpdate();
@@ -220,11 +218,11 @@ public class EntryDAO {
 				+ "entry_version_endtime, entry_version_userstory_fk, entry_version_current)"
 				+ "VALUES(?, ?, ?, ?, ?, ?, ?,?, true)";
 		try {
-			PreparedStatement changeVersions= connect.makeConnection().prepareStatement(changePreviousVersion);
+			PreparedStatement changeVersions= this.connect.makeConnection().prepareStatement(changePreviousVersion);
 			changeVersions.setInt(1, entryId);
 			changeVersions.executeUpdate();
 			changeVersions.close();
-			PreparedStatement changeProject = connect.makeConnection().prepareStatement(changeEntry);
+			PreparedStatement changeProject = this.connect.makeConnection().prepareStatement(changeEntry);
 			changeProject.setInt(1, entryId);
 			if(pId == 0)
 			{
@@ -279,7 +277,7 @@ public class EntryDAO {
 				"INNER JOIN userstory_version ON(userstory_version_project_fk=project_version_project_fk)\r\n" +
 				"WHERE entry_employee_fk = ?";
 		try {
-			PreparedStatement entries_statement = connect.makeConnection().prepareStatement(employee_entry_sql);
+			PreparedStatement entries_statement = this.connect.makeConnection().prepareStatement(employee_entry_sql);
 			entries_statement.setInt(1, e_id);
 			
 			ResultSet entry_set = entries_statement.executeQuery();

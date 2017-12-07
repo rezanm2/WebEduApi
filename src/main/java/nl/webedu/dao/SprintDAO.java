@@ -11,93 +11,96 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 public class SprintDAO {
-    ConnectDAO connect = new ConnectDAO();
+    private ConnectDAO connect;
+
+    public SprintDAO(){
+    	this.connect = new ConnectDAO();
+	}
        
 	/**
 	 * Deze methode vult de combobox met de sprints van het gevraagde project
-         * 
-         * @param employeeId    Id van de employee voor wie je de projecten wilt hebben
+	 * @param employeeId    Id van de employee voor wie je de projecten wilt hebben
 	 * @author rezanaser
 	 * @return sprint_alist
 	 */
-	public ArrayList<SprintModel> allSprintsEmployee(int employeeId){
-		ArrayList<SprintModel> sprint_alist = new ArrayList<SprintModel>();
-		String projects_sprints_sql = "select sprint_version_sprint_fk, sprint_version_name, sprint_version_description,sprint_version_startdate, sprint_version_enddate from sprint_version, project_employee where project_employee_employee_fk = ? AND  project_employee_project_fk = sprint_version_project_fk";
-				
-		try {
-			PreparedStatement sprints_statement = connect.makeConnection().prepareStatement(projects_sprints_sql);
-			sprints_statement.setInt(1, employeeId);
-			ResultSet sprints_sets = sprints_statement.executeQuery();
-			while(sprints_sets.next()) {
-				SprintModel sprint = new SprintModel();
-				sprint.setSprintId(sprints_sets.getInt("sprint_version_sprint_fk"));
-				sprint.setSprintName(sprints_sets.getString("sprint_version_name"));
-				sprint.setSprintStartDate(sprints_sets.getString("sprint_version_startdate"));
-				sprint.setSprintEndDate(sprints_sets.getString("sprint_version_enddate"));
-				sprint_alist.add(sprint);
-			}
-			sprints_statement.close();
-		}
-		catch(Exception e) {
-			e.printStackTrace();
-		}
-		return sprint_alist;
-	  }
+	public ArrayList<SprintModel> allSprintsEmployee(int employeeId) throws Exception {
+		ArrayList<SprintModel> sprintList = new ArrayList<SprintModel>();
+
+		String projectsSprintsSql = "SELECT sprint_version_sprint_fk, sprint_version_name, " +
+				"sprint_version_description,sprint_version_startdate, sprint_version_enddate " +
+				"FROM sprint_version, project_employee WHERE project_employee_employee_fk = ? AND " +
+				"project_employee_project_fk = sprint_version_project_fk";
+
+		PreparedStatement sprintsStatement = this.connect.makeConnection().prepareStatement(projectsSprintsSql);
+		sprintsStatement.setInt(1, employeeId);
+		ResultSet sprintsSets = sprintsStatement.executeQuery();
+
+		while(sprintsSets.next()) {
+            SprintModel sprintContainer = new SprintModel();
+			sprintContainer.setSprintId(sprintsSets.getInt("sprint_version_sprint_fk"));
+            sprintContainer.setSprintName(sprintsSets.getString("sprint_version_name"));
+            sprintContainer.setSprintStartDate(sprintsSets.getString("sprint_version_startdate"));
+            sprintContainer.setSprintEndDate(sprintsSets.getString("sprint_version_enddate"));
+
+            sprintList.add(sprintContainer);
+        }
+		sprintsStatement.close();
+		return sprintList;
+  	}
+
 	/**
 	 * Deze methode vult de combobox met de sprints van het gevraagde project
 	 * @author rezanaser
-	 * @return  sprint_alist lijst van sprints
+	 * @return sprint_alist lijst van sprints
 	 */
-	public ArrayList<SprintModel> allSprints(){
-		ArrayList<SprintModel> sprint_alist = new ArrayList<SprintModel>();
-		String projects_sprints_sql = "SELECT *  FROM sprint_version";
+	public ArrayList<SprintModel> allSprints() throws Exception {
+		ArrayList<SprintModel> sprintList = new ArrayList<SprintModel>();
+		String projectsSprintsSql = "SELECT *  FROM sprint_version";
 				//+ "AND entry_version_current = 'y' ";
-		try {
-			PreparedStatement sprints_statement = connect.makeConnection().prepareStatement(projects_sprints_sql);
-			
-			ResultSet sprints_sets = sprints_statement.executeQuery();
-			while(sprints_sets.next()) {
-				SprintModel sprint = new SprintModel();
-				sprint.setSprintId(sprints_sets.getInt("sprint_version_sprint_fk"));
-				sprint.setSprintName(sprints_sets.getString("sprint_version_name"));
-				sprint.setSprintStartDate(sprints_sets.getString("sprint_version_startdate"));
-				sprint.setSprintEndDate(sprints_sets.getString("sprint_version_enddate"));
-				sprint_alist.add(sprint);
-			}
-			sprints_statement.close();
-		}
-		catch(Exception e) {
-			e.printStackTrace();
-		}
-		return sprint_alist;
+		PreparedStatement sprintsStatement = this.connect.makeConnection().prepareStatement(projectsSprintsSql);
+		ResultSet sprintsSets = sprintsStatement.executeQuery();
+
+		while(sprintsSets.next()) {
+            SprintModel sprintContainer = new SprintModel();
+			sprintContainer.setSprintId(sprintsSets.getInt("sprint_version_sprint_fk"));
+            sprintContainer.setSprintName(sprintsSets.getString("sprint_version_name"));
+            sprintContainer.setSprintStartDate(sprintsSets.getString("sprint_version_startdate"));
+            sprintContainer.setSprintEndDate(sprintsSets.getString("sprint_version_enddate"));
+			sprintContainer.setSprintEndDate(sprintsSets.getString("sprint_version_enddate"));
+            sprintList.add(sprintContainer);
+        }
+		sprintsStatement.close();
+		return sprintList;
 	  }
 	
 	/**
 	 * Deze methode vult de combobox met de sprints van het gevraagde project
 	 * @author rezanaser
-         * @param p_id  id van project waar je de sprints voor wilt hebben.
+	 * @param p_id  id van project waar je de sprints voor wilt hebben.
 	 * @return sprint_alist lisjt van sprints
 	 */
 	public ArrayList<SprintModel> sprintsProjects(int p_id){
 		ArrayList<SprintModel> sprint_alist = new ArrayList<SprintModel>();
-		String projects_sprints_sql = "SELECT *  FROM sprint_version sv INNER JOIN project_version pv " +
+		String projectsSprintsSql = "SELECT *  FROM sprint_version sv INNER JOIN project_version pv " +
 				"ON sv.sprint_version_project_fk=pv.project_version_project_fk INNER JOIN project p " +
 				"ON p.project_id=pv.project_version_project_fk WHERE pv.project_version_project_fk= ?" +
 				"AND sv.sprint_version_current=TRUE AND project_isdeleted=FALSE";
 				//+ "AND entry_version_current = 'y' ";
 		try {
-			PreparedStatement sprints_statement = connect.makeConnection().prepareStatement(projects_sprints_sql);
-			sprints_statement.setInt(1, p_id);
-			ResultSet sprints_sets = sprints_statement.executeQuery();
-			while(sprints_sets.next()) {
-				SprintModel sprint = new SprintModel();
-				sprint.setSprintId(sprints_sets.getInt("sprint_version_sprint_fk"));
-				sprint.setSprintName(sprints_sets.getString("sprint_version_name"));
-				sprint.setSprintStartDate(sprints_sets.getString("sprint_version_startdate"));
-				sprint.setSprintEndDate(sprints_sets.getString("sprint_version_enddate"));
+			PreparedStatement sprintsStatement = this.connect.makeConnection().prepareStatement(projectsSprintsSql);
+			sprintsStatement.setInt(1, p_id);
+			ResultSet sprintsSets = sprintsStatement.executeQuery();
+			while(sprintsSets.next()) {
+				SprintModel sprint;
+				sprint = new SprintModel();
+				sprint.setSprintId(sprintsSets.getInt("sprint_version_sprint_fk"));
+				sprint.setSprintName(sprintsSets.getString("sprint_version_name"));
+				sprint.setSprintStartDate(sprintsSets.getString("sprint_version_startdate"));
+				sprint.setSprintEndDate(sprintsSets.getString("sprint_version_enddate"));
+				sprint.setSprintIsDeleted(sprintsSets.getBoolean("sprint_version_isdeleted"));
 				sprint_alist.add(sprint);
 			}
-			sprints_statement.close();
+			sprintsStatement.close();
 		}
 		catch(Exception e) {
 			e.printStackTrace();
@@ -109,17 +112,16 @@ public class SprintDAO {
 	/**
 	 * Deze methode laat alleen de current version zien van een sprint.
 	 * @author Jeroen Zandvliet
-	 * 
 	 * @return sprintList
 	 */
-	public ArrayList<SprintModel> sprint_list(){
+	public ArrayList<SprintModel> sprintListVersion(){
 		ArrayList<SprintModel> sprintList = new ArrayList<SprintModel>();
 		String sprintListSQL = "SELECT * FROM sprint_version "
 				+ "INNER JOIN sprint ON (sprint_id = sprint_version_sprint_fk)"
 				+ "AND sprint_version_current = true "
 				+ "ORDER BY sprint_version.sprint_version_sprint_fk ASC";
 		try {
-			PreparedStatement sprint_statement = connect.makeConnection().prepareStatement(sprintListSQL);
+			PreparedStatement sprint_statement = this.connect.makeConnection().prepareStatement(sprintListSQL);
 			ResultSet sprint_set = sprint_statement.executeQuery();
 			while(sprint_set.next()) {
 				SprintModel sprintModelContainer = new SprintModel();
@@ -148,15 +150,14 @@ public class SprintDAO {
 	 * @param projectModel  project waar je de sprints voor wilt hebben.
 	 * @return sprint_list  lijst van de sprints
 	 */
-	
-	public ArrayList<SprintModel> sprint_list(ProjectModel projectModel){
+	public ArrayList<SprintModel> sprintListProject(ProjectModel projectModel){
 		ArrayList<SprintModel> sprint_list = new ArrayList<SprintModel>();
 		String sprint_list_sql = "SELECT * FROM sprint_version "
 				+ "INNER JOIN sprint ON (sprint.sprint_id = sprint_version.sprint_version_sprint_fk) "
 				+ "WHERE sprint_version.sprint_version_project_fk="+projectModel.getProjectId()
 				+ " ORDER BY sprint_version.sprint_version_name ASC";
 		try {
-			PreparedStatement sprint_statement = connect.makeConnection().prepareStatement(sprint_list_sql);
+			PreparedStatement sprint_statement = this.connect.makeConnection().prepareStatement(sprint_list_sql);
 			ResultSet sprint_set = sprint_statement.executeQuery();
 			while(sprint_set.next()) {
 				SprintModel sprintModelContainer = new SprintModel();
@@ -182,12 +183,11 @@ public class SprintDAO {
 	 * @param employeeID    employee
 	 * @return sprintList
 	 */
-	
-	public ArrayList<SprintModel> sprint_list_employee(int employeeID){
+	public ArrayList<SprintModel> sprintListEmployee(int employeeID){
 		ArrayList<SprintModel> sprint_list = new ArrayList<SprintModel>();
 		String sprint_list_sql = "SELECT * FROM sprint_version";
 		try {
-			PreparedStatement sprint_statement = connect.makeConnection().prepareStatement(sprint_list_sql);
+			PreparedStatement sprint_statement = this.connect.makeConnection().prepareStatement(sprint_list_sql);
 			sprint_statement.setInt(1, employeeID);
 			ResultSet sprint_set = sprint_statement.executeQuery();
 			
@@ -217,34 +217,20 @@ public class SprintDAO {
 	 * @author Jeroen Zandvliet
 	 * @return generatedID
 	 */
-	public int createNewSprint()
-		{
-			int generatedID = 0;
-			PreparedStatement createSprint;
-			ResultSet sprintID = null;
-			String insertSprintStatement = "INSERT INTO sprint(sprint_isdeleted) VALUES(?)";
-			
-			try 
-			{
-				createSprint = connect.makeConnection().prepareStatement(insertSprintStatement, Statement.RETURN_GENERATED_KEYS);
-				
-				createSprint.setBoolean(1, false);
-				createSprint.executeUpdate();
-	//			createSprint.getGeneratedKeys();
-				sprintID = createSprint.getGeneratedKeys();
-				
-				
-				while(sprintID.next())
-				{
-					generatedID = sprintID.getInt(1);
-				}
-			
-			} catch (Exception e) 
-			{
-				e.printStackTrace();
-			}
-				return generatedID;
-		}
+	public int createNewSprint() throws Exception {
+		int generatedID = 0;
+		PreparedStatement createSprint;
+		ResultSet sprintID = null;
+		String insertSprintStatement = "INSERT INTO sprint(sprint_isdeleted) VALUES(?)";
+		createSprint = this.connect.makeConnection().prepareStatement(insertSprintStatement, Statement.RETURN_GENERATED_KEYS);
+		createSprint.setBoolean(1, false);
+		createSprint.executeUpdate();
+		sprintID = createSprint.getGeneratedKeys();
+		while(sprintID.next()) {
+            generatedID = sprintID.getInt(1);
+        }
+		return generatedID;
+	}
 
 
 	/**
@@ -259,12 +245,12 @@ public class SprintDAO {
 	public void addSprintToDatabase(int projectID, String sprintName, String sprintDescription, Date sprintStartDate, Date sprintEndDate)
 	{
 		PreparedStatement addSprint;
-		String insertStatement = "INSERT INTO sprint_version(sprint_version_sprint_fk, sprint_version_project_fk, sprint_version_name, sprint_version_description, sprint_version_startdate, sprint_version_enddate, sprint_version_current) " 
-				+ "VALUES(?,?,?,?,?,?, true)";
+		String insertStatement = "INSERT INTO sprint_version(sprint_version_sprint_fk, sprint_version_project_fk, " +
+				"sprint_version_name, sprint_version_description, sprint_version_startdate, sprint_version_enddate, " +
+				"sprint_version_current) VALUES(?,?,?,?,?,?, true)";
 		
-		try 
-		{
-			addSprint = connect.makeConnection().prepareStatement(insertStatement);
+		try {
+			addSprint = this.connect.makeConnection().prepareStatement(insertStatement);
 			
 			addSprint.setInt(1, createNewSprint());
 			addSprint.setInt(2,  projectID);
@@ -274,16 +260,12 @@ public class SprintDAO {
 			addSprint.setDate(6, sprintEndDate);
 			
 			addSprint.executeQuery();
-			addSprint.close();			
-			
+			addSprint.close();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			System.out.println(e.getMessage());
+			e.printStackTrace();
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
-			
-		} 
-		
+			e.printStackTrace();
+		}
 	}
 	
 	
@@ -295,7 +277,7 @@ public class SprintDAO {
 				+ "WHERE sprint_version_sprint_fk = sprint_id";
 		
 		try {
-			PreparedStatement sprintStatement = connect.makeConnection().prepareStatement(sprintQuery);
+			PreparedStatement sprintStatement = this.connect.makeConnection().prepareStatement(sprintQuery);
 			ResultSet sprint_set = sprintStatement.executeQuery();
 			while(sprint_set.next()){
 				SprintModel model = new SprintModel();
@@ -310,7 +292,7 @@ public class SprintDAO {
 			e.printStackTrace();
 		}
 		return sprintList;
-}
+	}
 
 
 /**
@@ -324,8 +306,7 @@ public class SprintDAO {
 	 * @param sprintEndDate     lol
 	 */
 	
-	public void modifySprint(int sprintID, String sprintName, int projectID, String sprintDescription, Date sprintStartDate, Date sprintEndDate)
-	{
+	public void modifySprint(int sprintID, String sprintName, int projectID, String sprintDescription, Date sprintStartDate, Date sprintEndDate) {
 		String changePreviousVersion = "UPDATE sprint_version SET sprint_version_current = 'n' "
 				+ "WHERE sprint_version_sprint_fk = ? AND sprint_version_current= true";
 		String change_sprint = "INSERT INTO sprint_version(sprint_version_sprint_fk, sprint_version_name, sprint_version_project_fk, sprint_version_description, sprint_version_startdate, sprint_version_enddate, sprint_version_current)"
@@ -333,11 +314,11 @@ public class SprintDAO {
 		
 		
 		try {
-			PreparedStatement changeVersions= connect.makeConnection().prepareStatement(changePreviousVersion);
+			PreparedStatement changeVersions= this.connect.makeConnection().prepareStatement(changePreviousVersion);
 			changeVersions.setInt(1, sprintID);
 			changeVersions.executeUpdate();
 			changeVersions.close();
-			PreparedStatement changeSprint = connect.makeConnection().prepareStatement(change_sprint);
+			PreparedStatement changeSprint = this.connect.makeConnection().prepareStatement(change_sprint);
 			changeSprint.setInt(1, sprintID);
 			changeSprint.setString(2, sprintName);
 			changeSprint.setInt(3, projectID);
@@ -350,23 +331,13 @@ public class SprintDAO {
 		} catch (Exception e) {
 			e.getMessage();
 		}
-		
 	}
 	
 
-	public void removeSprint(int sprintID) 
-	{
-		String deleteSprint = "UPDATE sprint "
-			+ "SET sprint_isdeleted = true "
-			+ "WHERE sprint_id = ?";
-		try 
-		{
-			PreparedStatement lockStatement = connect.makeConnection().prepareStatement(deleteSprint);
-			lockStatement.setInt(1, sprintID);
-			lockStatement.executeUpdate();
-		} catch (Exception e) 
-		{
-		e.printStackTrace();
-		}
+	public void removeSprint(int sprintID) throws Exception {
+		String deleteSprint = "UPDATE sprint SET sprint_isdeleted = true WHERE sprint_id = ?";
+		PreparedStatement lockStatement = this.connect.makeConnection().prepareStatement(deleteSprint);
+		lockStatement.setInt(1, sprintID);
+		lockStatement.executeUpdate();
 	}
 }

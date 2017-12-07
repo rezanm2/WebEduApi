@@ -16,7 +16,12 @@ import com.sun.org.apache.xerces.internal.util.SynchronizedSymbolTable;
 import javafx.scene.control.TextField;
 
 public class DataDAO {
-	ConnectDAO connect = new ConnectDAO();	
+	private ConnectDAO connect;
+
+	public DataDAO(){
+		this.connect = new ConnectDAO();
+	}
+
 	/**
 	 * Deze methode maakt een csv bestand van de database.
 	 * @author rezanaser
@@ -31,7 +36,7 @@ public class DataDAO {
 	        		+ "FROM entry_version, project_version "
 	        		+ "WHERE entry_version_project_fk = project_version_project_fk "
 	        		+"AND entry_version_current = true";
-	        Statement stmt = connect.makeConnection().createStatement();
+	        Statement stmt = this.connect.makeConnection().createStatement();
 	        fw.append("Datum");
             fw.append(';');
             fw.append("BeginTijd");

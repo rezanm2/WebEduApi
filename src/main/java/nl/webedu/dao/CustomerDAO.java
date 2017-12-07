@@ -10,11 +10,15 @@ import nl.webedu.dao.*;
 import nl.webedu.models.CustomerModel;
 
 public class CustomerDAO {
-	ConnectDAO connect = new ConnectDAO();
-        /**
+	private ConnectDAO connect;
+
+	public CustomerDAO(){
+		this.connect = new ConnectDAO();
+	}
+
+	 /**
 	 * Deze methode maakt een stored procedure aan die een nieuwe klant kan toevoegen zonder onderbroken te worden
 	 * door een andere gebruiker (atomicity). Date: 30-10-2017
-	 *
 	 * @author Robert den Blaauwen
 	 */
 	public void createAddCustomerFunction(){
@@ -28,7 +32,7 @@ public class CustomerDAO {
 				"    VALUES(pk,name,description,true); " +
 				"END $$ LANGUAGE plpgsql; ";
 		try {
-			PreparedStatement project_statement = connect.makeConnection().prepareStatement(project_list_sql);
+			PreparedStatement project_statement = this.connect.makeConnection().prepareStatement(project_list_sql);
 			project_statement.executeUpdate();
 			System.out.println(this.getClass().toString()+": constructor: FUNCTION add_customer(name, description) has been created!");
 		} catch (SQLException e) {
@@ -39,6 +43,7 @@ public class CustomerDAO {
 			e.printStackTrace();
 		}
 	}
+
 	/**
 	 * Return a customer model filled with information relating to given customer id
 	 * If id does not match with any given customer you will get a empty customer
@@ -50,7 +55,7 @@ public class CustomerDAO {
 		PreparedStatement customer_statement;
 		
 		try {
-			customer_statement = connect.makeConnection().prepareStatement(login_sql);
+			customer_statement = this.connect.makeConnection().prepareStatement(login_sql);
 			customer_statement.setInt(1, c_id);
 			ResultSet customer_set = customer_statement.executeQuery();
 			
@@ -71,12 +76,10 @@ public class CustomerDAO {
 	}
 	
 	/**Date:13-10-2017
-         * 
 	 * @author Robert
 	 * @return Customers
 	 */
 	public ArrayList<CustomerModel> getCustomerList(){
-//		String login_sql = "SELECT * FROM customer c INNER JOIN customer_version cv ON c.customer_id=cv.customer_version_customer_fk";
 		String login_sql = "SELECT * FROM customer c INNER JOIN customer_version cv "
 				+ "ON c.customer_id=cv.customer_version_customer_fk "
 				+ "AND cv.customer_version_current = true "
@@ -84,8 +87,7 @@ public class CustomerDAO {
 		PreparedStatement customer_statement;
 		
 		try {
-			customer_statement = connect.makeConnection().prepareStatement(login_sql);
-//			customer_statement.setInt(1, c_id);
+			customer_statement = this.connect.makeConnection().prepareStatement(login_sql);
 			ResultSet customer_set = customer_statement.executeQuery();
 			
 			ArrayList<CustomerModel> customers = new ArrayList<CustomerModel>();
@@ -113,7 +115,7 @@ public class CustomerDAO {
 		PreparedStatement customer_statement;
 
 		try {
-			customer_statement = connect.makeConnection().prepareStatement(login_sql);
+			customer_statement = this.connect.makeConnection().prepareStatement(login_sql);
 			ResultSet customer_set = customer_statement.executeQuery();
 			customer_statement.close();
 		} catch (Exception e) {
@@ -122,25 +124,25 @@ public class CustomerDAO {
 		}
 	}
 	
-        /**
-         * Deze methode wijzigt de geselcteerde klant 
-         * 
-         * @param cID           lol
-         * @param name          lol
-         * @param description   lol
-         * @author rezanaser
-         */
+	/**
+	 * Deze methode wijzigt de geselcteerde klant
+	 *
+	 * @param cID           lol
+	 * @param name          lol
+	 * @param description   lol
+	 * @author rezanaser
+	 */
 	public void modifyCustomer(int cID, String name, String description) {
 		String changePreviousVersion = "UPDATE customer_version set customer_version_current = false "
 				+ "WHERE customer_version_customer_fk = ?";
 		String change_customer = "INSERT INTO customer_version(customer_version_customer_fk, customer_version_name, customer_version_description, customer_version_current)"
 				+ "VALUES(?, ?, ?, true)";
 		try {
-			PreparedStatement changeVersions= connect.makeConnection().prepareStatement(changePreviousVersion);
+			PreparedStatement changeVersions= this.connect.makeConnection().prepareStatement(changePreviousVersion);
 			changeVersions.setInt(1, cID);
 			changeVersions.executeUpdate();
 			changeVersions.close();
-			PreparedStatement changeCustomer = connect.makeConnection().prepareStatement(change_customer);
+			PreparedStatement changeCustomer = this.connect.makeConnection().prepareStatement(change_customer);
 			changeCustomer.setInt(1, cID);
 			changeCustomer.setString(2, name);
 			changeCustomer.setString(3, description);
@@ -155,27 +157,22 @@ public class CustomerDAO {
 	
 	/**
 	 * Deze methode zet de customer op inactive
-         * 
-         * cId wordt meegekregen van CustomerManagementViewController
-         * 
+	 * cId wordt meegekregen van CustomerManagementViewController
 	 * @param cId   customer id
 	 * @author rezanaser
 	 */
 
 	public void removeCustomer(int cId) {
-		String remove_project = "UPDATE customer "
-				+ "SET customer_isdeleted = true "
-				+ "WHERE customer_id = ?";
+		String remove_project = "UPDATE customer SET customer_isdeleted = true WHERE customer_id = ?";
 		try {
-			PreparedStatement lock_statement = connect.makeConnection().prepareStatement(remove_project);
+			PreparedStatement lock_statement = this.connect.makeConnection().prepareStatement(remove_project);
 			lock_statement.setInt(1, cId);
 			lock_statement.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
 	}
-	/**
+	 /**
 	 * De volgende voegt een nieuwe klant toe aan de customer_version tabel
 	 * @param customerName klantNaam
 	 * @param customerDes klant  beschriving
@@ -185,7 +182,7 @@ public class CustomerDAO {
 		String insertUser_sql = "insert into customer_version (customer_version_customer_fk, customer_version_name, customer_version_description, customer_version_current) "
 				+ "VALUES (?, ?, ?, ?, ?)";
 		try {
-			insertProject = connect.makeConnection().prepareStatement(insertUser_sql);
+			insertProject = this.connect.makeConnection().prepareStatement(insertUser_sql);
 			
 			insertProject.setInt(1, createNewCustomer());
 			insertProject.setString(2, customerName);
@@ -213,7 +210,7 @@ public class CustomerDAO {
 		
 		try {
 			
-			createCustomer = connect.makeConnection().prepareStatement(insertProject_sql, Statement.RETURN_GENERATED_KEYS);
+			createCustomer = this.connect.makeConnection().prepareStatement(insertProject_sql, Statement.RETURN_GENERATED_KEYS);
 			
 			createCustomer.setBoolean(1, false);
 			createCustomer.executeUpdate();
