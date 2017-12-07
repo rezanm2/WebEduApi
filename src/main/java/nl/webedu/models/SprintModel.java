@@ -2,8 +2,6 @@ package nl.webedu.models;
 
 import java.util.ArrayList;
 
-import nl.webedu.dao.ProjectDAO;
-
 /**
  * Date 9-10-2017
  * 

@@ -60,14 +60,24 @@ public class ProjectDAO {
      */
     public ArrayList<ProjectModel> getAllProjects(){
         try {
+<<<<<<< HEAD
             String getUserQuery = "SELECT * FROM project_version where project_version_current = true";
             PreparedStatement getUserStatement = this.connect.makeConnection().prepareStatement(getUserQuery);
+=======
+            Connection connect = new ConnectDAO().makeConnection();
+            String getUserQuery = "SELECT * FROM project_version pv INNER JOIN project p on pv.project_version_project_fk=p.project_id "
+                    + "where project_version_current = true AND project_isdeleted=false";
+            PreparedStatement getUserStatement = connect.prepareStatement(getUserQuery);
+>>>>>>> 3c49e4c40d64b5e74bada41ddb99381eb102691c
             ResultSet userSet = getUserStatement.executeQuery();
             ArrayList<ProjectModel> data = new ArrayList<ProjectModel>();
             while(userSet.next()){
                 ProjectModel project =  new ProjectModel();
                 project.setProjectId(userSet.getInt( "project_version_project_fk"));
                 project.setProjectName(userSet.getString("project_version_name"));
+                project.setProjectDescription(userSet.getString("project_version_description"));
+                project.setProjectIsDeleted(userSet.getBoolean("project_isdeleted"));
+                project.setProjectCustomerFk(userSet.getInt("project_version_customer_fk"));
                 data.add(project);
             }
             userSet.close();
@@ -128,10 +138,18 @@ public class ProjectDAO {
 	 */
 	public ArrayList<ProjectModel> project_list_employee(int employeeId){
 		ArrayList<ProjectModel> proj_list = new ArrayList<ProjectModel>();
+<<<<<<< HEAD
 		String project_list_sql = "SELECT * FROM project_version "
 				+ "INNER JOIN project_employee "
 				+ "ON project_version_project_fk = project_employee_project_fk  AND project_version_current = true "
 				+ "AND project_employee_employee_fk = ?";
+=======
+		String project_list_sql = "select * from project_version " +
+                    "INNER JOIN project_employee ON project_version_project_fk = project_employee_project_fk " +
+                    "INNER JOIN project ON project_version_project_fk=project_id " +
+                    "WHERE project_version_current = true AND project_employee_employee_fk = ? " +
+                    "AND project_isdeleted=false;";
+>>>>>>> 3c49e4c40d64b5e74bada41ddb99381eb102691c
 		try {
 			PreparedStatement project_statement = this.connect.makeConnection().prepareStatement(project_list_sql);
 			project_statement.setInt(1, employeeId);
@@ -269,6 +287,18 @@ public class ProjectDAO {
 			lock_statement.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+        public void unRemoveProject(int projectId) {
+		String remove_project = "UPDATE project "
+				+ "SET project_isdeleted = false "
+				+ "WHERE project_id = ? AND project_isdeleted=true";
+		try {
+			PreparedStatement lock_statement = connect.makeConnection().prepareStatement(remove_project);
+			lock_statement.setInt(1, projectId);
+			lock_statement.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
