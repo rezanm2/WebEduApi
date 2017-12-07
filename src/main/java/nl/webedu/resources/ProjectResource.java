@@ -25,19 +25,21 @@ import nl.webedu.models.ProjectModel;
 @Path("/projects")
 public class ProjectResource {
     @GET
+    @Path("/read")
     @JsonProperty
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public ArrayList<ProjectModel> ProjectName(){
+    public ArrayList<ProjectModel> read(){
         ProjectDAO projectDAO = new ProjectDAO();
-        System.out.println(this.getClass().toString()+": GET Werkt!");
+        System.out.println(this.getClass().toString()+": read werkt!");
         return projectDAO.getAllProjects();
     }
     
     @POST
+    @Path("/create")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-        public String confirmation(@QueryParam("name") Optional<String> name,
+        public boolean create(@QueryParam("name") Optional<String> name,
                 @QueryParam("description") Optional<String> description,
                 @QueryParam("custid") Optional<String> customerId){
 
@@ -51,7 +53,55 @@ public class ProjectResource {
         
         ProjectDAO projectDAO = new ProjectDAO();
         projectDAO.addProject(name_parse, description_parse, customerId_parse);
-        System.out.println(this.getClass().toString()+": POST Werkt!: "+name_parse+description_parse+customerId_parse);
-        return "Kelukt";
+        System.out.println(this.getClass().toString()+": create werkt!: "+name_parse+description_parse+customerId_parse);
+        return true;
+    }
+        
+        /**
+         * De method mist een manier om de de klant aan te passen,
+         * want de method in de DAO ondersteunt dat niet >:(
+         * 
+         * @param projectId id van bestaand project
+         * @param name      nieuwe naam van project
+         * @param description   nieuwe beschrijving vvan project
+         * @return true
+         */
+    @POST
+    @Path("/update")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+        public boolean update(@QueryParam("pid") Optional<String> projectId,
+                @QueryParam("name") Optional<String> name,
+                @QueryParam("description") Optional<String> description){
+
+        int projectId_parse = Integer.parseInt(projectId.get());
+        String name_parse = name.get();
+        String description_parse = description.get();
+//        String name_parse = String.format("%b", name.or("empty"));
+//        String description_parse = String.format("%b", description.or("empty"));
+//        String customerId_parse1 = String.format("%b", customerId.or("empty"));
+//        int customerId_parse2 = Integer.parseInt(customerId_parse1);
+        
+        ProjectDAO projectDAO = new ProjectDAO();
+        projectDAO.modifyProject(projectId_parse,name_parse, description_parse);
+        System.out.println(this.getClass().toString()+": update werkt!: "+name_parse+description_parse);
+        return true;
+    }
+    @POST
+    @Path("/delete")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+        public boolean delete(@QueryParam("pid") Optional<String> projectId){
+
+        int projectId_parse = Integer.parseInt(projectId.get());
+//        String name_parse = String.format("%b", name.or("empty"));
+//        String description_parse = String.format("%b", description.or("empty"));
+//        String customerId_parse1 = String.format("%b", customerId.or("empty"));
+//        int customerId_parse2 = Integer.parseInt(customerId_parse1);
+        
+        ProjectDAO projectDAO = new ProjectDAO();
+        projectDAO.removeProject(projectId_parse);
+        System.out.println(this.getClass().toString()+": update werkt!: ");
+        return true;
     }
 }
