@@ -164,10 +164,11 @@ public class ProjectDAO {
 	 */
 	public ArrayList<ProjectModel> project_list_employee(int employeeId){
 		ArrayList<ProjectModel> proj_list = new ArrayList<ProjectModel>();
-		String project_list_sql = "select * from project_version "
-				+ "INNER JOIN project_employee "
-				+ "ON project_version_project_fk = project_employee_project_fk  AND project_version_current = true "
-				+ "AND project_employee_employee_fk = ?";
+		String project_list_sql = "select * from project_version " +
+                    "INNER JOIN project_employee ON project_version_project_fk = project_employee_project_fk " +
+                    "INNER JOIN project ON project_version_project_fk=project_id " +
+                    "WHERE project_version_current = true AND project_employee_employee_fk = ? " +
+                    "AND project_isdeleted=false;";
 		try {
 			PreparedStatement project_statement = connect.makeConnection().prepareStatement(project_list_sql);
 			project_statement.setInt(1, employeeId);
@@ -312,6 +313,18 @@ public class ProjectDAO {
 		String remove_project = "UPDATE project "
 				+ "SET project_isdeleted = true "
 				+ "WHERE project_id = ?";
+		try {
+			PreparedStatement lock_statement = connect.makeConnection().prepareStatement(remove_project);
+			lock_statement.setInt(1, projectId);
+			lock_statement.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+        public void unRemoveProject(int projectId) {
+		String remove_project = "UPDATE project "
+				+ "SET project_isdeleted = false "
+				+ "WHERE project_id = ? AND project_isdeleted=true";
 		try {
 			PreparedStatement lock_statement = connect.makeConnection().prepareStatement(remove_project);
 			lock_statement.setInt(1, projectId);

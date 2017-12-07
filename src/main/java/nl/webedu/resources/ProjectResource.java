@@ -24,15 +24,26 @@ import nl.webedu.models.ProjectModel;
  */
 @Path("/projects")
 public class ProjectResource {
+    ProjectDAO projectDAO = new ProjectDAO();
+    
     @GET
     @Path("/read")
     @JsonProperty
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public ArrayList<ProjectModel> read(){
-        ProjectDAO projectDAO = new ProjectDAO();
         System.out.println(this.getClass().toString()+": read werkt!");
         return projectDAO.getAllProjects();
+    }
+    @GET
+    @Path("/read/byemployee")
+    @JsonProperty
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public ArrayList<ProjectModel> read(@QueryParam("empid") Optional<String> employeeId){
+        int employeeId_parse = Integer.parseInt(employeeId.get());
+        System.out.println(this.getClass().toString()+": read werkt!");
+        return projectDAO.project_list_employee(employeeId_parse);
     }
     
     @POST
@@ -50,8 +61,6 @@ public class ProjectResource {
 //        String description_parse = String.format("%b", description.or("empty"));
 //        String customerId_parse1 = String.format("%b", customerId.or("empty"));
 //        int customerId_parse2 = Integer.parseInt(customerId_parse1);
-        
-        ProjectDAO projectDAO = new ProjectDAO();
         projectDAO.addProject(name_parse, description_parse, customerId_parse);
         System.out.println(this.getClass().toString()+": create werkt!: "+name_parse+description_parse+customerId_parse);
         return true;
@@ -81,8 +90,6 @@ public class ProjectResource {
 //        String description_parse = String.format("%b", description.or("empty"));
 //        String customerId_parse1 = String.format("%b", customerId.or("empty"));
 //        int customerId_parse2 = Integer.parseInt(customerId_parse1);
-        
-        ProjectDAO projectDAO = new ProjectDAO();
         projectDAO.modifyProject(projectId_parse,name_parse, description_parse);
         System.out.println(this.getClass().toString()+": update werkt!: "+name_parse+description_parse);
         return true;
@@ -94,13 +101,18 @@ public class ProjectResource {
         public boolean delete(@QueryParam("pid") Optional<String> projectId){
 
         int projectId_parse = Integer.parseInt(projectId.get());
-//        String name_parse = String.format("%b", name.or("empty"));
-//        String description_parse = String.format("%b", description.or("empty"));
-//        String customerId_parse1 = String.format("%b", customerId.or("empty"));
-//        int customerId_parse2 = Integer.parseInt(customerId_parse1);
-        
-        ProjectDAO projectDAO = new ProjectDAO();
         projectDAO.removeProject(projectId_parse);
+        System.out.println(this.getClass().toString()+": update werkt!: ");
+        return true;
+    }
+    @POST
+    @Path("/undelete")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+        public boolean unDelete(@QueryParam("pid") Optional<String> projectId){
+
+        int projectId_parse = Integer.parseInt(projectId.get());
+        projectDAO.unRemoveProject(projectId_parse);
         System.out.println(this.getClass().toString()+": update werkt!: ");
         return true;
     }
