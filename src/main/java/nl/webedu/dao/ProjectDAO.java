@@ -55,7 +55,7 @@ public class ProjectDAO {
     public ArrayList<ProjectModel> getAllProjects(){
         try {
             Connection connect = new ConnectDAO().makeConnection();
-            String getUserQuery = "SELECT * FROM project_version where project_version_current = true";
+            String getUserQuery = "SELECT * FROM project_version pv INNER JOIN project p on pv.project_version_project_fk=p.project_id where project_version_current = true";
             PreparedStatement getUserStatement = connect.prepareStatement(getUserQuery);
             ResultSet userSet = getUserStatement.executeQuery();
             ArrayList<ProjectModel> data = new ArrayList<ProjectModel>();
@@ -63,6 +63,9 @@ public class ProjectDAO {
                 ProjectModel project =  new ProjectModel();
                 project.setProjectId(userSet.getInt( "project_version_project_fk"));
                 project.setProjectName(userSet.getString("project_version_name"));
+                project.setProjectDescription(userSet.getString("project_version_description"));
+                project.setProjectIsDeleted(userSet.getBoolean("project_isdeleted"));
+                project.setProjectCustomerFk(userSet.getInt("project_version_customer_fk"));
                 data.add(project);
             }
             userSet.close();
