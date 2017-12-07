@@ -2,6 +2,8 @@ package nl.webedu.models;
 
 import nl.webedu.dao.SprintDAO;
 
+import java.lang.Exception;
+
 public class UserStoryModel {
 	private int userStoryId;
 	private String userStoryName;
@@ -9,7 +11,7 @@ public class UserStoryModel {
 	private int sprintFK;
 	private String sprintName;
 	private boolean isDeleted;
-	private SprintDAO sprintDAO;
+	private SprintDAO sprintDAO = new SprintDAO();
 
 	public int getUserStoryId() {
 		return userStoryId;
@@ -39,14 +41,14 @@ public class UserStoryModel {
 		return sprintFK;
 	}
 
-	public void setSprintFK(int sprintFK) {
+	public void setSprintFK(int sprintFK) throws Exception {
 		this.sprintFK = sprintFK;
 		
-		for(int counter = 0; counter < sprintDAO.sprint_list().size(); counter++)
+		for(int counter = 0; counter < this.sprintDAO.allSprints().size(); counter++)
 		{
-			if(sprintFK == sprintDAO.sprint_list().get(counter).getSprintId())
+			if(sprintFK == sprintDAO.allSprints().get(counter).getSprintId())
 			{
-				this.setSprintName(sprintDAO.sprint_list().get(counter).getSprintName());
+				this.setSprintName(sprintDAO.allSprints().get(counter).getSprintName());
 				System.out.println("sprintDAO.sprint_list().get(counter).getSprintName()");
 			};
 		}

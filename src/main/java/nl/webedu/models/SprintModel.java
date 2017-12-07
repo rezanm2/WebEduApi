@@ -1,5 +1,7 @@
 package nl.webedu.models;
 
+import nl.webedu.dao.ProjectDAO;
+
 import java.util.ArrayList;
 
 /**
@@ -68,13 +70,10 @@ public class SprintModel {
 	{
 		this.projectFK = projectFK;
 		
-		
-		for(int counter = 0; counter < projectDAO.project_list().size(); counter++)
-		{
-			if(projectFK == projectDAO.project_list().get(counter).getProjectId())
-			{
-				this.setProjectName(projectDAO.project_list().get(counter).getProjectName());
-			};
+		for(int counter = 0; counter < projectDAO.getAllProjects().size(); counter++) {
+			if(projectFK == projectDAO.getAllProjects().get(counter).getProjectId()) {
+				this.setProjectName(projectDAO.getAllProjects().get(counter).getProjectName());
+			}
 		}
 	}
 	public String getProjectName() {

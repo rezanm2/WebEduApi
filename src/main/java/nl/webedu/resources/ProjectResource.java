@@ -24,31 +24,21 @@ import nl.webedu.models.ProjectModel;
  */
 @Path("/projects")
 public class ProjectResource {
-<<<<<<< HEAD
     private ProjectDAO projectDAO;
 
     public ProjectResource(){
         projectDAO = new ProjectDAO();
     }
 
-=======
-    ProjectDAO projectDAO = new ProjectDAO();
-    
->>>>>>> 3c49e4c40d64b5e74bada41ddb99381eb102691c
     @GET
     @Path("/read")
     @JsonProperty
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-<<<<<<< HEAD
     public ArrayList<ProjectModel> ProjectName(){
         return this.projectDAO.getAllProjects();
-=======
-    public ArrayList<ProjectModel> read(){
-        System.out.println(this.getClass().toString()+": read werkt!");
-        return projectDAO.getAllProjects();
->>>>>>> 3c49e4c40d64b5e74bada41ddb99381eb102691c
     }
+
     @GET
     @Path("/read/byemployee")
     @JsonProperty
@@ -57,16 +47,16 @@ public class ProjectResource {
     public ArrayList<ProjectModel> read(@QueryParam("empid") Optional<String> employeeId){
         int employeeId_parse = Integer.parseInt(employeeId.get());
         System.out.println(this.getClass().toString()+": read werkt!");
-        return projectDAO.project_list_employee(employeeId_parse);
+        return this.projectDAO.project_list_employee(employeeId_parse);
     }
     
     @POST
     @Path("/create")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-        public boolean create(@QueryParam("name") Optional<String> name,
-                @QueryParam("description") Optional<String> description,
-                @QueryParam("custid") Optional<String> customerId){
+    public boolean create(@QueryParam("name") Optional<String> name,
+                          @QueryParam("description") Optional<String> description,
+                          @QueryParam("custid") Optional<String> customerId){
 
         String name_parse = name.get();
         String description_parse = description.get();
@@ -75,65 +65,58 @@ public class ProjectResource {
 //        String description_parse = String.format("%b", description.or("empty"));
 //        String customerId_parse1 = String.format("%b", customerId.or("empty"));
 //        int customerId_parse2 = Integer.parseInt(customerId_parse1);
-        projectDAO.addProject(name_parse, description_parse, customerId_parse);
+        this.projectDAO.addProject(name_parse, description_parse, customerId_parse);
         System.out.println(this.getClass().toString()+": create werkt!: "+name_parse+description_parse+customerId_parse);
         return true;
     }
         
-        /**
-         * De method mist een manier om de de klant aan te passen,
-         * want de method in de DAO ondersteunt dat niet >:(
-         * 
-         * @param projectId id van bestaand project
-         * @param name      nieuwe naam van project
-         * @param description   nieuwe beschrijving vvan project
-         * @return true
-         */
+    /**
+     * De method mist een manier om de de klant aan te passen,
+     * want de method in de DAO ondersteunt dat niet >:(
+     *
+     * @param projectId id van bestaand project
+     * @param name      nieuwe naam van project
+     * @param description   nieuwe beschrijving vvan project
+     * @return true
+     */
     @POST
     @Path("/update")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-<<<<<<< HEAD
-    public String confirmation(){
-        this.projectDAO.createProject();
-        return "Gelukt";
-=======
-        public boolean update(@QueryParam("pid") Optional<String> projectId,
-                @QueryParam("name") Optional<String> name,
-                @QueryParam("description") Optional<String> description){
-
+    public boolean update(@QueryParam("pid") Optional<String> projectId,
+                          @QueryParam("name") Optional<String> name,
+                          @QueryParam("description") Optional<String> description){
         int projectId_parse = Integer.parseInt(projectId.get());
         String name_parse = name.get();
         String description_parse = description.get();
-//        String name_parse = String.format("%b", name.or("empty"));
-//        String description_parse = String.format("%b", description.or("empty"));
-//        String customerId_parse1 = String.format("%b", customerId.or("empty"));
-//        int customerId_parse2 = Integer.parseInt(customerId_parse1);
-        projectDAO.modifyProject(projectId_parse,name_parse, description_parse);
+    //        String name_parse = String.format("%b", name.or("empty"));
+    //        String description_parse = String.format("%b", description.or("empty"));
+    //        String customerId_parse1 = String.format("%b", customerId.or("empty"));
+    //        int customerId_parse2 = Integer.parseInt(customerId_parse1);
+    //        this.projectDAO.modifyProject(projectId_parse, name_parse, description_parse);
         System.out.println(this.getClass().toString()+": update werkt!: "+name_parse+description_parse);
         return true;
     }
+
     @POST
     @Path("/delete")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-        public boolean delete(@QueryParam("pid") Optional<String> projectId){
-
+    public boolean delete(@QueryParam("pid") Optional<String> projectId){
         int projectId_parse = Integer.parseInt(projectId.get());
-        projectDAO.removeProject(projectId_parse);
+        this.projectDAO.removeProject(projectId_parse);
         System.out.println(this.getClass().toString()+": update werkt!: ");
         return true;
     }
+
     @POST
     @Path("/undelete")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-        public boolean unDelete(@QueryParam("pid") Optional<String> projectId){
-
+    public boolean unDelete(@QueryParam("pid") Optional<String> projectId){
         int projectId_parse = Integer.parseInt(projectId.get());
-        projectDAO.unRemoveProject(projectId_parse);
+        this.projectDAO.unRemoveProject(projectId_parse);
         System.out.println(this.getClass().toString()+": update werkt!: ");
         return true;
->>>>>>> 3c49e4c40d64b5e74bada41ddb99381eb102691c
     }
 }

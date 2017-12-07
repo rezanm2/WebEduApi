@@ -60,15 +60,10 @@ public class ProjectDAO {
      */
     public ArrayList<ProjectModel> getAllProjects(){
         try {
-<<<<<<< HEAD
-            String getUserQuery = "SELECT * FROM project_version where project_version_current = true";
+			String getUserQuery = "SELECT * FROM project_version pv INNER JOIN project p on pv.project_version_project_fk=p.project_id "
+					+ "where project_version_current = true AND project_isdeleted=false";
             PreparedStatement getUserStatement = this.connect.makeConnection().prepareStatement(getUserQuery);
-=======
             Connection connect = new ConnectDAO().makeConnection();
-            String getUserQuery = "SELECT * FROM project_version pv INNER JOIN project p on pv.project_version_project_fk=p.project_id "
-                    + "where project_version_current = true AND project_isdeleted=false";
-            PreparedStatement getUserStatement = connect.prepareStatement(getUserQuery);
->>>>>>> 3c49e4c40d64b5e74bada41ddb99381eb102691c
             ResultSet userSet = getUserStatement.executeQuery();
             ArrayList<ProjectModel> data = new ArrayList<ProjectModel>();
             while(userSet.next()){
@@ -91,11 +86,11 @@ public class ProjectDAO {
     
     public void createProject()
     {
-            try {
-            Connection connect = new ConnectDAO().makeConnection();
-            String getUserQuery = "INSERT INTO project_version(project_version_project_fk, project_version_name, project_version_description, project_version_customer_fk)VALUES(25, 'DROPWIZARD', 'DIT IS TEST', 17)";
-            PreparedStatement getUserStatement = this.connect.makeConnection().prepareStatement(getUserQuery);
-            ResultSet userSet = getUserStatement.executeQuery();
+		try {
+		Connection connect = new ConnectDAO().makeConnection();
+		String getUserQuery = "INSERT INTO project_version(project_version_project_fk, project_version_name, project_version_description, project_version_customer_fk)VALUES(25, 'DROPWIZARD', 'DIT IS TEST', 17)";
+		PreparedStatement getUserStatement = this.connect.makeConnection().prepareStatement(getUserQuery);
+		ResultSet userSet = getUserStatement.executeQuery();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -138,18 +133,11 @@ public class ProjectDAO {
 	 */
 	public ArrayList<ProjectModel> project_list_employee(int employeeId){
 		ArrayList<ProjectModel> proj_list = new ArrayList<ProjectModel>();
-<<<<<<< HEAD
 		String project_list_sql = "SELECT * FROM project_version "
 				+ "INNER JOIN project_employee "
 				+ "ON project_version_project_fk = project_employee_project_fk  AND project_version_current = true "
 				+ "AND project_employee_employee_fk = ?";
-=======
-		String project_list_sql = "select * from project_version " +
-                    "INNER JOIN project_employee ON project_version_project_fk = project_employee_project_fk " +
-                    "INNER JOIN project ON project_version_project_fk=project_id " +
-                    "WHERE project_version_current = true AND project_employee_employee_fk = ? " +
-                    "AND project_isdeleted=false;";
->>>>>>> 3c49e4c40d64b5e74bada41ddb99381eb102691c
+
 		try {
 			PreparedStatement project_statement = this.connect.makeConnection().prepareStatement(project_list_sql);
 			project_statement.setInt(1, employeeId);
