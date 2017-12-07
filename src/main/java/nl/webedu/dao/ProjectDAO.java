@@ -133,10 +133,11 @@ public class ProjectDAO {
 	 */
 	public ArrayList<ProjectModel> project_list_employee(int employeeId){
 		ArrayList<ProjectModel> proj_list = new ArrayList<ProjectModel>();
-		String project_list_sql = "SELECT * FROM project_version "
-				+ "INNER JOIN project_employee "
-				+ "ON project_version_project_fk = project_employee_project_fk  AND project_version_current = true "
-				+ "AND project_employee_employee_fk = ?";
+		String project_list_sql = "select * from project_version " +
+                    "INNER JOIN project_employee ON project_version_project_fk = project_employee_project_fk " +
+                    "INNER JOIN project ON project_version_project_fk=project_id " +
+                    "WHERE project_version_current = true AND project_employee_employee_fk = ? " +
+                    "AND project_isdeleted=false;";
 
 		try {
 			PreparedStatement project_statement = this.connect.makeConnection().prepareStatement(project_list_sql);
@@ -149,6 +150,7 @@ public class ProjectDAO {
 				pm_container.setProjectId(project_set.getInt("project_version_project_fk"));
 				pm_container.setProjectDescription(project_set.getString("project_version_description"));
 				pm_container.setProjectName(project_set.getString("project_version_name"));
+                                pm_container.setProjectCustomerFk(project_set.getInt("project_version_customer_fk"));
 				proj_list.add(pm_container);
 			}
 		} catch (SQLException e) {
@@ -241,7 +243,7 @@ public class ProjectDAO {
      * @author rezanaser
      */
 	public void modifyProject(int pId, String name, String description) throws Exception {
-		String changePreviousVersion = "UPDATE project_version set project_version_current = 'n' "
+		String changePreviousVersion = "UPDATE project_version set project_version_current = false "
 				+ "WHERE project_version_project_fk = ? AND project_version_current= true";
 
 		String change_project = "INSERT INTO project_version(project_version_project_fk, project_version_name, " +
@@ -257,8 +259,7 @@ public class ProjectDAO {
 		changeProject.setInt(1, pId);
 		changeProject.setString(2, name);
 		changeProject.setString(3, description);
-		changeProject.executeQuery();
-
+		changeProject.executeUpdate();
 		changeProject.close();
 	}
 	

@@ -132,7 +132,7 @@ public class ProjectResource {
     @Consumes(MediaType.APPLICATION_JSON)
         public boolean updateByUrl(@QueryParam("pid") Optional<String> projectId,
                 @QueryParam("name") Optional<String> name,
-                @QueryParam("description") Optional<String> description){
+                @QueryParam("description") Optional<String> description) throws Exception{
         int projectId_parse = Integer.parseInt(projectId.get());
         String name_parse = name.get();
         String description_parse = description.get();
@@ -141,6 +141,7 @@ public class ProjectResource {
     //        String customerId_parse1 = String.format("%b", customerId.or("empty"));
     //        int customerId_parse2 = Integer.parseInt(customerId_parse1);
     //        this.projectDAO.modifyProject(projectId_parse, name_parse, description_parse);
+        projectDAO.modifyProject(projectId_parse, name_parse, description_parse);
         System.out.println(this.getClass().toString()+": update werkt!: "+name_parse+description_parse);
         return true;
     }
@@ -150,7 +151,6 @@ public class ProjectResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public boolean delete(@FormParam("pid") Optional<String> projectId){
-
         int projectId_parse = Integer.parseInt(projectId.get());
         projectDAO.removeProject(projectId_parse);
         System.out.println(this.getClass().toString()+": update werkt!: ");
