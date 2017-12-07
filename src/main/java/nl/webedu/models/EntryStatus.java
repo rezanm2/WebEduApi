@@ -1,8 +1,7 @@
 package nl.webedu.models;
 
 /**
- * @Author Robert den Blaauwen
- * @date dunno,lol
+ * @author Robert den Blaauwen
  */
 public enum EntryStatus {
 	QUEUED,APPROVED, REJECTED

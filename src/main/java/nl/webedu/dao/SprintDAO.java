@@ -15,16 +15,18 @@ public class SprintDAO {
        
 	/**
 	 * Deze methode vult de combobox met de sprints van het gevraagde project
+         * 
+         * @param employeeId    Id van de employee voor wie je de projecten wilt hebben
 	 * @author rezanaser
-	 * @return
+	 * @return sprint_alist
 	 */
-	public ArrayList<SprintModel> allSprintsEmployee(int id){
+	public ArrayList<SprintModel> allSprintsEmployee(int employeeId){
 		ArrayList<SprintModel> sprint_alist = new ArrayList<SprintModel>();
 		String projects_sprints_sql = "select sprint_version_sprint_fk, sprint_version_name, sprint_version_description,sprint_version_startdate, sprint_version_enddate from sprint_version, project_employee where project_employee_employee_fk = ? AND  project_employee_project_fk = sprint_version_project_fk";
 				
 		try {
 			PreparedStatement sprints_statement = connect.makeConnection().prepareStatement(projects_sprints_sql);
-			sprints_statement.setInt(1, id);
+			sprints_statement.setInt(1, employeeId);
 			ResultSet sprints_sets = sprints_statement.executeQuery();
 			while(sprints_sets.next()) {
 				SprintModel sprint = new SprintModel();
@@ -44,7 +46,7 @@ public class SprintDAO {
 	/**
 	 * Deze methode vult de combobox met de sprints van het gevraagde project
 	 * @author rezanaser
-	 * @return
+	 * @return  sprint_alist lijst van sprints
 	 */
 	public ArrayList<SprintModel> allSprints(){
 		ArrayList<SprintModel> sprint_alist = new ArrayList<SprintModel>();
@@ -73,7 +75,8 @@ public class SprintDAO {
 	/**
 	 * Deze methode vult de combobox met de sprints van het gevraagde project
 	 * @author rezanaser
-	 * @return
+         * @param p_id  id van project waar je de sprints voor wilt hebben.
+	 * @return sprint_alist lisjt van sprints
 	 */
 	public ArrayList<SprintModel> sprintsProjects(int p_id){
 		ArrayList<SprintModel> sprint_alist = new ArrayList<SprintModel>();
@@ -142,8 +145,8 @@ public class SprintDAO {
 
 	/**
 	 * Deze methode geeft een lijst van sprints die bij een project horen
-	 * @param projectModel
-	 * @return
+	 * @param projectModel  project waar je de sprints voor wilt hebben.
+	 * @return sprint_list  lijst van de sprints
 	 */
 	
 	public ArrayList<SprintModel> sprint_list(ProjectModel projectModel){
@@ -176,7 +179,7 @@ public class SprintDAO {
 	/**
 	 * Deze methode geeft alleen de sprints terug van de meegegeven medewerker.
 	 * @author Jeroen Zandvliet
-	 * @param employeeID
+	 * @param employeeID    employee
 	 * @return sprintList
 	 */
 	
@@ -247,11 +250,11 @@ public class SprintDAO {
 	/**
 	 * Deze methode voegt een gekozen sprint aan de database toe.
 	 * @author Jeroen Zandvliet
-	 * @param sprintName
-	 * @param projectID
-	 * @param sprintDescription
-	 * @param sprintStartDate
-	 * @param sprintEndDate
+	 * @param sprintName        lol
+	 * @param projectID         lol
+	 * @param sprintDescription lol
+	 * @param sprintStartDate   lol
+	 * @param sprintEndDate     lol
 	 */
 	public void addSprintToDatabase(int projectID, String sprintName, String sprintDescription, Date sprintStartDate, Date sprintEndDate)
 	{
@@ -313,12 +316,12 @@ public class SprintDAO {
 /**
 	 * Deze methode past een eerder gemaakte sprint aan en zet de vorige versie op nonactief.
 	 * @author Jeroen Zandvliet
-	 * @param sprintID
-	 * @param sprintName
-	 * @param projectID
-	 * @param sprintDescription
-	 * @param sprintStartDate
-	 * @param sprintEndDate
+	 * @param sprintID          lol
+	 * @param sprintName        lol
+	 * @param projectID         lol
+	 * @param sprintDescription lol
+	 * @param sprintStartDate   lol
+	 * @param sprintEndDate     lol
 	 */
 	
 	public void modifySprint(int sprintID, String sprintName, int projectID, String sprintDescription, Date sprintStartDate, Date sprintEndDate)

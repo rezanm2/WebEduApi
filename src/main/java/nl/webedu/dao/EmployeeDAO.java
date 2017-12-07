@@ -18,11 +18,11 @@ public class EmployeeDAO {
         /**Deze methode voegt een nieuwe user toe. In tegenstelling tot createEmployee()
          * voegt hij een version toe
          * 
-         * @param firstName
-         * @param lastName
-         * @param role
-         * @param email
-         * @param password 
+         * @param firstName firstname
+         * @param lastName  lastname
+         * @param role  role
+         * @param email email
+         * @param password password
          */
         public void createEmployeeVersion(String firstName, String lastName, String role, String email, String password){
 		PreparedStatement insertNewUser;
@@ -75,7 +75,7 @@ public class EmployeeDAO {
 	}
         /**
 	 * Unlock an employee
-	 * @param - employee id to lock
+         * @param emp_id id to lock
 	 */
 	public void unlockEmployee(int emp_id) {
 		String lock_query = "UPDATE employee "
@@ -132,7 +132,7 @@ public class EmployeeDAO {
 	
 	/**
 	 * Lock an employee
-	 * @param - employee id to lock
+	 * @param emp_id id to lock
 	 */
 	public void lockEmployee(int emp_id) {
 		String lock_query = "UPDATE employee "

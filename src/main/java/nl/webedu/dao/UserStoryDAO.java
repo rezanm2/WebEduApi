@@ -21,7 +21,8 @@ public class UserStoryDAO {
 	/**
 	 * Deze methode vult de combobox met de userstories van het gevraagde project
 	 * @author rezanaser
-	 * @return p_id >het project nummer
+         * @param p_id  project nummer
+	 * @return p_id het project nummer
 	 */
 	public ArrayList<UserStoryModel> userstoriesProjects(int p_id){
 		ArrayList<UserStoryModel> userstory_alist = new ArrayList<UserStoryModel>();
@@ -58,7 +59,8 @@ public class UserStoryDAO {
 		/**
 		 * Deze methode vult de combobox met de sprints van het gevraagde project
 		 * @author rezanaser
-		 * @return
+                 * @param sprintID id van sprint
+		 * @return  sprint_alist
 		 */
 		public ArrayList<SprintModel> sprintsProjects(int sprintID){
 			ArrayList<SprintModel> sprint_alist = new ArrayList<SprintModel>();
@@ -90,7 +92,8 @@ public class UserStoryDAO {
 		/**
 		 * Deze methode vult de combobox met de userStorys van het gevraagde sprint
 		 * @author rezanaser
-		 * @return
+                 * @param userStoryID   id van userstory
+		 * @return usreSTory_alist
 		 */
 		public ArrayList<UserStoryModel> userStorysSprints(int userStoryID){
 			ArrayList<UserStoryModel> userStory_alist = new ArrayList<UserStoryModel>();
@@ -120,7 +123,8 @@ public class UserStoryDAO {
 			/**
 			 * Deze methode vult de combobox met de userStorys van het gevraagde userStory
 			 * @author rezanaser
-			 * @return
+                         * @param   p_id    id van eits?
+			 * @return  userStory_alist
 			 */
 			public ArrayList<UserStoryModel> userStorysUserStorys(int p_id){
 				ArrayList<UserStoryModel> userStory_alist = new ArrayList<UserStoryModel>();
@@ -190,8 +194,8 @@ public class UserStoryDAO {
 
 			/**
 			 * Deze methode geeft een lijst van userStorys die bij een userStory horen
-			 * @param userStoryModel
-			 * @return
+			 * @param userStoryModel    ayy
+			 * @return  userStory_list
 			 */
 			
 			public ArrayList<UserStoryModel> userStory_list(UserStoryModel userStoryModel){
@@ -222,7 +226,7 @@ public class UserStoryDAO {
 			/**
 			 * Deze methode geeft alleen de userStorys terug van de meegegeven medewerker.
 			 * @author Jeroen Zandvliet
-			 * @param employeeID
+			 * @param employeeID    ayy
 			 * @return userStoryList
 			 */
 			
@@ -291,11 +295,9 @@ public class UserStoryDAO {
 			/**
 			 * Deze methode voegt een gekozen userStory aan de database toe.
 			 * @author Jeroen Zandvliet
-			 * @param userStoryName
-			 * @param userStoryID
-			 * @param userStoryDescription
-			 * @param userStoryStartDate
-			 * @param userStoryEndDate
+			 * @param userStoryName         lol
+			 * @param sprintID           lol
+			 * @param userStoryDescription  lol
 			 */
 			public void addUserStoryToDatabase(int sprintID, String userStoryName, String userStoryDescription)
 			{
@@ -381,14 +383,11 @@ public class UserStoryDAO {
 		/**
 			 * Deze methode past een eerder gemaakte userStory aan en zet de vorige versie op nonactief.
 			 * @author Jeroen Zandvliet
-			 * @param userStoryID
-			 * @param userStoryName
-			 * @param userStoryID
-			 * @param userStoryDescription
-			 * @param userStoryStartDate
-			 * @param userStoryEndDate
+			 * @param userStoryID           lol
+			 * @param userStoryName         lol
+			 * @param sprintID              lol
+			 * @param userStoryDescription  lol
 			 */
-			
 			public void modifyUserStory(int userStoryID, String userStoryName, int sprintID, String userStoryDescription)
 			{
 				String changePreviousVersion = "UPDATE userstory_version SET userstory_version_current = 'n' "
@@ -413,8 +412,6 @@ public class UserStoryDAO {
 				} catch (Exception e) {
 					e.getMessage();
 				}
-				
-				
 			}
 			
 			public void removeUserStory(int userStoryID) 
