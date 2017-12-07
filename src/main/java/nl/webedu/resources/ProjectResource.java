@@ -22,21 +22,25 @@ import nl.webedu.models.ProjectModel;
  */
 @Path("/projects")
 public class ProjectResource {
+    private ProjectDAO projectDAO;
+
+    public ProjectResource(){
+        projectDAO = new ProjectDAO();
+    }
+
     @GET
     @JsonProperty
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public ArrayList<ProjectModel> ProjectName(){
-        ProjectDAO projectDAO = new ProjectDAO();
-        return projectDAO.getAllProjects();
+        return this.projectDAO.getAllProjects();
     }
     
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-        public String confirmation(){
-        ProjectDAO projectDAO = new ProjectDAO();
-        projectDAO.createProject();
+    public String confirmation(){
+        this.projectDAO.createProject();
         return "Gelukt";
     }
 }

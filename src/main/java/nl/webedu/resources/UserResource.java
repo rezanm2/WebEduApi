@@ -12,12 +12,22 @@ import nl.webedu.models.EmployeeModel;
 
 @Path("/login")
 public class UserResource {
+    private EmployeeDAO employeeDAO;
+
+    public UserResource(){
+        this.employeeDAO = new EmployeeDAO();
+    }
+
     @GET
     @JsonProperty
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public ArrayList<EmployeeModel> UserName(){
-        EmployeeDAO employeeDAO = new EmployeeDAO();
-        return employeeDAO.getAllEmployees();
+        try{
+            return this.employeeDAO.getAllEmployees();
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+        return null;
     }
 }

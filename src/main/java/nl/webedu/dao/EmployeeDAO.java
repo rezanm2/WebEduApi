@@ -96,7 +96,7 @@ public class EmployeeDAO {
 	 * @param pw - users password to verify login
 	 * @return a user model if login was successful
 	 */
-	public nl.webedu.models.EmployeeModel loginAssignment(String email, String pw){
+	public EmployeeModel loginAssignment(String email, String pw){
 
 		String login_sql = "SELECT * FROM employee, employee_version "
 				+ "WHERE employee_version_email = ? AND employee_version_password = ?"
@@ -136,6 +136,7 @@ public class EmployeeDAO {
 		lock_statement.setInt(1, emp_id);
 		lock_statement.executeUpdate();
 	}
+
 	public ArrayList<EmployeeModel> getAllEmployees() throws Exception {
 		//Empty list to return
 		ArrayList<EmployeeModel> employee_alist = new ArrayList<EmployeeModel>();
