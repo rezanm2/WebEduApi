@@ -28,7 +28,7 @@ public class EntryDAO {
 	 */
 	public ArrayList<EntryModel> entry_all_list(){
 		ArrayList<EntryModel> entry_alist = new ArrayList<EntryModel>();
-		String employee_entry_sql = "SELECT  * from entry ";
+		String employee_entry_sql = "SELECT  * from entry_version ";
 				//+ "AND entry_version_current = 'y' ";
 		try {
 			PreparedStatement entries_statement = this.connect.makeConnection().prepareStatement(employee_entry_sql);

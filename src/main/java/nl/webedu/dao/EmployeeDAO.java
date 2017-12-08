@@ -137,27 +137,30 @@ public class EmployeeDAO {
 		lock_statement.executeUpdate();
 	}
 
-	public ArrayList<EmployeeModel> getAllEmployees() throws Exception {
+	public ArrayList<EmployeeModel> getAllEmployees(){
 		//Empty list to return
 		ArrayList<EmployeeModel> employee_alist = new ArrayList<EmployeeModel>();
 		
-		String employee_entry_sql = "SELECT * FROM employee, employee_version "
-				+ "WHERE  employee_id = employee_version_employee_fk "
-				+ "AND employee_version_current = true AND employee_isdeleted = FALSE ";
+		String employee_entry_sql = "SELECT * FROM employee_version ";
+                try{
 		PreparedStatement user_statement = this.connect.makeConnection().prepareStatement(employee_entry_sql);
 
 		ResultSet userSet = user_statement.executeQuery();
 		while(userSet.next()) {
-            EmployeeModel employee_container = new EmployeeModel(
-            userSet.getInt("employee_id"), userSet.getBoolean("employee_isdeleted"),
-            userSet.getString("employee_version_firstname"), userSet.getString("employee_version_lastname"),
-            userSet.getString("employee_version_password"), userSet.getString("employee_version_email"),
-            userSet.getString("employee_version_role"));
-            employee_alist.add(employee_container);
+                EmployeeModel employee = new EmployeeModel();
+                    employee.setEmployeeId(userSet.getInt("employee_version_employee_fk"));
+                    employee.setEmployeeFirstname(userSet.getString("employee_version_firstname"));
+                    employee.setEmployeeEmail(userSet.getString("employee_version_email"));
+                    employee.setEmployeePassword(userSet.getString("employee_version_password"));
+                    employee_alist.add(employee);
+            }
+                    user_statement.close();
+                    return employee_alist;
+            }catch(Exception c){
+                c.getMessage();
+            }
+           return null;
         }
-		user_statement.close();
-		return employee_alist;
-	}
 
 	/**
 	 * Accounts that are currently active (not this.connected, but active in the sense that they are able to user their account
