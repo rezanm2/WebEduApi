@@ -1,6 +1,9 @@
 package nl.webedu.models;
 
-public class EmployeeModel {
+import java.security.Principal;
+import javax.security.auth.Subject;
+
+public class EmployeeModel{
 	/**
 	 * Employee Model.
 	 */
@@ -70,4 +73,7 @@ public class EmployeeModel {
 	public void setEmployeeIsDeleted(boolean employeeIsDeleted) {
 		this.employeeIsDeleted = employeeIsDeleted;
 	}
+
+
+
 }

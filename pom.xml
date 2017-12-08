@@ -9,36 +9,25 @@
         <maven>3.0.0</maven>
     </prerequisites>
 
-    <groupId>nl.m</groupId>
-    <artifactId>WebEduApi</artifactId>
+    <groupId>nl.webedu</groupId>
+    <artifactId>WebeduApi</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>WebEduApi</name>
+    <name>WebeduApi</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <dropwizard.version>1.3.0-rc1</dropwizard.version>
-        <mainClass>nl.webedu.WebEduApiApplication</mainClass>
+        <dropwizard.version>0.8.2</dropwizard.version>
+        <mainClass>nl.webedu.WebeduApiApplication</mainClass>
     </properties>
-
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>io.dropwizard</groupId>
-                <artifactId>dropwizard-bom</artifactId>
-                <version>${dropwizard.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
 
     <dependencies>
         <dependency>
             <groupId>io.dropwizard</groupId>
             <artifactId>dropwizard-core</artifactId>
+            <version>${dropwizard.version}</version>
         </dependency>
         <dependency>
             <groupId>io.dropwizard-bundles</groupId>
@@ -56,14 +45,13 @@
             <artifactId>dropwizard-db</artifactId>
             <version>0.7.0-rc2</version>
         </dependency>
-
     </dependencies>
 
     <build>
         <plugins>
             <plugin>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>2.4.1</version>
+                <version>1.7</version>
                 <configuration>
                     <createDependencyReducedPom>true</createDependencyReducedPom>
                     <transformers>
@@ -95,7 +83,7 @@
             </plugin>
             <plugin>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.0.2</version>
+                <version>2.4</version>
                 <configuration>
                     <archive>
                         <manifest>
@@ -107,15 +95,15 @@
             </plugin>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.6.1</version>
+                <version>2.3.2</version>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <source>1.7</source>
+                    <target>1.7</target>
                 </configuration>
             </plugin>
             <plugin>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>3.0.1</version>
+                <version>2.1.2</version>
                 <executions>
                     <execution>
                         <id>attach-sources</id>
@@ -127,7 +115,7 @@
             </plugin>
             <plugin>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.0.0-M1</version>
+                <version>2.8.1</version>
                 <executions>
                     <execution>
                         <id>attach-javadocs</id>
@@ -137,23 +125,26 @@
                     </execution>
                 </executions>
             </plugin>
-        </plugins>
-    </build>
-
-    <reporting>
-        <plugins>
             <plugin>
-                <artifactId>maven-project-info-reports-plugin</artifactId>
-                <version>2.8.1</version>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>3.0</version>
                 <configuration>
-                    <dependencyLocationsEnabled>false</dependencyLocationsEnabled>
-                    <dependencyDetailsEnabled>false</dependencyDetailsEnabled>
+                    <reportPlugins>
+                        <plugin>
+                            <artifactId>maven-project-info-reports-plugin</artifactId>
+                            <version>2.4</version>
+                            <configuration>
+                                <dependencyLocationsEnabled>false</dependencyLocationsEnabled>
+                                <dependencyDetailsEnabled>false</dependencyDetailsEnabled>
+                            </configuration>
+                        </plugin>
+                        <plugin>
+                            <artifactId>maven-javadoc-plugin</artifactId>
+                            <version>2.8.1</version>
+                        </plugin>
+                    </reportPlugins>
                 </configuration>
             </plugin>
-            <plugin>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.10.3</version>
-            </plugin>
         </plugins>
-    </reporting>
+    </build>
 </project>
