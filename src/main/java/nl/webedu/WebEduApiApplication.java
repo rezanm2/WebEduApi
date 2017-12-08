@@ -11,6 +11,7 @@ import nl.webedu.auth.Auth;
 import nl.webedu.models.EmployeeModel;
 import nl.webedu.resources.ProjectResource;
 import nl.webedu.resources.UserResource;
+import nl.webedu.resources.*;
 
 /**
  * Deze klasse is de startpunt van de api
@@ -52,12 +53,15 @@ public class WebEduApiApplication extends Application<WebEduApiConfiguration> {
          */
         environment.jersey().register(new UserResource());
         environment.jersey().register(new ProjectResource());
+        environment.jersey().register(new EntryResource());
         environment.jersey().register(AuthFactory.binder(
                 new BasicAuthFactory<>(
                         new Auth(),
                         "Security realm",
                         EmployeeModel.class
                 )));
+        
+
         /**
          * Hier krijgt de variabele 'naam' de apiName van de WebEduApiConfiguration
          * @author rezanaser

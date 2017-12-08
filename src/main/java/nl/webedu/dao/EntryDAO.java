@@ -49,6 +49,43 @@ public class EntryDAO {
 	}
         
         /**
+         * Geeft alle entries met hun data, inclusief deleted en oude versies.
+         * 
+         * @return entry_alist
+         */
+        public ArrayList<EntryModel> getEntriesFull(){
+		ArrayList<EntryModel> entry_alist = new ArrayList<EntryModel>();
+		String employee_entry_sql = "SELECT * FROM entry INNER JOIN entry_version ON entry_id=entry_version_entry_fk";
+				//+ "AND entry_version_current = 'y' ";
+		try {
+			PreparedStatement entries_statement = this.connect.makeConnection().prepareStatement(employee_entry_sql);
+			
+			ResultSet entry_set = entries_statement.executeQuery();
+			while(entry_set.next()) {
+				EntryModel entry = new EntryModel();
+				entry.setEntryId(entry_set.getInt("entry_id"));
+                                entry.setEmployeeFk(entry_set.getInt("entry_employee_fk"));
+                                entry.setEntryIsLocked(entry_set.getBoolean("entry_islocked"));
+                                entry.setIsDeleted(entry_set.getBoolean("entry_isdeleted"));
+                                entry.setEntryProjectFk(entry_set.getInt("entry_version_project_fk"));
+                                entry.setEntrySprintFk(entry_set.getInt("entry_version_sprint_fk"));
+                                entry.setEntryUserstoryFk(entry_set.getInt("entry_version_userstory_fk"));
+				entry.setEntryStatus(entry_set.getString("entry_status"));
+                                entry.setEntryStartTime(entry_set.getString("entry_version_starttime"));
+                                entry.setEntryEndTime(entry_set.getString("entry_version_endtime"));
+                                entry.setEntryDate(entry_set.getString("entry_version_date"));
+                                entry.setIsCurrent(entry_set.getBoolean("entry_version_current"));
+				entry_alist.add(entry);
+			}
+			entries_statement.close();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return entry_alist;
+	}
+        
+        /**
 	 * Deze methode krijgt de geselecteerde uur van de goedkeuren view en stuurt deze wijziging naar de database.
 	 * @param id is de id van de entry.
 	 * @author rezanaser

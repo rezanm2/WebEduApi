@@ -17,11 +17,35 @@ public class EntryModel {
 	private String entryProjectDescription;
 	private String entrySprintDescription;
 	private String entryUserStoryDescription;
+        private int employeeFk;
 	private int entryProjectFk;
 	private int entrySprintFk;
 	private int entryUserstoryFk;
-
-
+        private Boolean isDeleted;
+        private Boolean isCurrent;
+        
+        public int getEmployeeFk(){
+            return employeeFk;
+        }
+        
+        public void setEmployeeFk(int employeeFK){
+            this.employeeFk=employeeFk;
+        }
+        
+        public Boolean getIsDeleted(){
+            return isDeleted;
+        }
+        
+        public void setIsDeleted(boolean isDeleted){
+            this.isDeleted=isDeleted;
+        }
+        public Boolean getIsCurrent(){
+            return isCurrent;
+        }
+        
+        public void setIsCurrent(boolean isCurrent){
+            this.isCurrent=isCurrent;
+        }
 	
 	public String getEntryUserStoryDescription() {
 		return entryUserStoryDescription;
