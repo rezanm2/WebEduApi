@@ -2,9 +2,13 @@ package nl.webedu;
 
 import io.dropwizard.Application;
 import io.dropwizard.ConfiguredBundle;
+import io.dropwizard.auth.AuthFactory;
+import io.dropwizard.auth.basic.BasicAuthFactory;
 import io.dropwizard.bundles.assets.ConfiguredAssetsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import nl.webedu.auth.Auth;
+import nl.webedu.models.EmployeeModel;
 import nl.webedu.resources.ProjectResource;
 import nl.webedu.resources.UserResource;
 
@@ -48,7 +52,12 @@ public class WebEduApiApplication extends Application<WebEduApiConfiguration> {
          */
         environment.jersey().register(new UserResource());
         environment.jersey().register(new ProjectResource());
-
+        environment.jersey().register(AuthFactory.binder(
+                new BasicAuthFactory<>(
+                        new Auth(),
+                        "Security realm",
+                        EmployeeModel.class
+                )));
         /**
          * Hier krijgt de variabele 'naam' de apiName van de WebEduApiConfiguration
          * @author rezanaser
