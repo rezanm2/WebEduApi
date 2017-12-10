@@ -12,7 +12,7 @@ import nl.webedu.models.EmployeeModel;
 import nl.webedu.resources.ProjectResource;
 import nl.webedu.resources.UserResource;
 import nl.webedu.resources.*;
-
+import nl.webedu.helpers.*;
 /**
  * Deze klasse is de startpunt van de api
  * @author rezanaser
@@ -21,6 +21,8 @@ public class WebEduApiApplication extends Application<WebEduApiConfiguration> {
     private ConfiguredBundle assetsBundle;
     private String name;
     public static void main(final String[] args) throws Exception {
+//        DateHelper dateHelper = new DateHelper();
+//        System.out.println(dateHelper.parseTime("17:51:05", "HH:mm:ss"));
         new WebEduApiApplication().run(args);
     }
     /**

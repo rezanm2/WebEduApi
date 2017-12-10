@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.FormParam;
 import com.google.common.base.Optional;
+import java.sql.Date;
+import java.sql.Time;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ws.rs.Consumes;
@@ -21,6 +23,7 @@ import javax.ws.rs.core.MediaType;
 import nl.webedu.dao.*;
 import nl.webedu.models.EntryModel;
 import nl.webedu.models.ProjectModel;
+import nl.webedu.helpers.DateHelper;
 
 /**
  *
@@ -41,6 +44,14 @@ public class EntryResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public ArrayList<EntryModel> read(){
         return this.entryDao.getEntriesFull();
+    }
+    @GET
+    @Path("/read/queued")
+    @JsonProperty
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public ArrayList<EntryModel> readQueued(){
+        return this.entryDao.entry_queued_list(0);
     }
     @POST
     @Path("/approve")
@@ -93,6 +104,73 @@ public class EntryResource {
         try {
             entryDao.rejectHours(Integer.parseInt(entryId.get()));
         } catch (Exception ex) {
+            Logger.getLogger(EntryResource.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+        return true;
+    }
+    
+    @POST
+    @Path("/create")
+    @JsonProperty
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public boolean create(@FormParam("empid") Optional<String> employeeId,
+                        @FormParam("projid") Optional<String> projectId,
+                        @FormParam("sprintid") Optional<String> sprintId,
+                        @FormParam("date") Optional<String> date,
+                        @FormParam("description") Optional<String> description,
+                        @FormParam("starttime") Optional<String> startTime,
+                        @FormParam("endtime") Optional<String> endTime,
+                        @FormParam("userstoryid") Optional<String> userstoryId){
+        
+        DateHelper dateHelper = new DateHelper();
+        Date parsedDate = dateHelper.parseDate(date.get(),"dd-MM-yyyy");
+        Time parsedStartTime = dateHelper.parseTime(startTime.get(), "HH-mm-ss");
+        Time parsedEndTime = dateHelper.parseTime(endTime.get(), "HH-mm-ss");
+        try {
+            entryDao.addEntry(Integer.parseInt(employeeId.get()), 
+                    Integer.parseInt(projectId.get()), 
+                    Integer.parseInt(sprintId.get()), 
+                    parsedDate, 
+                    description.get(), 
+                    parsedStartTime, 
+                    parsedEndTime, 
+                    Integer.parseInt(userstoryId.get()));
+        } catch (Exception ex) {
+            Logger.getLogger(EntryResource.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+        return true;
+    }
+    @POST
+    @Path("/create/url")
+    @JsonProperty
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public boolean createByUrl(@QueryParam("empid") Optional<String> employeeId,
+                        @QueryParam("projid") Optional<String> projectId,
+                        @QueryParam("sprintid") Optional<String> sprintId,
+                        @QueryParam("date") Optional<String> date,
+                        @QueryParam("description") Optional<String> description,
+                        @QueryParam("starttime") Optional<String> startTime,
+                        @QueryParam("endtime") Optional<String> endTime,
+                        @QueryParam("userstoryid") Optional<String> userstoryId){
+        
+        DateHelper dateHelper = new DateHelper();
+        Date parsedDate = dateHelper.parseDate(date.get(),"dd-MM-yyyy");
+        Time parsedStartTime = dateHelper.parseTime(startTime.get(), "HH:mm:ss");
+        Time parsedEndTime = dateHelper.parseTime(endTime.get(), "HH:mm:ss");
+        try {
+            entryDao.addEntry(Integer.parseInt(employeeId.get()), 
+                    Integer.parseInt(projectId.get()), 
+                    Integer.parseInt(sprintId.get()), 
+                    parsedDate, 
+                    description.get(), 
+                    parsedStartTime, 
+                    parsedEndTime, 
+                    Integer.parseInt(userstoryId.get()));
+        } catch (NumberFormatException ex) {
             Logger.getLogger(EntryResource.class.getName()).log(Level.SEVERE, null, ex);
             return false;
         }

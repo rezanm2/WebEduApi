@@ -16,6 +16,32 @@ import java.util.ArrayList;
 
 public class EntryDAO {
     private ConnectDAO connect;
+    
+    private ArrayList<EntryModel> fillModels(ResultSet entrySet){
+        ArrayList<EntryModel> entries = new ArrayList<EntryModel>();
+        try{
+        while(entrySet.next()) {
+				EntryModel entry = new EntryModel();
+				entry.setEntryId(entrySet.getInt("entry_id"));
+                                entry.setEmployeeFk(entrySet.getInt("entry_employee_fk"));
+                                entry.setEntryIsLocked(entrySet.getBoolean("entry_islocked"));
+                                entry.setIsDeleted(entrySet.getBoolean("entry_isdeleted"));
+                                entry.setEntryProjectFk(entrySet.getInt("entry_version_project_fk"));
+                                entry.setEntrySprintFk(entrySet.getInt("entry_version_sprint_fk"));
+                                entry.setEntryUserstoryFk(entrySet.getInt("entry_version_userstory_fk"));
+				entry.setEntryStatus(entrySet.getString("entry_status"));
+                                entry.setEntryStartTime(entrySet.getString("entry_version_starttime"));
+                                entry.setEntryEndTime(entrySet.getString("entry_version_endtime"));
+                                entry.setEntryDate(entrySet.getString("entry_version_date"));
+                                entry.setIsCurrent(entrySet.getBoolean("entry_version_current"));
+				entries.add(entry);
+			}
+        }catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        return entries;
+    }
 
     public EntryDAO(){
     	this.connect = new ConnectDAO();
@@ -61,22 +87,23 @@ public class EntryDAO {
 			PreparedStatement entries_statement = this.connect.makeConnection().prepareStatement(employee_entry_sql);
 			
 			ResultSet entry_set = entries_statement.executeQuery();
-			while(entry_set.next()) {
-				EntryModel entry = new EntryModel();
-				entry.setEntryId(entry_set.getInt("entry_id"));
-                                entry.setEmployeeFk(entry_set.getInt("entry_employee_fk"));
-                                entry.setEntryIsLocked(entry_set.getBoolean("entry_islocked"));
-                                entry.setIsDeleted(entry_set.getBoolean("entry_isdeleted"));
-                                entry.setEntryProjectFk(entry_set.getInt("entry_version_project_fk"));
-                                entry.setEntrySprintFk(entry_set.getInt("entry_version_sprint_fk"));
-                                entry.setEntryUserstoryFk(entry_set.getInt("entry_version_userstory_fk"));
-				entry.setEntryStatus(entry_set.getString("entry_status"));
-                                entry.setEntryStartTime(entry_set.getString("entry_version_starttime"));
-                                entry.setEntryEndTime(entry_set.getString("entry_version_endtime"));
-                                entry.setEntryDate(entry_set.getString("entry_version_date"));
-                                entry.setIsCurrent(entry_set.getBoolean("entry_version_current"));
-				entry_alist.add(entry);
-			}
+                        entry_alist = fillModels(entry_set);
+//			while(entry_set.next()) {
+//				EntryModel entry = new EntryModel();
+//				entry.setEntryId(entry_set.getInt("entry_id"));
+//                                entry.setEmployeeFk(entry_set.getInt("entry_employee_fk"));
+//                                entry.setEntryIsLocked(entry_set.getBoolean("entry_islocked"));
+//                                entry.setIsDeleted(entry_set.getBoolean("entry_isdeleted"));
+//                                entry.setEntryProjectFk(entry_set.getInt("entry_version_project_fk"));
+//                                entry.setEntrySprintFk(entry_set.getInt("entry_version_sprint_fk"));
+//                                entry.setEntryUserstoryFk(entry_set.getInt("entry_version_userstory_fk"));
+//				entry.setEntryStatus(entry_set.getString("entry_status"));
+//                                entry.setEntryStartTime(entry_set.getString("entry_version_starttime"));
+//                                entry.setEntryEndTime(entry_set.getString("entry_version_endtime"));
+//                                entry.setEntryDate(entry_set.getString("entry_version_date"));
+//                                entry.setIsCurrent(entry_set.getBoolean("entry_version_current"));
+//				entry_alist.add(entry);
+//			}
 			entries_statement.close();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -118,27 +145,27 @@ public class EntryDAO {
 	 */
 	public ArrayList<EntryModel> entry_queued_list(int e_id){
 		ArrayList<EntryModel> entry_alist = new ArrayList<EntryModel>();
-		String employee_entry_sql = "SELECT * "
-				+ " FROM entry_version, entry "
-				+ "WHERE entry_version.entry_version_entry_fk = entry.entry_id AND entry.entry_status = 'queued' "
-				+ "AND entry_version_current = true ";
+		String employee_entry_sql = "SELECT * FROM entry_version "
+                        + "INNER JOIN entry ON entry_version_entry_fk=entry_id "
+                        + "WHERE entry.entry_status = 'queued' AND entry_version_current = true AND entry_isdeleted=false";
 		try {
 			PreparedStatement entries_statement = this.connect.makeConnection().prepareStatement(employee_entry_sql);
 			
 			ResultSet entry_set = entries_statement.executeQuery();
-			while(entry_set.next()) {
-				EntryModel dummy = new EntryModel();
-				dummy.setEntryId(entry_set.getInt("entry_id"));
-				dummy.setEntryDescription(entry_set.getString("entry_version_description"));
-				dummy.setEntryStartTime(entry_set.getString("entry_version_starttime"));
-				dummy.setEntryEndTime(entry_set.getString("entry_version_endtime"));
-				dummy.setEntryDate(entry_set.getString("entry_version_date"));
-				dummy.setEntryProjectFk(entry_set.getInt("entry_version_project_fk"));
-				dummy.setEntryIsLocked(entry_set.getBoolean("entry_islocked"));
-				dummy.setEntrySprintFk(entry_set.getInt("entry_version_sprint_fk"));
-				dummy.setEntryUserstoryFk(entry_set.getInt("entry_version_userstory_fk"));
-				entry_alist.add(dummy);
-			}
+                        entry_alist = fillModels(entry_set);
+//			while(entry_set.next()) {
+//				EntryModel dummy = new EntryModel();
+//				dummy.setEntryId(entry_set.getInt("entry_id"));
+//				dummy.setEntryDescription(entry_set.getString("entry_version_description"));
+//				dummy.setEntryStartTime(entry_set.getString("entry_version_starttime"));
+//				dummy.setEntryEndTime(entry_set.getString("entry_version_endtime"));
+//				dummy.setEntryDate(entry_set.getString("entry_version_date"));
+//				dummy.setEntryProjectFk(entry_set.getInt("entry_version_project_fk"));
+//				dummy.setEntryIsLocked(entry_set.getBoolean("entry_islocked"));
+//				dummy.setEntrySprintFk(entry_set.getInt("entry_version_sprint_fk"));
+//				dummy.setEntryUserstoryFk(entry_set.getInt("entry_version_userstory_fk"));
+//				entry_alist.add(dummy);
+//			}
 			entries_statement.close();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
