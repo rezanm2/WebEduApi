@@ -3,22 +3,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package nl.webedu.resources;
-
-import javax.ws.rs.Path;
-import nl.webedu.dao.EntryDAO;
+package nl.webedu;
+import com.codahale.metrics.health.HealthCheck;
 
 /**
  *
  * @author rezanaser
  */
-@Path("/entries")
-public class EntryResource {
-    private EntryDAO entryDao;
+public class DatabaseHealthCheck extends HealthCheck{
 
-    public EntryResource(){
-        entryDao = new EntryDAO();
+    @Override
+    protected Result check() throws Exception {
+        return Result.healthy();
     }
-
     
 }

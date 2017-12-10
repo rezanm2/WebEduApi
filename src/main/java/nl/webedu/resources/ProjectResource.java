@@ -38,7 +38,7 @@ public class ProjectResource {
     @JsonProperty
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public ArrayList<ProjectModel> ProjectName(){
+    public ArrayList<ProjectModel> ProjectName(@Auth EmployeeModel employeeModel){
         return this.projectDAO.getAllProjects();
     }
     @POST
