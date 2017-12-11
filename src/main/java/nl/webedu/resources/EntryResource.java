@@ -36,6 +36,7 @@ public class EntryResource {
 
     public EntryResource(){
         entryDao = new EntryDAO();
+        entryDao.createAddEntryProcedure();
     }
 
     @GET
@@ -127,8 +128,8 @@ public class EntryResource {
         
         DateHelper dateHelper = new DateHelper();
         Date parsedDate = dateHelper.parseDate(date.get(),"dd-MM-yyyy");
-        Time parsedStartTime = dateHelper.parseTime(startTime.get(), "HH-mm-ss");
-        Time parsedEndTime = dateHelper.parseTime(endTime.get(), "HH-mm-ss");
+        Time parsedStartTime = dateHelper.parseTime(startTime.get(), "HH:mm:ss");
+        Time parsedEndTime = dateHelper.parseTime(endTime.get(), "HH:mm:ss");
         try {
             entryDao.addEntry(Integer.parseInt(employeeId.get()), 
                     Integer.parseInt(projectId.get()), 
@@ -138,7 +139,7 @@ public class EntryResource {
                     parsedStartTime, 
                     parsedEndTime, 
                     Integer.parseInt(userstoryId.get()));
-        } catch (Exception ex) {
+        } catch (NumberFormatException ex) {
             Logger.getLogger(EntryResource.class.getName()).log(Level.SEVERE, null, ex);
             return false;
         }
@@ -171,6 +172,134 @@ public class EntryResource {
                     parsedStartTime, 
                     parsedEndTime, 
                     Integer.parseInt(userstoryId.get()));
+        } catch (NumberFormatException ex) {
+            Logger.getLogger(EntryResource.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+        return true;
+    }
+    
+    @POST
+    @Path("/update")
+    @JsonProperty
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public boolean update(@FormParam("empid") Optional<String> employeeId,
+                        @FormParam("projid") Optional<String> projectId,
+                        @FormParam("sprintid") Optional<String> sprintId,
+                        @FormParam("date") Optional<String> date,
+                        @FormParam("description") Optional<String> description,
+                        @FormParam("starttime") Optional<String> startTime,
+                        @FormParam("endtime") Optional<String> endTime,
+                        @FormParam("userstoryid") Optional<String> userstoryId){
+        
+        DateHelper dateHelper = new DateHelper();
+        Date parsedDate = dateHelper.parseDate(date.get(),"dd-MM-yyyy");
+        Time parsedStartTime = dateHelper.parseTime(startTime.get(), "HH:mm:ss");
+        Time parsedEndTime = dateHelper.parseTime(endTime.get(), "HH:mm:ss");
+        try {
+            entryDao.modifyEntry(Integer.parseInt(employeeId.get()), 
+                    Integer.parseInt(projectId.get()), 
+                    Integer.parseInt(sprintId.get()), 
+                    parsedDate, 
+                    description.get(), 
+                    parsedStartTime, 
+                    parsedEndTime, 
+                    Integer.parseInt(userstoryId.get()));
+        } catch (NumberFormatException ex) {
+            Logger.getLogger(EntryResource.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+        return true;
+    }
+    
+    @POST
+    @Path("/update/url")
+    @JsonProperty
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public boolean updateByUrl(@QueryParam("entryid") Optional<String> entryId,
+                        @QueryParam("projid") Optional<String> projectId,
+                        @QueryParam("sprintid") Optional<String> sprintId,
+                        @QueryParam("date") Optional<String> date,
+                        @QueryParam("description") Optional<String> description,
+                        @QueryParam("starttime") Optional<String> startTime,
+                        @QueryParam("endtime") Optional<String> endTime,
+                        @QueryParam("userstoryid") Optional<String> userstoryId){
+        
+        DateHelper dateHelper = new DateHelper();
+        Date parsedDate = dateHelper.parseDate(date.get(),"dd-MM-yyyy");
+        Time parsedStartTime = dateHelper.parseTime(startTime.get(), "HH:mm:ss");
+        Time parsedEndTime = dateHelper.parseTime(endTime.get(), "HH:mm:ss");
+        try {
+            entryDao.modifyEntry(Integer.parseInt(entryId.get()), 
+                    Integer.parseInt(projectId.get()), 
+                    Integer.parseInt(sprintId.get()), 
+                    parsedDate, 
+                    description.get(), 
+                    parsedStartTime, 
+                    parsedEndTime, 
+                    Integer.parseInt(userstoryId.get()));
+        } catch (NumberFormatException ex) {
+            Logger.getLogger(EntryResource.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+        return true;
+    }
+    
+    @POST
+    @Path("/delete")
+    @JsonProperty
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public boolean delete(@FormParam("entryid") Optional<String> entryId){
+        try {
+            entryDao.deleteEntry(Integer.parseInt(entryId.get()));
+        } catch (NumberFormatException ex) {
+            Logger.getLogger(EntryResource.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+        return true;
+    }
+    
+    @POST
+    @Path("/delete/url")
+    @JsonProperty
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public boolean deleteByUrl(@QueryParam("entryid") Optional<String> entryId){
+        try {
+            entryDao.deleteEntry(Integer.parseInt(entryId.get()));
+        } catch (NumberFormatException ex) {
+            Logger.getLogger(EntryResource.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+        return true;
+    }
+    
+    @POST
+    @Path("/undelete")
+    @JsonProperty
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public boolean unDelete(@FormParam("entryid") Optional<String> entryId){
+        try {
+            entryDao.unDeleteEntry(Integer.parseInt(entryId.get()));
+        } catch (NumberFormatException ex) {
+            Logger.getLogger(EntryResource.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+        return true;
+    }
+    
+    @POST
+    @Path("/undelete/url")
+    @JsonProperty
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public boolean unDeleteByUrl(@QueryParam("entryid") Optional<String> entryId){
+        try {
+            entryDao.unDeleteEntry(Integer.parseInt(entryId.get()));
         } catch (NumberFormatException ex) {
             Logger.getLogger(EntryResource.class.getName()).log(Level.SEVERE, null, ex);
             return false;
