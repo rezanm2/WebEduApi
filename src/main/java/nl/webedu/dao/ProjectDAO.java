@@ -86,7 +86,7 @@ public class ProjectDAO {
     
     public void createProject()
     {
-		try {
+	try {
 		Connection connect = new ConnectDAO().makeConnection();
 		String getUserQuery = "INSERT INTO project_version(project_version_project_fk, project_version_name, project_version_description, project_version_customer_fk)VALUES(25, 'DROPWIZARD', 'DIT IS TEST', 17)";
 		PreparedStatement getUserStatement = this.connect.makeConnection().prepareStatement(getUserQuery);

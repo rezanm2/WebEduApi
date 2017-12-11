@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.FormParam;
 import com.google.common.base.Optional;
+import io.dropwizard.auth.Auth;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -17,6 +18,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import nl.webedu.dao.ProjectDAO;
+import nl.webedu.models.EmployeeModel;
 import nl.webedu.models.ProjectModel;
 
 /**
@@ -36,7 +38,7 @@ public class ProjectResource {
     @JsonProperty
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public ArrayList<ProjectModel> ProjectName(){
+    public ArrayList<ProjectModel> ProjectName(@Auth EmployeeModel employeeModel){
         return this.projectDAO.getAllProjects();
     }
     @POST
@@ -187,5 +189,14 @@ public class ProjectResource {
         this.projectDAO.unRemoveProject(projectId_parse);
         System.out.println(this.getClass().toString()+": update werkt!: ");
         return true;
+    }
+        
+    @GET
+    @Path("/secured")
+    @JsonProperty
+    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.TEXT_PLAIN)
+    public String test(@Auth EmployeeModel employeeModel){
+        return "SECURED";
     }
 }

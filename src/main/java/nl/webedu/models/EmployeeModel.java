@@ -26,7 +26,7 @@ public class EmployeeModel{
 		this.employeeEmail = email;
 		this.employeeRole = role;
 	}
-	
+	public EmployeeModel(){}
 	public int getEmployeeId() {
 		return employeeId;
 	}
