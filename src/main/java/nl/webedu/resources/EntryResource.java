@@ -4,7 +4,6 @@
  * and open the template in the editor.
  */
 package nl.webedu.resources;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
 import javax.ws.rs.QueryParam;
@@ -24,6 +23,8 @@ import nl.webedu.dao.*;
 import nl.webedu.models.EntryModel;
 import nl.webedu.models.ProjectModel;
 import nl.webedu.helpers.DateHelper;
+import javax.ws.rs.Path;
+import nl.webedu.dao.EntryDAO;
 
 /**
  *

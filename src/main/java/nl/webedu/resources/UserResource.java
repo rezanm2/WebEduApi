@@ -1,10 +1,12 @@
 package nl.webedu.resources;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.dropwizard.auth.Auth;
 import java.util.ArrayList;
 import javax.ws.rs.Consumes;
 import nl.webedu.dao.EmployeeDAO;
 
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -22,7 +24,7 @@ public class UserResource {
     @JsonProperty
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public ArrayList<EmployeeModel> UserName(){
+    public ArrayList<EmployeeModel> UserName(@Auth EmployeeModel employeeModel){
         try{
             return this.employeeDAO.getAllEmployees();
         } catch(Exception e){

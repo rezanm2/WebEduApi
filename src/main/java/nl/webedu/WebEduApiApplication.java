@@ -53,6 +53,7 @@ public class WebEduApiApplication extends Application<WebEduApiConfiguration> {
         /**
          * Load resources into environment
          */
+        environment.healthChecks().register("database", new DatabaseHealthCheck());//Voert healthcheck uit(controlleer de connectie met de database)
         environment.jersey().register(new UserResource());
         environment.jersey().register(new ProjectResource());
         environment.jersey().register(new EntryResource());
