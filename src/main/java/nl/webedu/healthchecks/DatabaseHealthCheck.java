@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package nl.webedu;
+package nl.webedu.healthchecks;
 import com.codahale.metrics.health.HealthCheck;
 
 /**

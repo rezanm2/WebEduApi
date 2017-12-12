@@ -33,6 +33,7 @@ public class UserResource {
         return null;
     }
 
+    @Path("/users")
     @GET
     @JsonProperty
     @Produces(MediaType.APPLICATION_JSON)
