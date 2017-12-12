@@ -16,6 +16,36 @@ public class SprintDAO {
     public SprintDAO(){
     	this.connect = new ConnectDAO();
 	}
+    
+    /**
+     * Maakt een procedure die sprints toe kan voegen.
+     * 
+     * @author Robert den Blaauwen
+     */
+    public void createAddSprintFunction(){
+	String project_list_sql = "CREATE OR REPLACE FUNCTION add_sprint(project_id INT4, sprint_name TEXT, description TEXT, startdate DATE, enddate DATE) " +
+                                    "RETURNS void AS $$ " +
+                                    "DECLARE pk INT; " +
+                                    "BEGIN " +
+                                    "	INSERT INTO sprint(sprint_isdeleted) VALUES(false) " +
+                                    "	RETURNING sprint_id INTO pk; " +
+                                    "	INSERT INTO sprint_version(sprint_version_sprint_fk, sprint_version_project_fk," +
+                                    "    	sprint_version_name, sprint_version_description, sprint_version_startdate, sprint_version_enddate," +
+                                    "        sprint_version_current) " +
+                                    "    VALUES(pk,project_id,sprint_name,description,startdate,enddate, true); " +
+                                    "END $$ LANGUAGE plpgsql;";
+	try {
+            PreparedStatement project_statement = this.connect.makeConnection().prepareStatement(project_list_sql);
+            project_statement.executeUpdate();
+            //System.out.println(this.getClass().toString()+": constructor: FUNCTION add_project(name, description, customer) has been created!");
+	} catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+	} catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+	}
+    }
        
 	/**
 	 * Deze methode vult de combobox met de sprints van het gevraagde project
@@ -54,24 +84,28 @@ public class SprintDAO {
 	 * @return sprint_alist lijst van sprints
 	 */
 	public ArrayList<SprintModel> allSprints() throws Exception {
-		ArrayList<SprintModel> sprintList = new ArrayList<SprintModel>();
-		String projectsSprintsSql = "SELECT *  FROM sprint_version";
-				//+ "AND entry_version_current = 'y' ";
-		PreparedStatement sprintsStatement = this.connect.makeConnection().prepareStatement(projectsSprintsSql);
-		ResultSet sprintsSets = sprintsStatement.executeQuery();
+            ArrayList<SprintModel> sprintList = new ArrayList<SprintModel>();
+            String projectsSprintsSql = "SELECT *  FROM sprint_version INNER JOIN sprint ON sprint_id=sprint_version_sprint_fk";
+            //+ "AND entry_version_current = 'y' ";
+            PreparedStatement sprintsStatement = this.connect.makeConnection().prepareStatement(projectsSprintsSql);
+            ResultSet sprintsSets = sprintsStatement.executeQuery();
 
-		while(sprintsSets.next()) {
-            SprintModel sprintContainer = new SprintModel();
-			sprintContainer.setSprintId(sprintsSets.getInt("sprint_version_sprint_fk"));
-            sprintContainer.setSprintName(sprintsSets.getString("sprint_version_name"));
-            sprintContainer.setSprintStartDate(sprintsSets.getString("sprint_version_startdate"));
-            sprintContainer.setSprintEndDate(sprintsSets.getString("sprint_version_enddate"));
-			sprintContainer.setSprintEndDate(sprintsSets.getString("sprint_version_enddate"));
-            sprintList.add(sprintContainer);
-        }
-		sprintsStatement.close();
-		return sprintList;
-	  }
+            while(sprintsSets.next()) {
+                SprintModel sprintContainer = new SprintModel();
+                sprintContainer.setSprintId(sprintsSets.getInt("sprint_version_sprint_fk"));
+                sprintContainer.setSprintIsDeleted(sprintsSets.getBoolean("sprint_isdeleted"));
+                sprintContainer.setProjectFK(sprintsSets.getInt("sprint_version_project_fk"));
+                sprintContainer.setSprintName(sprintsSets.getString("sprint_version_name"));
+                sprintContainer.setSprintDescription(sprintsSets.getString("sprint_version_description"));
+                sprintContainer.setSprintStartDate(sprintsSets.getString("sprint_version_startdate"));
+                sprintContainer.setSprintEndDate(sprintsSets.getString("sprint_version_enddate"));
+                sprintContainer.setSprintEndDate(sprintsSets.getString("sprint_version_enddate"));
+                sprintContainer.setIsCurrent(sprintsSets.getBoolean("sprint_version_current"));
+                sprintList.add(sprintContainer);
+            }
+            sprintsStatement.close();
+            return sprintList;
+	}
 	
 	/**
 	 * Deze methode vult de combobox met de sprints van het gevraagde project
