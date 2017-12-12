@@ -1,14 +1,11 @@
 package nl.webedu.dao;
 
+import nl.webedu.models.EmployeeModel;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import nl.webedu.models.EntryModel;
-import nl.webedu.models.EmployeeModel;
-import nl.webedu.models.Role;
-import nl.webedu.dao.ConnectDAO;
 
 /**
  * Employee DAO to be used to access database to get employee information

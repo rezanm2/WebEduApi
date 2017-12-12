@@ -1,19 +1,8 @@
 package nl.webedu.dao;
 
 import java.io.FileWriter;
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.sql.Time;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import nl.webedu.dao.ConnectDAO;
-import com.sun.org.apache.xerces.internal.util.SynchronizedSymbolTable;
-
-import javafx.scene.control.TextField;
 
 public class DataDAO {
 	private ConnectDAO connect;

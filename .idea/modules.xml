@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/WebEduApi.iml" filepath="$PROJECT_DIR$/WebEduApi.iml" />
+      <module fileurl="file://$PROJECT_DIR$/WebeduApi.iml" filepath="$PROJECT_DIR$/WebeduApi.iml" />
     </modules>
   </component>
 </project>

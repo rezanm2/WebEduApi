@@ -1,8 +1,5 @@
 package nl.webedu.models;
 
-import java.security.Principal;
-import javax.security.auth.Subject;
-
 public class EmployeeModel{
 	/**
 	 * Employee Model.

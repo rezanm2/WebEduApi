@@ -5,8 +5,9 @@
  */
 package nl.webedu.resources;
 
-import javax.ws.rs.Path;
 import nl.webedu.dao.EntryDAO;
+
+import javax.ws.rs.Path;
 
 /**
  *
