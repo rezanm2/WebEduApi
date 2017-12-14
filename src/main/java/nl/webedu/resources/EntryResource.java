@@ -38,7 +38,6 @@ public class EntryResource {
 
     public EntryResource(){
         entryDao = new EntryDAO();
-        entryDao.createAddEntryProcedure();
     }
 
     @GET
