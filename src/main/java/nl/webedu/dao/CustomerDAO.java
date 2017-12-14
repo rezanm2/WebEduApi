@@ -1,15 +1,15 @@
 package nl.webedu.dao;
 
+import nl.webedu.models.CustomerModel;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-import nl.webedu.dao.*;
-import nl.webedu.models.CustomerModel;
-
 public class CustomerDAO {
+
 	private ConnectDAO connect;
 
 	public CustomerDAO(){

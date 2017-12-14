@@ -1,13 +1,9 @@
 package nl.webedu.dao;
 
-import nl.webedu.models.SprintModel;
 import nl.webedu.models.ProjectModel;
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import nl.webedu.models.SprintModel;
+
+import java.sql.*;
 import java.util.ArrayList;
 
 public class SprintDAO {

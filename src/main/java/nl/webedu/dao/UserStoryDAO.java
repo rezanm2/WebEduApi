@@ -1,13 +1,13 @@
 package nl.webedu.dao;
 
+import nl.webedu.models.SprintModel;
+import nl.webedu.models.UserStoryModel;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-
-import nl.webedu.models.SprintModel;
-import nl.webedu.models.UserStoryModel;
 
 /**
  * Deze klasse is verantwoordelijk voor de userstories

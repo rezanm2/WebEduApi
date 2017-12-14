@@ -2,7 +2,6 @@
 package nl.webedu.auth;
 
 import com.google.common.base.Optional;
-import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 import io.dropwizard.auth.AuthenticationException;
 import io.dropwizard.auth.Authenticator;
 import io.dropwizard.auth.basic.BasicCredentials;
@@ -19,8 +18,6 @@ public class Auth implements Authenticator<BasicCredentials, EmployeeModel>{
     public Optional<EmployeeModel> authenticate(BasicCredentials c) throws AuthenticationException {
         EmployeeDAO employeeDao = new EmployeeDAO();
         EmployeeModel currentEmployee = null;
-//        String decodedEmail = new String(Base64.decode(c.getUsername()));
-//        String decodedPassword = new String(Base64.decode(c.getPassword()));
         
         for(int x=0;x<employeeDao.getAllEmployees().size();x++)// Haalt alle emplopyees vanuit de dao klasse
             // Checkt of de gebruiker bestaat
