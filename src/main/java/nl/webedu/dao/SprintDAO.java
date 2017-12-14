@@ -369,4 +369,10 @@ public class SprintDAO {
 		lockStatement.setInt(1, sprintID);
 		lockStatement.executeUpdate();
 	}
+        public void unRemoveSprint(int sprintID) throws Exception {
+		String deleteSprint = "UPDATE sprint SET sprint_isdeleted = false WHERE sprint_id = ?";
+		PreparedStatement lockStatement = this.connect.makeConnection().prepareStatement(deleteSprint);
+		lockStatement.setInt(1, sprintID);
+		lockStatement.executeUpdate();
+	}
 }
