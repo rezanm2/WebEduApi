@@ -15,6 +15,8 @@ import nl.webedu.models.ProjectModel;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -26,6 +28,7 @@ public class ProjectResource {
 
     public ProjectResource(){
         projectDAO = new ProjectDAO();
+        projectDAO.createAddProjectFunction();
     }
 
     @GET
@@ -92,7 +95,7 @@ public class ProjectResource {
         
     /**
      * De method mist een manier om de de klant aan te passen,
-     * want de method in de DAO ondersteunt dat niet >:(
+     * want de method in de DAO ondersteunt dat niet
      *
      * @param projectId id van bestaand project
      * @param name      nieuwe naam van project
@@ -103,14 +106,24 @@ public class ProjectResource {
     @Path("/update")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
+
     public boolean update(@FormParam("pid") Optional<String> projectId,
             @FormParam("name") Optional<String> name,
-            @FormParam("description") Optional<String> description) throws Exception{
-        int projectId_parse;
-        projectId_parse = Integer.parseInt(projectId.get());
+            @FormParam("description") Optional<String> description){
+
+        int projectId_parse = Integer.parseInt(projectId.get());
         String name_parse = name.get();
         String description_parse = description.get();
-        projectDAO.modifyProject(projectId_parse,name_parse, description_parse);
+        try {
+            //        String name_parse = String.format("%b", name.or("empty"));
+//        String description_parse = String.format("%b", description.or("empty"));
+//        String customerId_parse1 = String.format("%b", customerId.or("empty"));
+//        int customerId_parse2 = Integer.parseInt(customerId_parse1);
+            projectDAO.modifyProject(projectId_parse,name_parse, description_parse);
+        } catch (Exception ex) {
+            Logger.getLogger(ProjectResource.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
         System.out.println(this.getClass().toString()+": update werkt!: "+name_parse+description_parse);
         return true;
     }

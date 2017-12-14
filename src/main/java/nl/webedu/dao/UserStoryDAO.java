@@ -60,6 +60,7 @@ public class UserStoryDAO {
 	 * @author rezanaser
 	 * @param sprintID id van sprint
 	 * @return  sprint_alist
+         * @throws Exception SQL exception en normale exception
 	 */
 	public ArrayList<SprintModel> sprintsProjects(int sprintID) throws Exception {
 		SprintModel sprint;
@@ -116,6 +117,7 @@ public class UserStoryDAO {
 	 * @author rezanaser
 	 * @param   p_id    id van eits?
 	 * @return  userStory_alist
+         * @throws Exception SQL exception en normale exception
 	 */
 	public ArrayList<UserStoryModel> userStoriesVersion(int p_id) throws Exception {
 		ArrayList<UserStoryModel> userStory_alist = new ArrayList<UserStoryModel>();

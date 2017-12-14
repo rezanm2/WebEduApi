@@ -13,10 +13,11 @@ import nl.webedu.models.EmployeeModel;
 import nl.webedu.resources.ProjectResource;
 import nl.webedu.resources.UserResource;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
-
 import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration;
 import java.util.EnumSet;
+import nl.webedu.resources.*;
+import nl.webedu.helpers.*;
 
 /**
  * Deze klasse is de startpunt van de api
@@ -26,6 +27,8 @@ public class WebEduApiApplication extends Application<WebEduApiConfiguration> {
     private ConfiguredBundle assetsBundle;
     private String name;
     public static void main(final String[] args) throws Exception {
+//        DateHelper dateHelper = new DateHelper();
+//        System.out.println(dateHelper.parseTime("17:51:05", "HH:mm:ss"));
         new WebEduApiApplication().run(args);
     }
     /**
@@ -59,12 +62,15 @@ public class WebEduApiApplication extends Application<WebEduApiConfiguration> {
         environment.healthChecks().register("database", new DatabaseHealthCheck());//Voert healthcheck uit(controlleer de connectie met de database)
         environment.jersey().register(new UserResource());
         environment.jersey().register(new ProjectResource());
+        environment.jersey().register(new EntryResource());
+        environment.jersey().register(new SprintResource());
         environment.jersey().register(AuthFactory.binder(
                 new BasicAuthFactory<>(
                         new Auth(),
                         "Security realm",
                         EmployeeModel.class
                 )));
+
 
         /**
          * ALLOW ALL CONTENT FOR DEV PURPOSES WILL DELETE THIS ON PRODUCTION TIME

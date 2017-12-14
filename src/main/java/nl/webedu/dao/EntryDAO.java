@@ -4,13 +4,66 @@ import nl.webedu.models.EntryModel;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class EntryDAO {
     private ConnectDAO connect;
+    
+    private ArrayList<EntryModel> fillModels(ResultSet entrySet){
+        ArrayList<EntryModel> entries = new ArrayList<EntryModel>();
+        try{
+        while(entrySet.next()) {
+				EntryModel entry = new EntryModel();
+				entry.setEntryId(entrySet.getInt("entry_id"));
+                                entry.setEmployeeFk(entrySet.getInt("entry_employee_fk"));
+                                entry.setEntryIsLocked(entrySet.getBoolean("entry_islocked"));
+                                entry.setIsDeleted(entrySet.getBoolean("entry_isdeleted"));
+                                entry.setEntryProjectFk(entrySet.getInt("entry_version_project_fk"));
+                                entry.setEntrySprintFk(entrySet.getInt("entry_version_sprint_fk"));
+                                entry.setEntryDescription(entrySet.getString("entry_version_description"));
+                                entry.setEntryUserstoryFk(entrySet.getInt("entry_version_userstory_fk"));
+				entry.setEntryStatus(entrySet.getString("entry_status"));
+                                entry.setEntryStartTime(entrySet.getString("entry_version_starttime"));
+                                entry.setEntryEndTime(entrySet.getString("entry_version_endtime"));
+                                entry.setEntryDate(entrySet.getString("entry_version_date"));
+                                entry.setIsCurrent(entrySet.getBoolean("entry_version_current"));
+				entries.add(entry);
+			}
+        }catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        return entries;
+    }
 
     public EntryDAO(){
     	this.connect = new ConnectDAO();
 	}
+    
+    public void createAddEntryProcedure(){
+        String project_list_sql = "CREATE OR REPLACE FUNCTION add_entry(empid INT4, projid INT4, sprintid INT4, description text, datum date, starttime time, endtime time, userstoryid INT4)\n" +
+            "RETURNS void AS $$ " +
+            "DECLARE pk INT; " +
+            "BEGIN " +
+            "   	insert into entry(entry_employee_fk, entry_status, entry_islocked, entry_isdeleted) values (empid,'queued',false,false) " +
+            "	RETURNING entry_id INTO pk; " +
+            "	insert into entry_version (entry_version_entry_fk, entry_version_project_fk,entry_version_sprint_fk, entry_version_description, entry_version_current, " +
+            "                               entry_version_date,entry_version_starttime, entry_version_endtime, entry_version_userstory_fk)" +
+            "	VALUES (pk, projid, sprintid, description, true, datum,starttime,endtime,userstoryid); " +
+            "END $$ LANGUAGE plpgsql;";
+	try {
+            PreparedStatement project_statement = this.connect.makeConnection().prepareStatement(project_list_sql);
+            project_statement.executeUpdate();
+            //System.out.println(this.getClass().toString()+": constructor: FUNCTION add_project(name, description, customer) has been created!");
+	} catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+	} catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+	}
+    }
 
     /**
 	 * Deze methode laat een lijst zien van entries die de status queued hebben.
@@ -40,9 +93,49 @@ public class EntryDAO {
 	}
         
         /**
+         * Geeft alle entries met hun data, inclusief deleted en oude versies.
+         * 
+         * @return entry_alist
+         */
+        public ArrayList<EntryModel> getEntriesFull(){
+		ArrayList<EntryModel> entry_alist = new ArrayList<EntryModel>();
+		String employee_entry_sql = "SELECT * FROM entry INNER JOIN entry_version "
+                                            + "ON entry_id=entry_version_entry_fk "
+                                            + "WHERE entry_version_current=true AND entry_isdeleted=false;";
+		try {
+			PreparedStatement entries_statement = this.connect.makeConnection().prepareStatement(employee_entry_sql);
+			
+			ResultSet entry_set = entries_statement.executeQuery();
+                        entry_alist = fillModels(entry_set);
+//			while(entry_set.next()) {
+//				EntryModel entry = new EntryModel();
+//				entry.setEntryId(entry_set.getInt("entry_id"));
+//                                entry.setEmployeeFk(entry_set.getInt("entry_employee_fk"));
+//                                entry.setEntryIsLocked(entry_set.getBoolean("entry_islocked"));
+//                                entry.setIsDeleted(entry_set.getBoolean("entry_isdeleted"));
+//                                entry.setEntryProjectFk(entry_set.getInt("entry_version_project_fk"));
+//                                entry.setEntrySprintFk(entry_set.getInt("entry_version_sprint_fk"));
+//                                entry.setEntryUserstoryFk(entry_set.getInt("entry_version_userstory_fk"));
+//				entry.setEntryStatus(entry_set.getString("entry_status"));
+//                                entry.setEntryStartTime(entry_set.getString("entry_version_starttime"));
+//                                entry.setEntryEndTime(entry_set.getString("entry_version_endtime"));
+//                                entry.setEntryDate(entry_set.getString("entry_version_date"));
+//                                entry.setIsCurrent(entry_set.getBoolean("entry_version_current"));
+//				entry_alist.add(entry);
+//			}
+			entries_statement.close();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return entry_alist;
+	}
+        
+        /**
 	 * Deze methode krijgt de geselecteerde uur van de goedkeuren view en stuurt deze wijziging naar de database.
 	 * @param id is de id van de entry.
 	 * @author rezanaser
+         * @throws Exception SQL exception en normale exception
 	 */
 	public void approveHours(int id) throws Exception {
 		String employee_entry_sql = "UPDATE entry SET entry_status = 'approved' WHERE entry_id = ? ";
@@ -72,27 +165,27 @@ public class EntryDAO {
 	 */
 	public ArrayList<EntryModel> entry_queued_list(int e_id){
 		ArrayList<EntryModel> entry_alist = new ArrayList<EntryModel>();
-		String employee_entry_sql = "SELECT * "
-				+ " FROM entry_version, entry "
-				+ "WHERE entry_version.entry_version_entry_fk = entry.entry_id AND entry.entry_status = 'queued' "
-				+ "AND entry_version_current = true ";
+		String employee_entry_sql = "SELECT * FROM entry_version "
+                        + "INNER JOIN entry ON entry_version_entry_fk=entry_id "
+                        + "WHERE entry.entry_status = 'queued' AND entry_version_current = true AND entry_isdeleted=false";
 		try {
 			PreparedStatement entries_statement = this.connect.makeConnection().prepareStatement(employee_entry_sql);
 			
 			ResultSet entry_set = entries_statement.executeQuery();
-			while(entry_set.next()) {
-				EntryModel dummy = new EntryModel();
-				dummy.setEntryId(entry_set.getInt("entry_id"));
-				dummy.setEntryDescription(entry_set.getString("entry_version_description"));
-				dummy.setEntryStartTime(entry_set.getString("entry_version_starttime"));
-				dummy.setEntryEndTime(entry_set.getString("entry_version_endtime"));
-				dummy.setEntryDate(entry_set.getString("entry_version_date"));
-				dummy.setEntryProjectFk(entry_set.getInt("entry_version_project_fk"));
-				dummy.setEntryIsLocked(entry_set.getBoolean("entry_islocked"));
-				dummy.setEntrySprintFk(entry_set.getInt("entry_version_sprint_fk"));
-				dummy.setEntryUserstoryFk(entry_set.getInt("entry_version_userstory_fk"));
-				entry_alist.add(dummy);
-			}
+                        entry_alist = fillModels(entry_set);
+//			while(entry_set.next()) {
+//				EntryModel dummy = new EntryModel();
+//				dummy.setEntryId(entry_set.getInt("entry_id"));
+//				dummy.setEntryDescription(entry_set.getString("entry_version_description"));
+//				dummy.setEntryStartTime(entry_set.getString("entry_version_starttime"));
+//				dummy.setEntryEndTime(entry_set.getString("entry_version_endtime"));
+//				dummy.setEntryDate(entry_set.getString("entry_version_date"));
+//				dummy.setEntryProjectFk(entry_set.getInt("entry_version_project_fk"));
+//				dummy.setEntryIsLocked(entry_set.getBoolean("entry_islocked"));
+//				dummy.setEntrySprintFk(entry_set.getInt("entry_version_sprint_fk"));
+//				dummy.setEntryUserstoryFk(entry_set.getInt("entry_version_userstory_fk"));
+//				entry_alist.add(dummy);
+//			}
 			entries_statement.close();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -110,17 +203,15 @@ public class EntryDAO {
 	 * @param description   entry description
 	 * @param startTime     entry start time
 	 * @param endTime       entry end time
-	 * @param userId
+	 * @param userId        userstory Id
          */
-	public void addEntry(int employeeId, int pId, int spId, Date date, String description, Time startTime, Time endTime, int userId){
+	public void addEntry(int employeeId, int pId, int spId, Date date, String description, Time startTime, Time endTime, int userId){               
 		PreparedStatement insertProject;
-		String insertUser_sql = "insert into entry_version (entry_version_entry_fk, entry_version_project_fk,entry_version_sprint_fk, entry_version_description, entry_version_current, entry_version_date"
-				+ ",entry_version_starttime, entry_version_endtime, entry_version_userstory_fk) "
-				+ "VALUES (?, ?, ?, ?, ?, ?,?,?,?)";
+		String addEntrySQL = "SELECT add_entry(?,?,?,?,?,?,?,?);";;
 		try {
-			insertProject = this.connect.makeConnection().prepareStatement(insertUser_sql);
+			insertProject = this.connect.makeConnection().prepareStatement(addEntrySQL);
 			
-			insertProject.setInt(1, createNewEntry(employeeId));
+			insertProject.setInt(1, employeeId);
 			if(pId == 0)
 			{
 				insertProject.setNull(2, java.sql.Types.INTEGER);
@@ -138,17 +229,16 @@ public class EntryDAO {
 				insertProject.setInt(3, spId);
 			}
 			insertProject.setString(4, description);
-			insertProject.setBoolean(5, true);
-			insertProject.setDate(6, date);
-			insertProject.setTime(7, startTime);
-			insertProject.setTime(8, endTime);
+			insertProject.setDate(5, date);
+			insertProject.setTime(6, startTime);
+			insertProject.setTime(7, endTime);
 			if(userId == 0)
 			{
-				insertProject.setNull(9, java.sql.Types.INTEGER);
+				insertProject.setNull(8, java.sql.Types.INTEGER);
 			}
 			else
 			{
-				insertProject.setInt(9, userId);
+				insertProject.setInt(8, userId);
 			}
 			insertProject.executeQuery();
 			insertProject.close();
@@ -293,4 +383,40 @@ public class EntryDAO {
 		}
 		return entry_alist;
 	}
+        
+        /**
+         * @author Robert
+         * @param entryId id van de entry die gedelete moet worden
+         */
+        public void deleteEntry(int entryId){
+            PreparedStatement deleteStatement;
+            String deleteSQL="UPDATE entry SET entry_isdeleted=true WHERE entry_id=?";
+            try {
+                deleteStatement = this.connect.makeConnection().prepareStatement(deleteSQL);
+                deleteStatement.setInt(1, entryId);
+                deleteStatement.executeUpdate();
+                deleteStatement.close();
+                
+            } catch (Exception ex) {
+                Logger.getLogger(EntryDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        /**
+         * @author Robert
+         * @param entryId id van entry
+         */
+        public void unDeleteEntry(int entryId){
+            PreparedStatement deleteStatement;
+            String deleteSQL="UPDATE entry SET entry_isdeleted=false WHERE entry_id=?";
+            try {
+                deleteStatement = this.connect.makeConnection().prepareStatement(deleteSQL);
+                deleteStatement.setInt(1, entryId);
+                deleteStatement.executeUpdate();
+                deleteStatement.close();
+                
+            } catch (Exception ex) {
+                Logger.getLogger(EntryDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
 }
