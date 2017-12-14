@@ -276,22 +276,18 @@ public class SprintDAO {
 	 * @param sprintStartDate   lol
 	 * @param sprintEndDate     lol
 	 */
-	public void addSprintToDatabase(int projectID, String sprintName, String sprintDescription, Date sprintStartDate, Date sprintEndDate)
-	{
+	public void addSprintToDatabase(int projectID, String sprintName, String sprintDescription, Date sprintStartDate, Date sprintEndDate){
 		PreparedStatement addSprint;
-		String insertStatement = "INSERT INTO sprint_version(sprint_version_sprint_fk, sprint_version_project_fk, " +
-				"sprint_version_name, sprint_version_description, sprint_version_startdate, sprint_version_enddate, " +
-				"sprint_version_current) VALUES(?,?,?,?,?,?, true)";
+		String insertStatement = "SELECT add_sprint(?,?,?,?,?)";
 		
 		try {
 			addSprint = this.connect.makeConnection().prepareStatement(insertStatement);
 			
-			addSprint.setInt(1, createNewSprint());
-			addSprint.setInt(2,  projectID);
-			addSprint.setString(3, sprintName);
-			addSprint.setString(4, sprintDescription);
-			addSprint.setDate(5, sprintStartDate);
-			addSprint.setDate(6, sprintEndDate);
+			addSprint.setInt(1,  projectID);
+			addSprint.setString(2, sprintName);
+			addSprint.setString(3, sprintDescription);
+			addSprint.setDate(4, sprintStartDate);
+			addSprint.setDate(5, sprintEndDate);
 			
 			addSprint.executeQuery();
 			addSprint.close();

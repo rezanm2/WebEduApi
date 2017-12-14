@@ -35,6 +35,7 @@ public class SprintResource {
     private SprintDAO sprintDao;
     public SprintResource(){
         sprintDao = new SprintDAO();
+        sprintDao.createAddSprintFunction();
     }
     
     @GET
@@ -51,12 +52,39 @@ public class SprintResource {
         }
     }
     
-//    @POST
-//    @Path("/create")
-//    @JsonProperty
-//    @Produces(MediaType.APPLICATION_JSON)
-//    @Consumes(MediaType.APPLICATION_JSON)
-//    public boolean create(){
-//        
-//    }
+    @POST
+    @Path("/create")
+    @JsonProperty
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public boolean create(@FormParam("projid") Optional<String> projectId,
+                        @FormParam("name") Optional<String> name,
+                        @FormParam("description") Optional<String> description,
+                        @FormParam("startdate") Optional<String> startDate,
+                        @FormParam("endDate") Optional<String> endDate){
+        DateHelper dateHelper = new DateHelper();
+        Date startDateParsed = dateHelper.parseDate(startDate.get(), "dd-MM-yyyy");
+        Date endDateParsed = dateHelper.parseDate(endDate.get(), "dd-MM-yyyy");
+        sprintDao.addSprintToDatabase(Integer.parseInt(projectId.get()), name.get(), 
+                description.get(), startDateParsed, endDateParsed);
+        return true;
+    }
+    
+    @POST
+    @Path("/create/url")
+    @JsonProperty
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public boolean createByUrl(@QueryParam("projid") Optional<String> projectId,
+                        @QueryParam("name") Optional<String> name,
+                        @QueryParam("description") Optional<String> description,
+                        @QueryParam("startdate") Optional<String> startDate,
+                        @QueryParam("enddate") Optional<String> endDate){
+        DateHelper dateHelper = new DateHelper();
+        Date startDateParsed = dateHelper.parseDate(startDate.get(), "dd-MM-yyyy");
+        Date endDateParsed = dateHelper.parseDate(endDate.get(), "dd-MM-yyyy");
+        sprintDao.addSprintToDatabase(Integer.parseInt(projectId.get()), name.get(), 
+                description.get(), startDateParsed, endDateParsed);
+        return true;
+    }
 }
