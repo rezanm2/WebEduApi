@@ -10,6 +10,11 @@ import java.util.logging.Logger;
 public class EntryDAO {
     private ConnectDAO connect;
     
+    public EntryDAO(){
+    	this.connect = new ConnectDAO();
+        this.createAddEntryProcedure();
+    }
+    
     private ArrayList<EntryModel> fillModels(ResultSet entrySet){
         ArrayList<EntryModel> entries = new ArrayList<EntryModel>();
         try{
@@ -36,10 +41,6 @@ public class EntryDAO {
 		}
         return entries;
     }
-
-    public EntryDAO(){
-    	this.connect = new ConnectDAO();
-	}
     
     public void createAddEntryProcedure(){
         String project_list_sql = "CREATE OR REPLACE FUNCTION add_entry(empid INT4, projid INT4, sprintid INT4, description text, datum date, starttime time, endtime time, userstoryid INT4)\n" +

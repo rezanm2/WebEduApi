@@ -11,7 +11,8 @@ public class SprintDAO {
 
     public SprintDAO(){
     	this.connect = new ConnectDAO();
-	}
+        this.createAddSprintFunction();
+    }
     
     /**
      * Maakt een procedure die sprints toe kan voegen.

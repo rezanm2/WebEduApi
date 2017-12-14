@@ -28,7 +28,6 @@ public class ProjectResource {
 
     public ProjectResource(){
         projectDAO = new ProjectDAO();
-        projectDAO.createAddProjectFunction();
     }
 
     @GET

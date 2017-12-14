@@ -19,6 +19,7 @@ public class ProjectDAO {
 
     public ProjectDAO(){
         this.connect = new ConnectDAO();
+        this.createAddProjectFunction();
     }
 
     /**

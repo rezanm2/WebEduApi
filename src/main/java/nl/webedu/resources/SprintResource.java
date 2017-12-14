@@ -37,7 +37,6 @@ public class SprintResource {
     private SprintDAO sprintDao;
     public SprintResource(){
         sprintDao = new SprintDAO();
-        sprintDao.createAddSprintFunction();
     }
     
     @GET
