@@ -68,10 +68,6 @@ public class ProjectResource {
         String name_parse = name.get();
         String description_parse = description.get();
         int customerId_parse = Integer.parseInt(customerId.get());
-//        String name_parse = String.format("%b", name.or("empty"));
-//        String description_parse = String.format("%b", description.or("empty"));
-//        String customerId_parse1 = String.format("%b", customerId.or("empty"));
-//        int customerId_parse2 = Integer.parseInt(customerId_parse1);
         projectDAO.addProject(name_parse, description_parse, customerId_parse);
         System.out.println(this.getClass().toString()+": create werkt!: "+name_parse+description_parse+customerId_parse);
         return true;
@@ -80,16 +76,15 @@ public class ProjectResource {
     @Path("/create/url")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-        public boolean createByUrl(@QueryParam("name") Optional<String> name,
-                @QueryParam("description") Optional<String> description,
-                @QueryParam("custid") Optional<String> customerId){
+    public boolean createByUrl(@QueryParam("name") Optional<String> name,
+            @QueryParam("description") Optional<String> description,
+            @QueryParam("custid") Optional<String> customerId){
         String name_parse = name.get();
+        System.out.println(name_parse);
         String description_parse = description.get();
+        System.out.println(description_parse);
         int customerId_parse = Integer.parseInt(customerId.get());
-//        String name_parse = String.format("%b", name.or("empty"));
-//        String description_parse = String.format("%b", description.or("empty"));
-//        String customerId_parse1 = String.format("%b", customerId.or("empty"));
-//        int customerId_parse2 = Integer.parseInt(customerId_parse1);
+        System.out.println(customerId_parse);
         this.projectDAO.addProject(name_parse, description_parse, customerId_parse);
         System.out.println(this.getClass().toString()+": create werkt!: "+name_parse+description_parse+customerId_parse);
         return true;
@@ -108,36 +103,28 @@ public class ProjectResource {
     @Path("/update")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-        public boolean update(@FormParam("pid") Optional<String> projectId,
-                @FormParam("name") Optional<String> name,
-                @FormParam("description") Optional<String> description) throws Exception{
-
-        int projectId_parse = Integer.parseInt(projectId.get());
+    public boolean update(@FormParam("pid") Optional<String> projectId,
+            @FormParam("name") Optional<String> name,
+            @FormParam("description") Optional<String> description) throws Exception{
+        int projectId_parse;
+        projectId_parse = Integer.parseInt(projectId.get());
         String name_parse = name.get();
         String description_parse = description.get();
-//        String name_parse = String.format("%b", name.or("empty"));
-//        String description_parse = String.format("%b", description.or("empty"));
-//        String customerId_parse1 = String.format("%b", customerId.or("empty"));
-//        int customerId_parse2 = Integer.parseInt(customerId_parse1);
         projectDAO.modifyProject(projectId_parse,name_parse, description_parse);
         System.out.println(this.getClass().toString()+": update werkt!: "+name_parse+description_parse);
         return true;
     }
+
     @POST
     @Path("/update/url")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-        public boolean updateByUrl(@QueryParam("pid") Optional<String> projectId,
-                @QueryParam("name") Optional<String> name,
-                @QueryParam("description") Optional<String> description) throws Exception{
+    public boolean updateByUrl(@QueryParam("pid") Optional<String> projectId,
+            @QueryParam("name") Optional<String> name,
+            @QueryParam("description") Optional<String> description) throws Exception{
         int projectId_parse = Integer.parseInt(projectId.get());
         String name_parse = name.get();
         String description_parse = description.get();
-    //        String name_parse = String.format("%b", name.or("empty"));
-    //        String description_parse = String.format("%b", description.or("empty"));
-    //        String customerId_parse1 = String.format("%b", customerId.or("empty"));
-    //        int customerId_parse2 = Integer.parseInt(customerId_parse1);
-    //        this.projectDAO.modifyProject(projectId_parse, name_parse, description_parse);
         projectDAO.modifyProject(projectId_parse, name_parse, description_parse);
         System.out.println(this.getClass().toString()+": update werkt!: "+name_parse+description_parse);
         return true;

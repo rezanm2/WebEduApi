@@ -12,6 +12,11 @@ import nl.webedu.healthchecks.DatabaseHealthCheck;
 import nl.webedu.models.EmployeeModel;
 import nl.webedu.resources.ProjectResource;
 import nl.webedu.resources.UserResource;
+import org.eclipse.jetty.servlets.CrossOriginFilter;
+
+import javax.servlet.DispatcherType;
+import javax.servlet.FilterRegistration;
+import java.util.EnumSet;
 
 /**
  * Deze klasse is de startpunt van de api
@@ -60,11 +65,21 @@ public class WebEduApiApplication extends Application<WebEduApiConfiguration> {
                         "Security realm",
                         EmployeeModel.class
                 )));
+
         /**
-         * Hier krijgt de variabele 'naam' de apiName van de WebEduApiConfiguration
-         * @author rezanaser
+         * ALLOW ALL CONTENT FOR DEV PURPOSES WILL DELETE THIS ON PRODUCTION TIME
          */
-        name = configuration.getApiName();
+        final FilterRegistration.Dynamic cors =
+                environment.servlets().addFilter("CORS", CrossOriginFilter.class);
+
+        // Configure CORS parameters
+        cors.setInitParameter(CrossOriginFilter.ALLOWED_ORIGINS_PARAM, "*");
+        cors.setInitParameter(CrossOriginFilter.ALLOWED_HEADERS_PARAM, "X-Requested-With,Content-Type,Accept,Origin,Authorization");
+        cors.setInitParameter(CrossOriginFilter.ALLOWED_METHODS_PARAM, "OPTIONS,GET,PUT,POST,DELETE,HEAD");
+        cors.setInitParameter(CrossOriginFilter.ALLOW_CREDENTIALS_PARAM, "true");
+
+        // Add URL mapping
+        cors.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");
     }
 
 }
