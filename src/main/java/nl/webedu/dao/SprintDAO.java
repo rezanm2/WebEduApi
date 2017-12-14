@@ -11,7 +11,8 @@ public class SprintDAO {
 
     public SprintDAO(){
     	this.connect = new ConnectDAO();
-	}
+        this.createAddSprintFunction();
+    }
     
     /**
      * Maakt een procedure die sprints toe kan voegen.
@@ -365,6 +366,12 @@ public class SprintDAO {
 
 	public void removeSprint(int sprintID) throws Exception {
 		String deleteSprint = "UPDATE sprint SET sprint_isdeleted = true WHERE sprint_id = ?";
+		PreparedStatement lockStatement = this.connect.makeConnection().prepareStatement(deleteSprint);
+		lockStatement.setInt(1, sprintID);
+		lockStatement.executeUpdate();
+	}
+        public void unRemoveSprint(int sprintID) throws Exception {
+		String deleteSprint = "UPDATE sprint SET sprint_isdeleted = false WHERE sprint_id = ?";
 		PreparedStatement lockStatement = this.connect.makeConnection().prepareStatement(deleteSprint);
 		lockStatement.setInt(1, sprintID);
 		lockStatement.executeUpdate();
