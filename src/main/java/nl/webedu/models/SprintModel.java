@@ -71,11 +71,11 @@ public class SprintModel {
 	{
 		this.projectFK = projectFK;
 		
-		for(int counter = 0; counter < projectDAO.getAllProjects().size(); counter++) {
-			if(projectFK == projectDAO.getAllProjects().get(counter).getProjectId()) {
-				this.setProjectName(projectDAO.getAllProjects().get(counter).getProjectName());
-			}
-		}
+//		for(int counter = 0; counter < projectDAO.getAllProjects().size(); counter++) {
+//			if(projectFK == projectDAO.getAllProjects().get(counter).getProjectId()) {
+//				this.setProjectName(projectDAO.getAllProjects().get(counter).getProjectName());
+//			}
+//		}
 	}
 	public String getProjectName() {
 		return projectName;
