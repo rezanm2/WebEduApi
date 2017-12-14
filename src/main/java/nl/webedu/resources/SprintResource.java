@@ -53,6 +53,60 @@ public class SprintResource {
         }
     }
     
+    @PUT
+    @Path("/byemployee")
+    @JsonProperty
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public ArrayList<SprintModel> readByEmployee(@FormParam("empid") Optional<String> employeeId){
+        try {
+            return this.sprintDao.allSprintsEmployee(Integer.parseInt(employeeId.get()));
+        } catch (Exception ex) {
+            Logger.getLogger(SprintResource.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+    }
+    @PUT
+    @Path("/byemployee/url")
+    @JsonProperty
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public ArrayList<SprintModel> readByEmployeeByUrl(@QueryParam("empid") Optional<String> employeeId){
+        try {
+            return this.sprintDao.allSprintsEmployee(Integer.parseInt(employeeId.get()));
+        } catch (Exception ex) {
+            Logger.getLogger(SprintResource.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+    }
+    
+    @PUT
+    @Path("/byproject")
+    @JsonProperty
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public ArrayList<SprintModel> readByProject(@FormParam("projid") Optional<String> projectId){
+        try {
+            return this.sprintDao.sprintsProjects(Integer.parseInt(projectId.get()));
+        } catch (Exception ex) {
+            Logger.getLogger(SprintResource.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+    }
+    @PUT
+    @Path("/byproject/url")
+    @JsonProperty
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public ArrayList<SprintModel> readByProjectByUrl(@QueryParam("projid") Optional<String> projectId){
+        try {
+            return this.sprintDao.sprintsProjects(Integer.parseInt(projectId.get()));
+        } catch (Exception ex) {
+            Logger.getLogger(SprintResource.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+    }
+    
     @POST
 //    @Path("/create")
     @JsonProperty
@@ -119,9 +173,11 @@ public class SprintResource {
                         @QueryParam("description") Optional<String> description,
                         @QueryParam("startdate") Optional<String> startDate,
                         @QueryParam("endDate") Optional<String> endDate){
+        
         DateHelper dateHelper = new DateHelper();
         Date startDateParsed = dateHelper.parseDate(startDate.get(), "dd-MM-yyyy");
         Date endDateParsed = dateHelper.parseDate(endDate.get(), "dd-MM-yyyy");
+        
         sprintDao.modifySprint(Integer.parseInt(sprintId.get()),
                 name.get(), Integer.parseInt(projectId.get()),  
                 description.get(), startDateParsed, endDateParsed);

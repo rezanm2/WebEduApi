@@ -114,7 +114,8 @@ public class SprintDAO {
 	 */
 	public ArrayList<SprintModel> sprintsProjects(int p_id){
 		ArrayList<SprintModel> sprint_alist = new ArrayList<SprintModel>();
-		String projectsSprintsSql = "SELECT *  FROM sprint_version sv INNER JOIN project_version pv " +
+		String projectsSprintsSql = "SELECT *  FROM sprint_version sv INNER JOIN sprint s ON s.sprint_id=sv.sprint_version_sprint_fk " +
+                                "INNER JOIN project_version pv " +
 				"ON sv.sprint_version_project_fk=pv.project_version_project_fk INNER JOIN project p " +
 				"ON p.project_id=pv.project_version_project_fk WHERE pv.project_version_project_fk= ?" +
 				"AND sv.sprint_version_current=TRUE AND project_isdeleted=FALSE";
@@ -128,9 +129,12 @@ public class SprintDAO {
 				sprint = new SprintModel();
 				sprint.setSprintId(sprintsSets.getInt("sprint_version_sprint_fk"));
 				sprint.setSprintName(sprintsSets.getString("sprint_version_name"));
+                                sprint.setSprintDescription(sprintsSets.getString("sprint_version_description"));
 				sprint.setSprintStartDate(sprintsSets.getString("sprint_version_startdate"));
 				sprint.setSprintEndDate(sprintsSets.getString("sprint_version_enddate"));
-				sprint.setSprintIsDeleted(sprintsSets.getBoolean("sprint_version_isdeleted"));
+				sprint.setSprintIsDeleted(sprintsSets.getBoolean("sprint_isdeleted"));
+                                sprint.setIsCurrent(sprintsSets.getBoolean("sprint_version_current"));
+                                sprint.setProjectFK(sprintsSets.getInt("sprint_version_project_fk"));
 				sprint_alist.add(sprint);
 			}
 			sprintsStatement.close();
