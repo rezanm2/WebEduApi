@@ -1,17 +1,8 @@
 package nl.webedu.dao;
 
-import nl.webedu.models.ProjectModel;
 import nl.webedu.models.EntryModel;
-import nl.webedu.models.EmployeeModel;
-import nl.webedu.dao.ConnectDAO;
 
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Time;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -111,7 +102,6 @@ public class EntryDAO {
 		String employee_entry_sql = "SELECT * FROM entry INNER JOIN entry_version "
                                             + "ON entry_id=entry_version_entry_fk "
                                             + "WHERE entry_version_current=true AND entry_isdeleted=false;";
-				//+ "AND entry_version_current = 'y' ";
 		try {
 			PreparedStatement entries_statement = this.connect.makeConnection().prepareStatement(employee_entry_sql);
 			
@@ -145,6 +135,7 @@ public class EntryDAO {
 	 * Deze methode krijgt de geselecteerde uur van de goedkeuren view en stuurt deze wijziging naar de database.
 	 * @param id is de id van de entry.
 	 * @author rezanaser
+         * @throws Exception SQL exception en normale exception
 	 */
 	public void approveHours(int id) throws Exception {
 		String employee_entry_sql = "UPDATE entry SET entry_status = 'approved' WHERE entry_id = ? ";
@@ -212,7 +203,7 @@ public class EntryDAO {
 	 * @param description   entry description
 	 * @param startTime     entry start time
 	 * @param endTime       entry end time
-	 * @param userId
+	 * @param userId        userstory Id
          */
 	public void addEntry(int employeeId, int pId, int spId, Date date, String description, Time startTime, Time endTime, int userId){               
 		PreparedStatement insertProject;
@@ -395,7 +386,7 @@ public class EntryDAO {
         
         /**
          * @author Robert
-         * @param entryId 
+         * @param entryId id van de entry die gedelete moet worden
          */
         public void deleteEntry(int entryId){
             PreparedStatement deleteStatement;
@@ -413,7 +404,7 @@ public class EntryDAO {
         
         /**
          * @author Robert
-         * @param entryId 
+         * @param entryId id van entry
          */
         public void unDeleteEntry(int entryId){
             PreparedStatement deleteStatement;

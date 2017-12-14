@@ -21,9 +21,9 @@ public class DateHelper {
      * Maakt een sql.Date object van een dateString en een formatString
      * 
      * @author Robert den Blaauwen
-     * @param  dateString
-     * @param  formatString
-     * @return sqlDate
+     * @param  dateString   string met datum
+     * @param  formatString string met format
+     * @return sqlDate      sql.Date object 
      */
     public Date parseDate(String dateString, String formatString){
         SimpleDateFormat sdf1 = new SimpleDateFormat(formatString);
@@ -40,9 +40,9 @@ public class DateHelper {
     
     /**
      * @author  Robert den Blaauwen
-     * @param   timeString
-     * @param   formatString
-     * @return 
+     * @param   timeString      string met tijd
+     * @param   formatString    string met format
+     * @return sqlTime          sql.Time object
      */
     public Time parseTime(String timeString, String formatString){
         SimpleDateFormat sdf = new SimpleDateFormat(formatString);

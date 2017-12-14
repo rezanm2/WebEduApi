@@ -8,6 +8,7 @@ import io.dropwizard.bundles.assets.ConfiguredAssetsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import nl.webedu.auth.Auth;
+import nl.webedu.healthchecks.DatabaseHealthCheck;
 import nl.webedu.models.EmployeeModel;
 import nl.webedu.resources.ProjectResource;
 import nl.webedu.resources.UserResource;
@@ -57,6 +58,7 @@ public class WebEduApiApplication extends Application<WebEduApiConfiguration> {
         environment.jersey().register(new UserResource());
         environment.jersey().register(new ProjectResource());
         environment.jersey().register(new EntryResource());
+        environment.jersey().register(new SprintResource());
         environment.jersey().register(AuthFactory.binder(
                 new BasicAuthFactory<>(
                         new Auth(),

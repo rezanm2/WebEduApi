@@ -1,14 +1,11 @@
 package nl.webedu.dao;
 
+import nl.webedu.models.EmployeeModel;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import nl.webedu.models.EntryModel;
-import nl.webedu.models.EmployeeModel;
-import nl.webedu.models.Role;
-import nl.webedu.dao.ConnectDAO;
 
 /**
  * Employee DAO to be used to access database to get employee information
@@ -56,7 +53,7 @@ public class EmployeeDAO {
 	/**
 	 * return the id of the last employee id
 	 * @return int of id
-	 * @throws Exception
+	 * @throws Exception Een SQL exception
 	 */
 	public int createEmployee() throws Exception {
 		int id = 0;
@@ -79,6 +76,7 @@ public class EmployeeDAO {
 	/**
 	 * Unlock an employee
 	 * @param emp_id id to lock
+         * @throws Exception Een sql exception en normale exception
 	 */
 	public void unlockEmployee(int emp_id) throws Exception {
 		String lock_query = "UPDATE employee "
@@ -129,6 +127,7 @@ public class EmployeeDAO {
 	/**
 	 * Lock an employee
 	 * @param emp_id id to lock
+         * @throws Exception een SQL exceptione n normale exception
 	 */
 	public void lockEmployee(int emp_id) throws Exception {
 		String lock_query = "UPDATE employee SET employee_isdeleted = true WHERE employee_id = ?";
@@ -137,6 +136,10 @@ public class EmployeeDAO {
 		lock_statement.executeUpdate();
 	}
 
+        /**
+         * 
+         * @return employee_alist arraylist met employees
+         */
 	public ArrayList<EmployeeModel> getAllEmployees(){
 		//Empty list to return
 		ArrayList<EmployeeModel> employee_alist = new ArrayList<EmployeeModel>();

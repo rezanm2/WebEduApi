@@ -6,20 +6,17 @@
 package nl.webedu.resources;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.ArrayList;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.FormParam;
 import com.google.common.base.Optional;
 import io.dropwizard.auth.Auth;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
 import nl.webedu.dao.ProjectDAO;
 import nl.webedu.models.EmployeeModel;
 import nl.webedu.models.ProjectModel;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -102,7 +99,7 @@ public class ProjectResource {
         
     /**
      * De method mist een manier om de de klant aan te passen,
-     * want de method in de DAO ondersteunt dat niet >:(
+     * want de method in de DAO ondersteunt dat niet
      *
      * @param projectId id van bestaand project
      * @param name      nieuwe naam van project
@@ -115,16 +112,21 @@ public class ProjectResource {
     @Consumes(MediaType.APPLICATION_JSON)
         public boolean update(@FormParam("pid") Optional<String> projectId,
                 @FormParam("name") Optional<String> name,
-                @FormParam("description") Optional<String> description) throws Exception{
+                @FormParam("description") Optional<String> description){
 
         int projectId_parse = Integer.parseInt(projectId.get());
         String name_parse = name.get();
         String description_parse = description.get();
-//        String name_parse = String.format("%b", name.or("empty"));
+        try {
+            //        String name_parse = String.format("%b", name.or("empty"));
 //        String description_parse = String.format("%b", description.or("empty"));
 //        String customerId_parse1 = String.format("%b", customerId.or("empty"));
 //        int customerId_parse2 = Integer.parseInt(customerId_parse1);
-        projectDAO.modifyProject(projectId_parse,name_parse, description_parse);
+            projectDAO.modifyProject(projectId_parse,name_parse, description_parse);
+        } catch (Exception ex) {
+            Logger.getLogger(ProjectResource.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
         System.out.println(this.getClass().toString()+": update werkt!: "+name_parse+description_parse);
         return true;
     }

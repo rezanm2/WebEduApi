@@ -18,6 +18,7 @@ public class SprintModel {
 	private String sprintDescription;
 	private int projectFK;
 	private String projectName;
+        private boolean isCurrent;
 	private ProjectDAO projectDAO = new ProjectDAO();
 	private ArrayList<EntryModel> entries;
 	
@@ -81,5 +82,12 @@ public class SprintModel {
 	}
 	public void setProjectName(String projectName) {
 		this.projectName = projectName;
+	}
+        
+        public boolean getIsCurrent() {
+		return this.isCurrent;
+	}
+	public void setIsCurrent(boolean isCurrent) {
+		this.isCurrent=isCurrent;
 	}
 }

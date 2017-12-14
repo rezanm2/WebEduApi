@@ -5,14 +5,10 @@
  */
 package nl.webedu.dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
 import nl.webedu.models.ProjectModel;
-import nl.webedu.dao.ConnectDAO;
+
+import java.sql.*;
+import java.util.ArrayList;
 
 /**
  *
@@ -96,12 +92,12 @@ public class ProjectDAO {
         }
     }
     
-    /**
+        /**
 	 * Met deze methode krijg je een lijst van huidige project versies terug
 	 * @return Een lijst van laatste project versies
 	 * @author rezanaser
+         * @throws Exception SQL exception en normale exception
 	 */
-	
 	public ArrayList<ProjectModel> project_list() throws Exception {
 		ArrayList<ProjectModel> proj_list = new ArrayList<ProjectModel>();
 		String project_list_sql = "SELECT * FROM project_version "
@@ -165,8 +161,9 @@ public class ProjectDAO {
 
 	/**
 	 * De volgende voegt een nieuwe project toe aan de project tabel
-     * @return id   de id van het project dat net gemaakt is.
+         * @return id   de id van het project dat net gemaakt is.
 	 * @author rezanaser
+         * @throws Exception SQL exception en normale exception
 	 */
 	public int createNewProject() throws Exception {
 		int id = 0;
@@ -241,6 +238,7 @@ public class ProjectDAO {
      * @param name          project naam
      * @param description   project description
      * @author rezanaser
+     * @throws Exception SQL exception en normale exception
      */
 	public void modifyProject(int pId, String name, String description) throws Exception {
 		String changePreviousVersion = "UPDATE project_version set project_version_current = false "

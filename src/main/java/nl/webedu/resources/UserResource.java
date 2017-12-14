@@ -1,16 +1,16 @@
 package nl.webedu.resources;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.dropwizard.auth.Auth;
-import java.util.ArrayList;
-import javax.ws.rs.Consumes;
 import nl.webedu.dao.EmployeeDAO;
+import nl.webedu.models.EmployeeModel;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import nl.webedu.models.EmployeeModel;
+import java.util.ArrayList;
 
 @Path("/login")
 public class UserResource {
@@ -28,6 +28,20 @@ public class UserResource {
         try{
             return this.employeeDAO.getAllEmployees();
         } catch(Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Path("/users")
+    @GET
+    @JsonProperty
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public ArrayList<EmployeeModel> Users() {
+        try {
+            return this.employeeDAO.getAllEmployees();
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
