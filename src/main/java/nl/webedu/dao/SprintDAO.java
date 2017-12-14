@@ -48,6 +48,7 @@ public class SprintDAO {
 	 * @param employeeId    Id van de employee voor wie je de projecten wilt hebben
 	 * @author rezanaser
 	 * @return sprint_alist
+         * @throws Exception SQL exception en normale exception
 	 */
 	public ArrayList<SprintModel> allSprintsEmployee(int employeeId) throws Exception {
 		ArrayList<SprintModel> sprintList = new ArrayList<SprintModel>();
@@ -78,6 +79,7 @@ public class SprintDAO {
 	 * Deze methode vult de combobox met de sprints van het gevraagde project
 	 * @author rezanaser
 	 * @return sprint_alist lijst van sprints
+         * @throws Exception SQL exception en normale exception
 	 */
 	public ArrayList<SprintModel> allSprints() throws Exception {
             ArrayList<SprintModel> sprintList = new ArrayList<SprintModel>();
@@ -246,6 +248,7 @@ public class SprintDAO {
 	 * Deze methode geeft het gegenereerde ID van een sprint terug
 	 * @author Jeroen Zandvliet
 	 * @return generatedID
+         * @throws Exception SQL exception en normale exception
 	 */
 	public int createNewSprint() throws Exception {
 		int generatedID = 0;
