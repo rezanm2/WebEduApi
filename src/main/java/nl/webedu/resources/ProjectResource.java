@@ -39,8 +39,18 @@ public class ProjectResource {
     public ArrayList<ProjectModel> ProjectName(@Auth EmployeeModel employeeModel){
         return this.projectDAO.getAllProjects();
     }
-    @POST
-    @Path("/read/byemployee")
+
+    @GET
+    @Path("/read/all")
+    @JsonProperty
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public ArrayList<ProjectModel> AllProjects(){
+        return this.projectDAO.getAllProjects();
+    }
+
+    @GET
+    @Path("/read/project-by-employee")
     @JsonProperty
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -49,6 +59,7 @@ public class ProjectResource {
         System.out.println(this.getClass().toString()+": read werkt!");
         return projectDAO.project_list_employee(employeeId_parse);
     }
+
     @GET
     @Path("/read/byemployee/url")
     @JsonProperty
@@ -64,9 +75,9 @@ public class ProjectResource {
     @Path("/create")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-        public boolean create(@FormParam("name") Optional<String> name,
-                @FormParam("description") Optional<String> description,
-                @FormParam("custid") Optional<String> customerId){
+    public boolean create(@FormParam("name") Optional<String> name,
+            @FormParam("description") Optional<String> description,
+            @FormParam("custid") Optional<String> customerId){
 
         String name_parse = name.get();
         String description_parse = description.get();
@@ -75,6 +86,7 @@ public class ProjectResource {
         System.out.println(this.getClass().toString()+": create werkt!: "+name_parse+description_parse+customerId_parse);
         return true;
     }
+
     @POST
     @Path("/create/url")
     @Produces(MediaType.APPLICATION_JSON)
@@ -102,7 +114,7 @@ public class ProjectResource {
      * @param description   nieuwe beschrijving vvan project
      * @return true
      */
-    @POST
+    @PUT
     @Path("/update")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -115,10 +127,6 @@ public class ProjectResource {
         String name_parse = name.get();
         String description_parse = description.get();
         try {
-            //        String name_parse = String.format("%b", name.or("empty"));
-//        String description_parse = String.format("%b", description.or("empty"));
-//        String customerId_parse1 = String.format("%b", customerId.or("empty"));
-//        int customerId_parse2 = Integer.parseInt(customerId_parse1);
             projectDAO.modifyProject(projectId_parse,name_parse, description_parse);
         } catch (Exception ex) {
             Logger.getLogger(ProjectResource.class.getName()).log(Level.SEVERE, null, ex);
@@ -143,7 +151,7 @@ public class ProjectResource {
         return true;
     }
 
-    @POST
+    @DELETE
     @Path("/delete")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -153,6 +161,7 @@ public class ProjectResource {
         System.out.println(this.getClass().toString()+": update werkt!: ");
         return true;
     }
+
     @POST
     @Path("/delete/url")
     @Produces(MediaType.APPLICATION_JSON)

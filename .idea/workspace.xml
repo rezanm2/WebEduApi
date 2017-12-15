@@ -2,21 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6ac41c10-877c-4a77-b779-264b846221c3" name="Default" comment="">
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/main/java/nl/webedu/helpers/DateHelper.java" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterPath="" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/nl/webedu/WebEduApiApplication.java" afterPath="$PROJECT_DIR$/src/main/java/nl/webedu/WebEduApiApplication.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/nl/webedu/dao/ConnectDAO.java" afterPath="$PROJECT_DIR$/src/main/java/nl/webedu/dao/ConnectDAO.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/nl/webedu/dao/EmployeeDAO.java" afterPath="$PROJECT_DIR$/src/main/java/nl/webedu/dao/EmployeeDAO.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/nl/webedu/dao/EntryDAO.java" afterPath="$PROJECT_DIR$/src/main/java/nl/webedu/dao/EntryDAO.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/nl/webedu/dao/ProjectDAO.java" afterPath="$PROJECT_DIR$/src/main/java/nl/webedu/dao/ProjectDAO.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/nl/webedu/dao/SprintDAO.java" afterPath="$PROJECT_DIR$/src/main/java/nl/webedu/dao/SprintDAO.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/nl/webedu/dao/UserStoryDAO.java" afterPath="$PROJECT_DIR$/src/main/java/nl/webedu/dao/UserStoryDAO.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/nl/webedu/models/EntryModel.java" afterPath="$PROJECT_DIR$/src/main/java/nl/webedu/models/EntryModel.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/nl/webedu/models/SprintModel.java" afterPath="$PROJECT_DIR$/src/main/java/nl/webedu/models/SprintModel.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/nl/webedu/resources/EntryResource.java" afterPath="$PROJECT_DIR$/src/main/java/nl/webedu/resources/EntryResource.java" />
       <change beforePath="$PROJECT_DIR$/src/main/java/nl/webedu/resources/ProjectResource.java" afterPath="$PROJECT_DIR$/src/main/java/nl/webedu/resources/ProjectResource.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/nl/webedu/resources/SprintResource.java" afterPath="$PROJECT_DIR$/src/main/java/nl/webedu/resources/SprintResource.java" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -31,7 +18,7 @@
       <file leaf-file-name="WebEduApiApplication.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/nl/webedu/WebEduApiApplication.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="18">
+            <state relative-caret-position="180">
               <caret line="27" column="0" lean-forward="false" selection-start-line="27" selection-start-column="0" selection-end-line="27" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -45,24 +32,26 @@
       <file leaf-file-name="ProjectResource.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/nl/webedu/resources/ProjectResource.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="180">
-              <caret line="30" column="46" lean-forward="true" selection-start-line="30" selection-start-column="46" selection-end-line="30" selection-end-column="46" />
+            <state relative-caret-position="18">
+              <caret line="154" column="20" lean-forward="false" selection-start-line="154" selection-start-column="20" selection-end-line="154" selection-end-column="20" />
               <folding>
-                <element signature="e#0#7709#0" expanded="true" />
-                <element signature="e#7673#7674#0" expanded="true" />
-                <element signature="e#7705#7706#0" expanded="true" />
-                <marker date="1513248652452" expanded="true" signature="4963:5095" ph="{...}" />
-                <marker date="1513248652452" expanded="true" signature="5434:5808" ph="{...}" />
-                <marker date="1513248652452" expanded="true" signature="5814:5924" ph="@{...}" />
-                <marker date="1513248652452" expanded="true" signature="5996:6216" ph="{...}" />
-                <marker date="1513248652452" expanded="true" signature="6221:6335" ph="@{...}" />
-                <marker date="1513248652452" expanded="true" signature="6413:6638" ph="{...}" />
-                <marker date="1513248652452" expanded="true" signature="6644:6756" ph="@{...}" />
-                <marker date="1513248652452" expanded="true" signature="6830:7053" ph="{...}" />
-                <marker date="1513248652452" expanded="true" signature="7058:7174" ph="@{...}" />
-                <marker date="1513248652452" expanded="true" signature="7258:7485" ph="{...}" />
-                <marker date="1513248652452" expanded="true" signature="7499:7615" ph="@{...}" />
+                <element signature="e#0#7633#0" expanded="true" />
+                <element signature="e#1295#1296#0" expanded="true" />
+                <element signature="e#1350#1351#0" expanded="true" />
+                <element signature="e#7597#7598#0" expanded="true" />
+                <element signature="e#7629#7630#0" expanded="true" />
+                <marker date="1513274813595" expanded="true" signature="4884:5016" ph="{...}" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="EntryDAO.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/nl/webedu/dao/EntryDAO.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="5868">
+              <caret line="331" column="13" lean-forward="false" selection-start-line="331" selection-start-column="13" selection-end-line="331" selection-end-column="13" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -70,7 +59,7 @@
       <file leaf-file-name="ConnectDAO.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/nl/webedu/dao/ConnectDAO.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="360">
+            <state relative-caret-position="324">
               <caret line="20" column="35" lean-forward="false" selection-start-line="20" selection-start-column="35" selection-end-line="20" selection-end-column="35" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -103,6 +92,7 @@
         <option value="$PROJECT_DIR$/src/main/java/nl/webedu/healthchecks/DatabaseHealthCheck.java" />
         <option value="$PROJECT_DIR$/src/main/java/nl/webedu/WebEduApiApplication.java" />
         <option value="$PROJECT_DIR$/src/main/java/nl/webedu/dao/ConnectDAO.java" />
+        <option value="$PROJECT_DIR$/src/main/java/nl/webedu/resources/SprintResource.java" />
         <option value="$PROJECT_DIR$/src/main/java/nl/webedu/resources/ProjectResource.java" />
       </list>
     </option>
@@ -121,9 +111,10 @@
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="707" />
-    <option name="width" value="666" />
-    <option name="height" value="775" />
+    <option name="x" value="65" />
+    <option name="y" value="-4" />
+    <option name="width" value="1855" />
+    <option name="height" value="1084" />
   </component>
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
@@ -143,10 +134,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
-      <pane id="AndroidView" />
       <pane id="Scratches" />
-      <pane id="Scope" />
+      <pane id="AndroidView" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -220,6 +209,8 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -365,31 +356,32 @@
       <workItem from="1513093347336" duration="2678000" />
       <workItem from="1513096145114" duration="2782000" />
       <workItem from="1513102770963" duration="804000" />
-      <workItem from="1513246048836" duration="2595000" />
+      <workItem from="1513246048836" duration="7195000" />
+      <workItem from="1513272937743" duration="979000" />
+      <workItem from="1513328536871" duration="180000" />
+      <workItem from="1513329805403" duration="1729000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="11374000" />
+    <option name="totallyTimeSpent" value="18862000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="707" y="0" width="1857" height="1092" extended-state="6" />
-    <editor active="true" />
+    <frame x="65" y="-4" width="1855" height="1084" extended-state="6" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32924336" sideWeight="0.49811321" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32924336" sideWeight="0.5018868" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32879582" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32984293" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32879582" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20104712" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.19402985" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20066334" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -401,6 +393,7 @@
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32924336" sideWeight="0.49811321" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Java Enterprise" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Bean Validation" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -418,6 +411,74 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/src/main/java/nl/webedu/resources/ProjectResource.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2466">
+          <caret line="154" column="20" lean-forward="true" selection-start-line="154" selection-start-column="20" selection-end-line="154" selection-end-column="20" />
+          <folding>
+            <element signature="e#0#7633#0" expanded="true" />
+            <element signature="e#1295#1296#0" expanded="true" />
+            <element signature="e#1350#1351#0" expanded="true" />
+            <element signature="e#7597#7598#0" expanded="true" />
+            <element signature="e#7629#7630#0" expanded="true" />
+            <marker date="1513274813595" expanded="true" signature="4884:5016" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/nl/webedu/WebEduApiApplication.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="27" column="0" lean-forward="false" selection-start-line="27" selection-start-column="0" selection-end-line="27" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#1391#1392#0" expanded="true" />
+            <element signature="e#1418#1419#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/nl/webedu/resources/SprintResource.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1656">
+          <caret line="92" column="0" lean-forward="false" selection-start-line="92" selection-start-column="0" selection-end-line="92" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/nl/webedu/dao/EntryDAO.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="5958">
+          <caret line="331" column="13" lean-forward="true" selection-start-line="331" selection-start-column="13" selection-end-line="331" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/nl/webedu/dao/ConnectDAO.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="324">
+          <caret line="20" column="35" lean-forward="false" selection-start-line="20" selection-start-column="35" selection-end-line="20" selection-end-column="35" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/nl/webedu/resources/ProjectResource.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2088">
+          <caret line="116" column="0" lean-forward="false" selection-start-line="116" selection-start-column="0" selection-end-line="116" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#7633#0" expanded="true" />
+            <element signature="e#1295#1296#0" expanded="true" />
+            <element signature="e#1350#1351#0" expanded="true" />
+            <element signature="e#7597#7598#0" expanded="true" />
+            <element signature="e#7629#7630#0" expanded="true" />
+            <marker date="1513274813595" expanded="true" signature="4884:5016" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/nl/webedu/WebEduApiApplication.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -486,7 +547,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="144">
           <caret line="12" column="13" lean-forward="false" selection-start-line="12" selection-start-column="13" selection-end-line="12" selection-end-column="13" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -495,20 +555,12 @@
         <state relative-caret-position="972">
           <caret line="69" column="66" lean-forward="false" selection-start-line="69" selection-start-column="66" selection-end-line="69" selection-end-column="66" />
           <folding>
-            <element signature="e#0#7709#0" expanded="true" />
-            <element signature="e#7673#7674#0" expanded="true" />
-            <element signature="e#7705#7706#0" expanded="true" />
-            <marker date="1513248652452" expanded="true" signature="4963:5095" ph="{...}" />
-            <marker date="1513248652452" expanded="true" signature="5434:5808" ph="{...}" />
-            <marker date="1513248652452" expanded="true" signature="5814:5924" ph="@{...}" />
-            <marker date="1513248652452" expanded="true" signature="5996:6216" ph="{...}" />
-            <marker date="1513248652452" expanded="true" signature="6221:6335" ph="@{...}" />
-            <marker date="1513248652452" expanded="true" signature="6413:6638" ph="{...}" />
-            <marker date="1513248652452" expanded="true" signature="6644:6756" ph="@{...}" />
-            <marker date="1513248652452" expanded="true" signature="6830:7053" ph="{...}" />
-            <marker date="1513248652452" expanded="true" signature="7058:7174" ph="@{...}" />
-            <marker date="1513248652452" expanded="true" signature="7258:7485" ph="{...}" />
-            <marker date="1513248652452" expanded="true" signature="7499:7615" ph="@{...}" />
+            <element signature="e#0#7633#0" expanded="true" />
+            <element signature="e#1295#1296#0" expanded="true" />
+            <element signature="e#1350#1351#0" expanded="true" />
+            <element signature="e#7597#7598#0" expanded="true" />
+            <element signature="e#7629#7630#0" expanded="true" />
+            <marker date="1513274813595" expanded="true" signature="4884:5016" ph="{...}" />
           </folding>
         </state>
       </provider>
@@ -517,9 +569,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="288">
           <caret line="21" column="0" lean-forward="false" selection-start-line="21" selection-start-column="0" selection-end-line="21" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -527,10 +576,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="36">
           <caret line="4" column="26" lean-forward="false" selection-start-line="4" selection-start-column="26" selection-end-line="4" selection-end-column="26" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <marker date="1513093790285" expanded="true" signature="484:841" ph="SELECT entry... entry_version" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -578,9 +623,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="72">
           <caret line="4" column="54" lean-forward="false" selection-start-line="4" selection-start-column="54" selection-end-line="4" selection-end-column="54" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -675,20 +717,12 @@
         <state relative-caret-position="468">
           <caret line="46" column="41" lean-forward="true" selection-start-line="46" selection-start-column="41" selection-end-line="46" selection-end-column="41" />
           <folding>
-            <element signature="e#0#7709#0" expanded="true" />
-            <element signature="e#7673#7674#0" expanded="true" />
-            <element signature="e#7705#7706#0" expanded="true" />
-            <marker date="1513248652452" expanded="true" signature="4963:5095" ph="{...}" />
-            <marker date="1513248652452" expanded="true" signature="5434:5808" ph="{...}" />
-            <marker date="1513248652452" expanded="true" signature="5814:5924" ph="@{...}" />
-            <marker date="1513248652452" expanded="true" signature="5996:6216" ph="{...}" />
-            <marker date="1513248652452" expanded="true" signature="6221:6335" ph="@{...}" />
-            <marker date="1513248652452" expanded="true" signature="6413:6638" ph="{...}" />
-            <marker date="1513248652452" expanded="true" signature="6644:6756" ph="@{...}" />
-            <marker date="1513248652452" expanded="true" signature="6830:7053" ph="{...}" />
-            <marker date="1513248652452" expanded="true" signature="7058:7174" ph="@{...}" />
-            <marker date="1513248652452" expanded="true" signature="7258:7485" ph="{...}" />
-            <marker date="1513248652452" expanded="true" signature="7499:7615" ph="@{...}" />
+            <element signature="e#0#7633#0" expanded="true" />
+            <element signature="e#1295#1296#0" expanded="true" />
+            <element signature="e#1350#1351#0" expanded="true" />
+            <element signature="e#7597#7598#0" expanded="true" />
+            <element signature="e#7629#7630#0" expanded="true" />
+            <marker date="1513274813595" expanded="true" signature="4884:5016" ph="{...}" />
           </folding>
         </state>
       </provider>
@@ -812,7 +846,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="144">
           <caret line="12" column="13" lean-forward="false" selection-start-line="12" selection-start-column="13" selection-end-line="12" selection-end-column="13" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -820,9 +853,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="288">
           <caret line="21" column="0" lean-forward="false" selection-start-line="21" selection-start-column="0" selection-end-line="21" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -830,16 +860,20 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="36">
           <caret line="4" column="26" lean-forward="false" selection-start-line="4" selection-start-column="26" selection-end-line="4" selection-end-column="26" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <marker date="1513093790285" expanded="true" signature="484:841" ph="SELECT entry... entry_version" />
-          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/nl/webedu/resources/SprintResource.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1152">
+          <caret line="92" column="0" lean-forward="false" selection-start-line="92" selection-start-column="0" selection-end-line="92" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/nl/webedu/WebEduApiApplication.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="18">
+        <state relative-caret-position="180">
           <caret line="27" column="0" lean-forward="false" selection-start-line="27" selection-start-column="0" selection-end-line="27" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
@@ -849,9 +883,17 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/nl/webedu/dao/EntryDAO.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="5868">
+          <caret line="331" column="13" lean-forward="false" selection-start-line="331" selection-start-column="13" selection-end-line="331" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/nl/webedu/dao/ConnectDAO.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="360">
+        <state relative-caret-position="324">
           <caret line="20" column="35" lean-forward="false" selection-start-line="20" selection-start-column="35" selection-end-line="20" selection-end-column="35" />
           <folding>
             <element signature="imports" expanded="true" />
@@ -861,23 +903,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/nl/webedu/resources/ProjectResource.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="30" column="46" lean-forward="true" selection-start-line="30" selection-start-column="46" selection-end-line="30" selection-end-column="46" />
+        <state relative-caret-position="18">
+          <caret line="154" column="20" lean-forward="false" selection-start-line="154" selection-start-column="20" selection-end-line="154" selection-end-column="20" />
           <folding>
-            <element signature="e#0#7709#0" expanded="true" />
-            <element signature="e#7673#7674#0" expanded="true" />
-            <element signature="e#7705#7706#0" expanded="true" />
-            <marker date="1513248652452" expanded="true" signature="4963:5095" ph="{...}" />
-            <marker date="1513248652452" expanded="true" signature="5434:5808" ph="{...}" />
-            <marker date="1513248652452" expanded="true" signature="5814:5924" ph="@{...}" />
-            <marker date="1513248652452" expanded="true" signature="5996:6216" ph="{...}" />
-            <marker date="1513248652452" expanded="true" signature="6221:6335" ph="@{...}" />
-            <marker date="1513248652452" expanded="true" signature="6413:6638" ph="{...}" />
-            <marker date="1513248652452" expanded="true" signature="6644:6756" ph="@{...}" />
-            <marker date="1513248652452" expanded="true" signature="6830:7053" ph="{...}" />
-            <marker date="1513248652452" expanded="true" signature="7058:7174" ph="@{...}" />
-            <marker date="1513248652452" expanded="true" signature="7258:7485" ph="{...}" />
-            <marker date="1513248652452" expanded="true" signature="7499:7615" ph="@{...}" />
+            <element signature="e#0#7633#0" expanded="true" />
+            <element signature="e#1295#1296#0" expanded="true" />
+            <element signature="e#1350#1351#0" expanded="true" />
+            <element signature="e#7597#7598#0" expanded="true" />
+            <element signature="e#7629#7630#0" expanded="true" />
+            <marker date="1513274813595" expanded="true" signature="4884:5016" ph="{...}" />
           </folding>
         </state>
       </provider>
