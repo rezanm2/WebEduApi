@@ -5,12 +5,14 @@ import nl.webedu.models.SprintModel;
 
 import java.sql.*;
 import java.util.ArrayList;
+import nl.webedu.helpers.DateHelper;
 
 public class SprintDAO {
     private ConnectDAO connect;
-
+       DateHelper dateHelper = new DateHelper();
     public SprintDAO(){
     	this.connect = new ConnectDAO();
+        
         this.createAddSprintFunction();
     }
     
@@ -270,28 +272,20 @@ public class SprintDAO {
 		return generatedID;
 	}
 
-
-	/**
-	 * Deze methode voegt een gekozen sprint aan de database toe.
-	 * @author Jeroen Zandvliet
-	 * @param sprintName        lol
-	 * @param projectID         lol
-	 * @param sprintDescription lol
-	 * @param sprintStartDate   lol
-	 * @param sprintEndDate     lol
-	 */
-	public void addSprintToDatabase(int projectID, String sprintName, String sprintDescription, Date sprintStartDate, Date sprintEndDate){
+	public void createSprint(SprintModel sprintModel){
 		PreparedStatement addSprint;
 		String insertStatement = "SELECT add_sprint(?,?,?,?,?)";
 		
 		try {
 			addSprint = this.connect.makeConnection().prepareStatement(insertStatement);
 			
-			addSprint.setInt(1,  projectID);
-			addSprint.setString(2, sprintName);
-			addSprint.setString(3, sprintDescription);
-			addSprint.setDate(4, sprintStartDate);
-			addSprint.setDate(5, sprintEndDate);
+                        Date startDateParsed = dateHelper.parseDate(sprintModel.getSprintStartDate(), "yyyy-MM-dd");
+                        Date endDateParsed = dateHelper.parseDate(sprintModel.getSprintEndDate(), "yyyy-MM-dd");
+			addSprint.setInt(1,  sprintModel.getProjectFK());
+			addSprint.setString(2, sprintModel.getSprintName());
+			addSprint.setString(3, sprintModel.getSprintDescription());
+			addSprint.setDate(4, startDateParsed);
+			addSprint.setDate(5, endDateParsed);
 			
 			addSprint.executeQuery();
 			addSprint.close();

@@ -9,10 +9,12 @@ import java.util.ArrayList;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.FormParam;
 import com.google.common.base.Optional;
+import io.dropwizard.auth.Auth;
 import java.sql.Date;
 import java.sql.Time;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import static javax.ws.rs.HttpMethod.PUT;
@@ -27,6 +29,7 @@ import nl.webedu.models.ProjectModel;
 import nl.webedu.helpers.DateHelper;
 import javax.ws.rs.Path;
 import nl.webedu.dao.SprintDAO;
+import nl.webedu.models.EmployeeModel;
 
 /**
  *
@@ -38,9 +41,8 @@ public class SprintResource {
     public SprintResource(){
         sprintDao = new SprintDAO();
     }
-    
     @GET
-//    @Path("/read")
+    @Path("/read")
     @JsonProperty
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -107,44 +109,45 @@ public class SprintResource {
         }
     }
     
+
+    /**
+     * Deze methode krijgt een hele object van de frondend. 
+     * Hij checkt od het model voldoet aan java model. Zo ja,
+     * word er een nieuwe model aangemaakt.
+     * @param sprintModel
+     * @return returneert true of false
+     * @author rezanaser
+     */
     @POST
-//    @Path("/create")
+    @Path("/create")
     @JsonProperty
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public boolean create(@FormParam("projid") Optional<String> projectId,
-                        @FormParam("name") Optional<String> name,
-                        @FormParam("description") Optional<String> description,
-                        @FormParam("startdate") Optional<String> startDate,
-                        @FormParam("endDate") Optional<String> endDate){
-        DateHelper dateHelper = new DateHelper();
-        Date startDateParsed = dateHelper.parseDate(startDate.get(), "dd-MM-yyyy");
-        Date endDateParsed = dateHelper.parseDate(endDate.get(), "dd-MM-yyyy");
-        sprintDao.addSprintToDatabase(Integer.parseInt(projectId.get()), name.get(), 
-                description.get(), startDateParsed, endDateParsed);
+    public boolean create(@Auth EmployeeModel employeeModel, @Valid SprintModel sprintModel){
+        sprintDao.createSprint(sprintModel);
         return true;
     }
     
-    @POST
-    @Path("/url")
-    @JsonProperty
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    public boolean createByUrl(@QueryParam("projid") Optional<String> projectId,
-                        @QueryParam("name") Optional<String> name,
-                        @QueryParam("description") Optional<String> description,
-                        @QueryParam("startdate") Optional<String> startDate,
-                        @QueryParam("enddate") Optional<String> endDate){
-        DateHelper dateHelper = new DateHelper();
-        Date startDateParsed = dateHelper.parseDate(startDate.get(), "dd-MM-yyyy");
-        Date endDateParsed = dateHelper.parseDate(endDate.get(), "dd-MM-yyyy");
-        sprintDao.addSprintToDatabase(Integer.parseInt(projectId.get()), name.get(), 
-                description.get(), startDateParsed, endDateParsed);
-        return true;
-    }
+//    @POST
+//    @Path("/url")
+//    @JsonProperty
+//    @Produces(MediaType.APPLICATION_JSON)
+//    @Consumes(MediaType.APPLICATION_JSON)
+//    public boolean createByUrl(@QueryParam("projid") Optional<String> projectId,
+//                        @QueryParam("name") Optional<String> name,
+//                        @QueryParam("description") Optional<String> description,
+//                        @QueryParam("startdate") Optional<String> startDate,
+//                        @QueryParam("enddate") Optional<String> endDate){
+//        DateHelper dateHelper = new DateHelper();
+//        Date startDateParsed = dateHelper.parseDate(startDate.get(), "dd-MM-yyyy");
+//        Date endDateParsed = dateHelper.parseDate(endDate.get(), "dd-MM-yyyy");
+//        sprintDao.addSprintToDatabase(Integer.parseInt(projectId.get()), name.get(), 
+//                description.get(), startDateParsed, endDateParsed);
+//        return true;
+//    }
     
     @PUT
-//    @Path("/update")
+    @Path("/update")
     @JsonProperty
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -185,7 +188,7 @@ public class SprintResource {
     }
     
     @DELETE
-//    @Path("/delete")
+    @Path("/delete")
     @JsonProperty
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
