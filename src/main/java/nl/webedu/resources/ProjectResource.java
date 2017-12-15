@@ -40,25 +40,25 @@ public class ProjectResource {
         return this.projectDAO.getAllProjects();
     }
 
-    @GET
-    @Path("/read/all")
-    @JsonProperty
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    public ArrayList<ProjectModel> AllProjects(){
-        return this.projectDAO.getAllProjects();
-    }
-
-    @GET
-    @Path("/read/project-by-employee")
-    @JsonProperty
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    public ArrayList<ProjectModel> read(@FormParam("empid") Optional<String> employeeId){
-        int employeeId_parse = Integer.parseInt(employeeId.get());
-        System.out.println(this.getClass().toString()+": read werkt!");
-        return projectDAO.project_list_employee(employeeId_parse);
-    }
+//    @GET
+//    @Path("/read/all")
+//    @JsonProperty
+//    @Produces(MediaType.APPLICATION_JSON)
+//    @Consumes(MediaType.APPLICATION_JSON)
+//    public ArrayList<ProjectModel> AllProjects(){
+//        return this.projectDAO.getAllProjects();
+//    }
+//
+//    @GET
+//    @Path("/read/project-by-employee")
+//    @JsonProperty
+//    @Produces(MediaType.APPLICATION_JSON)
+//    @Consumes(MediaType.APPLICATION_JSON)
+//    public ArrayList<ProjectModel> read(@FormParam("empid") Optional<String> employeeId){
+//        int employeeId_parse = Integer.parseInt(employeeId.get());
+//        System.out.println(this.getClass().toString()+": read werkt!");
+//        return projectDAO.project_list_employee(employeeId_parse);
+//    }
 
     @GET
     @Path("/read/byemployee/url")
