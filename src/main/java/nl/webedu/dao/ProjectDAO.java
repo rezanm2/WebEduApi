@@ -219,12 +219,15 @@ public class ProjectDAO {
 	 * @param description   description van project
 	 * @param customerID    id van bijbehorende klant
 	 */
-	public void addProject(String name, String description, int customerID) {
-		String login_sql = "SELECT add_project('"+name+"','"+description+"','"+customerID+"')";
+	public void addProject(ProjectModel projectModel) {
+		String login_sql = "SELECT add_project(?,?,?)";
 		PreparedStatement project_statement;
 
 		try {
 			project_statement = this.connect.makeConnection().prepareStatement(login_sql);
+                        project_statement.setString(1, projectModel.getProjectName());
+                        project_statement.setString(2, projectModel.getProjectDescription());
+                        project_statement.setInt(3, projectModel.getProjectCustomerFk());
 			project_statement.executeQuery();
 			project_statement.close();
 		} catch (Exception e) {
@@ -241,23 +244,24 @@ public class ProjectDAO {
      * @author rezanaser
      * @throws Exception SQL exception en normale exception
      */
-	public void modifyProject(int pId, String name, String description) throws Exception {
+	public void modifyProject(ProjectModel projectModel) throws Exception {
 		String changePreviousVersion = "UPDATE project_version set project_version_current = false "
 				+ "WHERE project_version_project_fk = ? AND project_version_current= true";
 
 		String change_project = "INSERT INTO project_version(project_version_project_fk, project_version_name, " +
-				"project_version_description, project_version_current) VALUES(?, ?, ?, true)";
+				"project_version_description, project_version_customer_fk, project_version_current) VALUES(?, ?, ?,?, true)";
 
 		PreparedStatement changeVersions= this.connect.makeConnection().prepareStatement(changePreviousVersion);
-		changeVersions.setInt(1, pId);
+		changeVersions.setInt(1, projectModel.getProjectId());
 		changeVersions.executeUpdate();
 		changeVersions.close();
 
 		PreparedStatement changeProject = this.connect.makeConnection().prepareStatement(change_project);
 
-		changeProject.setInt(1, pId);
-		changeProject.setString(2, name);
-		changeProject.setString(3, description);
+		changeProject.setInt(1, projectModel.getProjectId());
+		changeProject.setString(2, projectModel.getProjectName());
+		changeProject.setString(3, projectModel.getProjectDescription());
+                changeProject.setInt(4, projectModel.getProjectCustomerFk());
 		changeProject.executeUpdate();
 		changeProject.close();
 	}
@@ -267,12 +271,16 @@ public class ProjectDAO {
 	 * @param projectId meegekregen van ProjectBeherenViewController
 	 * @author rezanaser
 	 */
-	public void removeProject(int projectId) {
+	public void removeProject(ProjectModel projectModel) {
 		String remove_project = "UPDATE project SET project_isdeleted = true WHERE project_id = ?";
+                String setCurrentOnFalse = "UPDATE project_version set project_version_current = false WHERE project_version_project_fk = ?";
 		try {
 			PreparedStatement lock_statement = this.connect.makeConnection().prepareStatement(remove_project);
-			lock_statement.setInt(1, projectId);
+                        PreparedStatement lock_version_statement = this.connect.makeConnection().prepareStatement(setCurrentOnFalse);
+			lock_statement.setInt(1, projectModel.getProjectId());
 			lock_statement.executeUpdate();
+                        lock_version_statement.setInt(1, projectModel.getProjectId());
+                        lock_version_statement.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
