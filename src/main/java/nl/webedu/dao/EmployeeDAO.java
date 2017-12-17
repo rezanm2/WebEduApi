@@ -155,6 +155,7 @@ public class EmployeeDAO {
                     employee.setEmployeeFirstname(userSet.getString("employee_version_firstname"));
                     employee.setEmployeeEmail(userSet.getString("employee_version_email"));
                     employee.setEmployeePassword(userSet.getString("employee_version_password"));
+                    employee.setEmployeeRole(userSet.getString("employee_version_role"));
                     employee_alist.add(employee);
             }
                     user_statement.close();

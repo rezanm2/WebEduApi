@@ -7,6 +7,8 @@ import io.dropwizard.auth.basic.BasicAuthFactory;
 import io.dropwizard.bundles.assets.ConfiguredAssetsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import java.net.InetAddress;
+import java.net.ServerSocket;
 import nl.webedu.auth.Auth;
 import nl.webedu.healthchecks.DatabaseHealthCheck;
 import nl.webedu.models.EmployeeModel;
@@ -29,6 +31,8 @@ public class WebEduApiApplication extends Application<WebEduApiConfiguration> {
     public static void main(final String[] args) throws Exception {
 //        DateHelper dateHelper = new DateHelper();
 //        System.out.println(dateHelper.parseTime("17:51:05", "HH:mm:ss"));
+//        InetAddress locIP = InetAddress.getByName("192.168.1.68");
+//        ServerSocket serverSocket = new ServerSocket(9999, 0, locIP);
         new WebEduApiApplication().run(args);
     }
     /**
