@@ -57,22 +57,22 @@ public class ProjectDAO {
      */
     public ArrayList<ProjectModel> getAllProjects(){
         try {
-			String getUserQuery = "SELECT * FROM project_version pv INNER JOIN project p on pv.project_version_project_fk=p.project_id "
-					+ "where project_version_current = true AND project_isdeleted=false";
+            String getUserQuery = "SELECT * FROM project_version pv INNER JOIN project p on pv.project_version_project_fk=p.project_id Inner join customer_version cm on pv.project_version_customer_fk = cm.customer_version_customer_fk where project_version_current = true AND project_isdeleted=false";
             PreparedStatement getUserStatement = this.connect.makeConnection().prepareStatement(getUserQuery);
             Connection connect = new ConnectDAO().makeConnection();
-            ResultSet userSet = getUserStatement.executeQuery();
+            ResultSet projectSet = getUserStatement.executeQuery();
             ArrayList<ProjectModel> data = new ArrayList<ProjectModel>();
-            while(userSet.next()){
+            while(projectSet.next()){
                 ProjectModel project =  new ProjectModel();
-                project.setProjectId(userSet.getInt( "project_version_project_fk"));
-                project.setProjectName(userSet.getString("project_version_name"));
-                project.setProjectDescription(userSet.getString("project_version_description"));
-                project.setProjectIsDeleted(userSet.getBoolean("project_isdeleted"));
-                project.setProjectCustomerFk(userSet.getInt("project_version_customer_fk"));
+                project.setProjectId(projectSet.getInt( "project_version_project_fk"));
+                project.setProjectName(projectSet.getString("project_version_name"));
+                project.setProjectDescription(projectSet.getString("project_version_description"));
+                project.setProjectIsDeleted(projectSet.getBoolean("project_isdeleted"));
+                project.setProjectCustomerFk(projectSet.getInt("project_version_customer_fk"));
+                project.setCustomerName(projectSet.getString("customer_version_name"));
                 data.add(project);
             }
-            userSet.close();
+            projectSet.close();
             return data;
         } catch (Exception e) {
             e.printStackTrace();

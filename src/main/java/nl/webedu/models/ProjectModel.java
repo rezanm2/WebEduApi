@@ -2,18 +2,24 @@ package nl.webedu.models;
 
 public class ProjectModel {
 	
-	private int projectId;
-	
-    private String projectName;
-    private String projectDescription;
-
+        private int projectId;
+        private String projectName;
+        private String projectDescription;
 	private boolean projectIsDeleted;
-
 	private int projectEntryFk;
 	private int projectUserStoryFk;
 	private int projectSprintFk;
-	private int projectCustomerFk
+	private int projectCustomerFk;
+        private String projectCustomerName;
 ;	
+
+    public String getCustomerName() {
+        return projectCustomerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.projectCustomerName = customerName;
+    }
 	public int getProjectId() {
 		return projectId;
 	}
