@@ -6,6 +6,7 @@
 package nl.webedu.resources;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.dropwizard.auth.Auth;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,6 +20,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import nl.webedu.dao.CustomerDAO;
 import nl.webedu.models.CustomerModel;
+import nl.webedu.models.EmployeeModel;
 import nl.webedu.models.ProjectModel;
 
 /**
@@ -35,7 +37,7 @@ public class CustomerResource {
     @JsonProperty
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public ArrayList<CustomerModel> read(){
+    public ArrayList<CustomerModel> getAllCustomers(@Auth EmployeeModel employeeModel){
         try {
             return this.customerDao.getCustomerList();
         } catch (Exception ex) {
@@ -49,7 +51,7 @@ public class CustomerResource {
     @JsonProperty
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public void createNewCustomer(@Valid CustomerModel csModel){
+    public void createNewCustomer(@Auth EmployeeModel employeeModel, @Valid CustomerModel csModel){
         try {
             this.customerDao.addCustomer(csModel.getCustomer_name(), csModel.getCustomer_description());
         } catch (Exception ex) {
@@ -62,7 +64,7 @@ public class CustomerResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
 
-    public boolean update(@Valid CustomerModel csModel){
+    public boolean update(@Auth EmployeeModel employeeModel, @Valid CustomerModel csModel){
 
         try {
             customerDao.modifyCustomer(csModel.getCustomer_id(), csModel.getCustomer_name(), csModel.getCustomer_description());
@@ -79,7 +81,7 @@ public class CustomerResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
 
-    public boolean deleteCustomer(@Valid CustomerModel csModel){
+    public boolean deleteCustomer(@Auth EmployeeModel employeeModel, @Valid CustomerModel csModel){
 
         try {
             customerDao.removeCustomer(csModel.getCustomer_id());
