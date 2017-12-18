@@ -6,7 +6,7 @@ package nl.webedu.models;
  */
 public class EntryModel {
 	private int entryId;
-	private String entryName;
+	//private String entryName;
 	private String entryDescription;
 	private Exception entryException;
 	private String entryStatus;
@@ -72,12 +72,12 @@ public class EntryModel {
 		this.entryId = entryId;
 	}
 	
-	public String getEntryName() {
-		return entryName;
-	}
-	public void setEntryName(String entryName) {
-		this.entryName = entryName;
-	}
+//	public String getEntryName() {
+//		return entryName;
+//	}
+//	public void setEntryName(String entryName) {
+//		this.entryName = entryName;
+//	}
 	public String getEntryDescription() {
 		return entryDescription;
 	}

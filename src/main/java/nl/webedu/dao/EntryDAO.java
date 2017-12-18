@@ -21,7 +21,6 @@ public class EntryDAO {
         while(entrySet.next()) {
 				EntryModel entry = new EntryModel();
 				entry.setEntryId(entrySet.getInt("entry_id"));
-                                entry.setEntryName(entrySet.getString("entry_version_name"));
                                 entry.setEmployeeFk(entrySet.getInt("entry_employee_fk"));
                                 entry.setEntryIsLocked(entrySet.getBoolean("entry_islocked"));
                                 entry.setIsDeleted(entrySet.getBoolean("entry_isdeleted"));
