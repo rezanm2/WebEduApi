@@ -214,10 +214,8 @@ public class ProjectDAO {
 	/**
 	 * Voegt een nieuw project toe, maakt gebruik van de stored procedure die gemaakt wordt in createAddProjectFunction()
 	 *
-	 * @author Robert den Blaauwen
-	 * @param name          naam van project
-	 * @param description   description van project
-	 * @param customerID    id van bijbehorende klant
+	 * @author Robert den Blaauwe
+	 * @param projectModel  het projectModel meegekregen van front-end
 	 */
 	public void addProject(ProjectModel projectModel) {
 		String login_sql = "SELECT add_project(?,?,?)";
@@ -238,9 +236,7 @@ public class ProjectDAO {
 
     /**
      * Deze methode wijzigt het geselcteerde project project
-     * @param pId           project id
-     * @param name          project naam
-     * @param description   project description
+     * @param projectModel    het projectModel meegekregen van front-end
      * @author rezanaser
      * @throws Exception SQL exception en normale exception
      */
@@ -268,7 +264,7 @@ public class ProjectDAO {
 	
 	/**
 	 * Deze methode zet het project op inactive
-	 * @param projectId meegekregen van ProjectBeherenViewController
+	 * @param projectModel het projectModel meegekregen van front-end
 	 * @author rezanaser
 	 */
 	public void removeProject(ProjectModel projectModel) {

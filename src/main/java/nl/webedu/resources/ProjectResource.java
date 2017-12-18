@@ -37,7 +37,7 @@ public class ProjectResource {
     @JsonProperty
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public ArrayList<ProjectModel> ProjectName(@Auth EmployeeModel employeeModel){
+    public ArrayList<ProjectModel> getAllProjects(@Auth EmployeeModel employeeModel){
         return this.projectDAO.getAllProjects();
     }
 
@@ -76,7 +76,7 @@ public class ProjectResource {
     @Path("/create")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public boolean create(@Valid ProjectModel projectModel){
+    public boolean createProject(@Valid ProjectModel projectModel){
         projectDAO.addProject(projectModel);
         System.out.println(this.getClass().toString()+": create werkt!: ");
         return true;
@@ -104,9 +104,7 @@ public class ProjectResource {
      * De method mist een manier om de de klant aan te passen,
      * want de method in de DAO ondersteunt dat niet
      *
-     * @param projectId id van bestaand project
-     * @param name      nieuwe naam van project
-     * @param description   nieuwe beschrijving vvan project
+     * @param projectModel is het projectmodel gekregen van de front-end
      * @return true
      */
     @PUT

@@ -14,6 +14,7 @@ public class CustomerDAO {
 
 	public CustomerDAO(){
 		this.connect = new ConnectDAO();
+                createAddCustomerFunction();
 	}
 
 	 /**
@@ -163,11 +164,15 @@ public class CustomerDAO {
 	 */
 
 	public void removeCustomer(int cId) {
-		String remove_project = "UPDATE customer SET customer_isdeleted = true WHERE customer_id = ?";
+		String remove_customer = "UPDATE customer SET customer_isdeleted = true WHERE customer_id = ?";
+                String setCurrentOnFalse = "UPDATE customer_version set customer_version_current = false WHERE customer_version_customer_fk = ?";
 		try {
-			PreparedStatement lock_statement = this.connect.makeConnection().prepareStatement(remove_project);
+			PreparedStatement lock_statement = this.connect.makeConnection().prepareStatement(remove_customer);
+                        PreparedStatement lock_version_statement = this.connect.makeConnection().prepareStatement(setCurrentOnFalse);
 			lock_statement.setInt(1, cId);
 			lock_statement.executeUpdate();
+                        lock_version_statement.setInt(1, cId);
+                        lock_version_statement.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
