@@ -10,6 +10,8 @@ import java.util.ArrayList;
  * @author Robert
  */
 public class SprintModel {
+
+    
 	private int sprintId;
 	private boolean sprintIsDeleted;
 	private String sprintName;
@@ -21,6 +23,7 @@ public class SprintModel {
         private boolean isCurrent;
 	private ProjectDAO projectDAO = new ProjectDAO();
 	private ArrayList<EntryModel> entries;
+        private boolean isDeleted;
 	
 	public String getSprintName() {
 		return sprintName;
@@ -90,4 +93,19 @@ public class SprintModel {
 	public void setIsCurrent(boolean isCurrent) {
 		this.isCurrent=isCurrent;
 	}
+       /**
+        * @author Robert
+        * @return isDeleted
+        */
+       public boolean isIsDeleted() {
+           return isDeleted;
+       }
+
+       /**
+        * @author Robert
+        * @param isDeleted the isDeleted to set
+        */
+       public void setIsDeleted(boolean isDeleted) {
+           this.isDeleted = isDeleted;
+       }
 }

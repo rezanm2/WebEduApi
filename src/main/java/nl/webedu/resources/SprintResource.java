@@ -114,7 +114,8 @@ public class SprintResource {
      * Deze methode krijgt een hele object van de frondend. 
      * Hij checkt od het model voldoet aan java model. Zo ja,
      * word er een nieuwe model aangemaakt.
-     * @param sprintModel
+     * @param sprintModel   sprintModel
+     * @param employeeModel model
      * @return returneert true of false
      * @author rezanaser
      */

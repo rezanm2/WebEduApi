@@ -12,7 +12,6 @@ public class SprintDAO {
        DateHelper dateHelper = new DateHelper();
     public SprintDAO(){
     	this.connect = new ConnectDAO();
-        
         this.createAddSprintFunction();
     }
     
@@ -22,7 +21,7 @@ public class SprintDAO {
      * @author Robert den Blaauwen
      */
     public void createAddSprintFunction(){
-	String project_list_sql = "CREATE OR REPLACE FUNCTION add_sprint(project_id INT4, sprint_name TEXT, description TEXT, startdate DATE, enddate DATE) " +
+	String sprintProcedureSql = "CREATE OR REPLACE FUNCTION add_sprint(project_id INT4, sprint_name TEXT, description TEXT, startdate DATE, enddate DATE) " +
                                     "RETURNS void AS $$ " +
                                     "DECLARE pk INT; " +
                                     "BEGIN " +
@@ -34,8 +33,9 @@ public class SprintDAO {
                                     "    VALUES(pk,project_id,sprint_name,description,startdate,enddate, true); " +
                                     "END $$ LANGUAGE plpgsql;";
 	try {
-            PreparedStatement project_statement = this.connect.makeConnection().prepareStatement(project_list_sql);
-            project_statement.executeUpdate();
+            PreparedStatement sprintProcedureStatement = this.connect.makeConnection().prepareStatement(sprintProcedureSql);
+            sprintProcedureStatement.executeUpdate();
+            sprintProcedureStatement.close();
             //System.out.println(this.getClass().toString()+": constructor: FUNCTION add_project(name, description, customer) has been created!");
 	} catch (SQLException e) {
             // TODO Auto-generated catch block
@@ -45,6 +45,26 @@ public class SprintDAO {
             e.printStackTrace();
 	}
     }
+    
+    public SprintModel getSprint(int sprintId) throws Exception{
+            String sprintSql = "SELECT * FROM sprint INNER JOIN sprint_version "
+                                + "ON sprint_id=sprint_version_sprint_fk "
+                                + "WHERE sprint_id=? AND sprint_version_current=true;";
+            PreparedStatement sprintStatement = this.connect.makeConnection().prepareStatement(sprintSql);
+            sprintStatement.setInt(1,sprintId);
+            ResultSet sprintSet = sprintStatement.executeQuery();
+            
+            sprintSet.next();
+            SprintModel sprint = new SprintModel();
+            sprint.setSprintId(sprintSet.getInt("sprint_id"));
+            sprint.setSprintName(sprintSet.getString("sprint_version_name"));
+            sprint.setSprintDescription(sprintSet.getString("sprint_version_description"));
+            sprint.setIsDeleted(sprintSet.getBoolean("sprint_isdeleted"));
+            sprint.setIsCurrent(true);
+            sprint.setProjectFK(sprintSet.getInt("sprint_version_project_fk"));
+            sprintStatement.close();
+            return sprint;
+        }
        
 	/**
 	 * Deze methode vult de combobox met de sprints van het gevraagde project
@@ -173,6 +193,7 @@ public class SprintDAO {
 				sprintModelContainer.setProjectFK(sprint_set.getInt("sprint_version_project_fk"));
 				sprintList.add(sprintModelContainer);
 			}
+                        sprint_statement.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

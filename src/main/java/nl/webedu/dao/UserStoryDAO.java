@@ -21,9 +21,37 @@ public class UserStoryDAO {
 
 	public UserStoryDAO(){
 		this.connect = new ConnectDAO(); // Connectie maken met de database
-
 	}
 
+        /**
+         * Haalt een enkele userstory op basiis van userstory_id
+         * Haalt alleen op waar userstory_version_current=true
+         * 
+         * @throws Exception    kek
+         * @author    Robert
+         * @param userstoryId   id van userstory
+         * @return  userstory
+         */
+        public UserStoryModel getUserstory(int userstoryId) throws Exception{
+            String userstorySql = "SELECT * FROM userstory INNER JOIN userstory_version " + 
+                                "ON userstory_id=userstory_version_userstory_fk " +
+                                "WHERE userstory_id=? AND userstory_version_current=true;";
+            System.out.println(this.getClass().toString()+": "+userstoryId);
+            PreparedStatement userstoryStatement = this.connect.makeConnection().prepareStatement(userstorySql);
+            userstoryStatement.setInt(1,userstoryId);
+            ResultSet userstorySet = userstoryStatement.executeQuery();
+            
+            userstorySet.next();
+            UserStoryModel userstory = new UserStoryModel();
+            userstory.setUserStoryId(userstorySet.getInt("userstory_id"));
+            userstory.setUserStoryName(userstorySet.getString("userstory_version_name"));
+            userstory.setUserStoryDescription(userstorySet.getString("userstory_version_description"));
+            userstory.setDeleted(userstorySet.getBoolean("userstory_isdeleted"));
+            userstory.setIsCurrent(true);
+            userstoryStatement.close();
+            
+            return userstory;
+        }
 
 	/**
 	 * Deze methode vult de combobox met de userstories van het gevraagde project
@@ -127,11 +155,11 @@ public class UserStoryDAO {
 		userStorys_statement.setInt(1, p_id);
 		ResultSet userStoriesSet = userStorys_statement.executeQuery();
 		while(userStoriesSet.next()) {
-            UserStoryModel userStory = new UserStoryModel();
-            userStory.setUserStoryId(userStoriesSet.getInt("userStory_version_userStory_fk"));
-            userStory.setUserStoryName(userStoriesSet.getString("userStory_version_name"));
-            userStory_alist.add(userStory);
-        }
+                    UserStoryModel userStory = new UserStoryModel();
+                    userStory.setUserStoryId(userStoriesSet.getInt("userStory_version_userStory_fk"));
+                    userStory.setUserStoryName(userStoriesSet.getString("userStory_version_name"));
+                    userStory_alist.add(userStory);
+                }
 		userStorys_statement.close();
 		return userStory_alist;
 	  }
@@ -166,6 +194,7 @@ public class UserStoryDAO {
 
 				userStoryList.add(userStoryModelContainer);
 			}
+                        userStory_statement.close();
 		} catch (SQLException e) {
 
 			e.printStackTrace();
@@ -199,6 +228,7 @@ public class UserStoryDAO {
 				userStoryModelContainer.setDeleted(userStory_set.getBoolean("userStory_isdeleted"));
 				userStory_list.add(userStoryModelContainer);
 			}
+                        userStory_statement.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
@@ -230,6 +260,7 @@ public class UserStoryDAO {
 				userStoryModelContainer.setUserStoryName(userStory_set.getString("userStory_version_name"));
 				userStory_list.add(userStoryModelContainer);
 			}
+                        userStory_statement.close();
 		} catch (SQLException e) {
 
 			e.printStackTrace();
@@ -260,6 +291,7 @@ public class UserStoryDAO {
 			while(userStoryID.next()) {
 				generatedID = userStoryID.getInt(1);
 			}
+                        createUserStory.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -346,6 +378,7 @@ public class UserStoryDAO {
 /**
 	 * Deze methode past een eerder gemaakte userStory aan en zet de vorige versie op nonactief.
 	 * @author Jeroen Zandvliet
+         * @throws Exception            kek
 	 * @param userStoryID           lol
 	 * @param userStoryName         lol
 	 * @param sprintID              lol
@@ -375,6 +408,7 @@ public class UserStoryDAO {
 		PreparedStatement lockStatement = this.connect.makeConnection().prepareStatement(deleteUserStory);
 		lockStatement.setInt(1, userStoryID);
 		lockStatement.executeUpdate();
+                lockStatement.close();
 	}
 }
 

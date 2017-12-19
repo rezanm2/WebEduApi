@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.FormParam;
 import com.google.common.base.Optional;
+import io.dropwizard.auth.Auth;
 import java.sql.Date;
 import java.sql.Time;
 import java.util.logging.Level;
@@ -27,6 +28,9 @@ import javax.ws.rs.Path;
 import nl.webedu.dao.EntryDAO;
 
 import javax.ws.rs.Path;
+import nl.webedu.models.EmployeeModel;
+import javax.inject.Inject;
+import nl.webedu.services.*;
 
 /**
  *
@@ -35,21 +39,26 @@ import javax.ws.rs.Path;
 @Path("/entries")
 public class EntryResource {
     private EntryDAO entryDao;
+    
+    private EntryService entryService;
 
+    @Inject
     public EntryResource(){
         entryDao = new EntryDAO();
+        this.entryService = new EntryService();
     }
 
     @GET
-    @Path("/read")
+//    @Path("/read")
     @JsonProperty
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public ArrayList<EntryModel> read(){
-        return this.entryDao.getEntriesFull();
+    public ArrayList<EntryModel> read(@Auth EmployeeModel employeeModel){
+        System.out.println(employeeModel.getEmployeeRole());
+        return this.entryService.getEntries(employeeModel);
     }
     @GET
-    @Path("/read/queued")
+    @Path("/queued")
     @JsonProperty
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)

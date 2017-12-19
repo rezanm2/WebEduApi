@@ -19,28 +19,60 @@ public class ProjectDAO {
 
     public ProjectDAO(){
         this.connect = new ConnectDAO();
-        this.createAddProjectFunction();
+//        this.createAddProjectFunction();
+    }
+    
+    /**
+     * Krijg een enkel project
+     * 
+     * @author Robert
+     * @throws SQLException kek
+     * @throws Exception    kek
+     * @param projectId id van project
+     * @return project
+     */
+    public ProjectModel getProject(int projectId) throws SQLException, Exception {
+       String projectSql = "SELECT * FROM project INNER JOIN project_version " + 
+                                "ON project_id=project_version_project_fk " +
+                                "WHERE project_id=? AND project_version_current=true;";
+       
+            PreparedStatement projectStatement= this.connect.makeConnection().prepareStatement(projectSql);
+            projectStatement.setInt(1,projectId);
+            ResultSet projectSet = projectStatement.executeQuery();
+            
+            projectSet.next();
+            ProjectModel project = new ProjectModel();
+            project.setProjectId(projectSet.getInt("project_id"));
+            project.setProjectName(projectSet.getString("project_version_name"));
+            project.setProjectDescription(projectSet.getString("project_version_description"));
+            project.setProjectIsDeleted(projectSet.getBoolean("project_isdeleted"));
+            project.setIsCurrent(true);
+            project.setProjectCustomerFk(projectSet.getInt("project_version_customer_fk"));
+            projectStatement.close();
+            
+            return project; 
     }
 
-    /**
-	 * Deze methode maakt een stored procedure aan die een nieuw project kan toevoegen zonder onderbroken te worden
-	 * door een andere gebruiker (atomicity). Date:30-10-2017
+        /**
+	 *Deze method maakt een procedure aan die projecten aan kan maken.
+         * GEEFT BIZARRE NULLPOINTER EXCEPTIONS!
 	 *
 	 * @author Robert den Blaauwen
 	 */
 	public void createAddProjectFunction(){
-		String project_list_sql = "CREATE OR REPLACE FUNCTION add_project(name TEXT, description TEXT, customer INT4) " +
+		String projectProcedureSql = "CREATE OR REPLACE FUNCTION add_project(name TEXT, description TEXT, customer INT4) " +
 				"RETURNS void AS $$ " +
 				"DECLARE pk INT; " +
 				"BEGIN " +
-				" INSERT INTO project(project_isdeleted) VALUES(false) " +
+				"    INSERT INTO project(project_isdeleted) VALUES(false) " +
 				"    RETURNING project_id INTO pk; " +
 				"    INSERT INTO project_version(project_version_project_fk, project_version_name, project_version_description, project_version_customer_fk,project_version_current) " +
 				"    VALUES(pk,name,description, customer,true); " +
 				"END $$ LANGUAGE plpgsql;";
 		try {
-			PreparedStatement project_statement = this.connect.makeConnection().prepareStatement(project_list_sql);
-			project_statement.executeUpdate();
+			PreparedStatement projectProcedureStatement = this.connect.makeConnection().prepareStatement(projectProcedureSql);
+			projectProcedureStatement.executeUpdate();
+                        projectProcedureStatement.close();
 			//System.out.println(this.getClass().toString()+": constructor: FUNCTION add_project(name, description, customer) has been created!");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

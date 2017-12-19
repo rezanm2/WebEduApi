@@ -8,7 +8,7 @@ public class EntryModel {
 	private int entryId;
 	//private String entryName;
 	private String entryDescription;
-	private Exception entryException;
+//	private Exception entryException;
 	private String entryStatus;
 	private String entryDate;
 	private String entryStartTime;
@@ -18,9 +18,13 @@ public class EntryModel {
 	private String entrySprintDescription;
 	private String entryUserStoryDescription;
         private int employeeFk;
+        private String employeeName;
 	private int entryProjectFk;
+        private String entryProjectName;
 	private int entrySprintFk;
+        private String entrySprintName;
 	private int entryUserstoryFk;
+        private String entryUserstoryName;
         private Boolean isDeleted;
         private Boolean isCurrent;
         
@@ -29,8 +33,15 @@ public class EntryModel {
         }
         
         public void setEmployeeFk(int employeeFK){
-            this.employeeFk=employeeFk;
+            this.employeeFk=employeeFK;
         }
+        
+        public String getEntryEmployeeName() {
+		return employeeName;
+	}
+        public void setEntryEmployeeName(String employeeName) {
+		this.employeeName = employeeName;
+	}
         
         public Boolean getIsDeleted(){
             return isDeleted;
@@ -84,12 +95,12 @@ public class EntryModel {
 	public void setEntryDescription(String entryDescription) {
 		this.entryDescription = entryDescription;
 	}
-	public Exception getEntryException() {
-		return entryException;
-	}
-	public void setEntryException(Exception entryException) {
-		this.entryException = entryException;
-	}
+//	public Exception getEntryException() {
+//		return entryException;
+//	}
+//	public void setEntryException(Exception entryException) {
+//		this.entryException = entryException;
+//	}
 	public String getEntryStatus() {
 		return entryStatus;
 	}
@@ -126,16 +137,34 @@ public class EntryModel {
 	public void setEntryProjectFk(int entryProjectFk) {
 		this.entryProjectFk = entryProjectFk;
 	}
+        public String getEntryProjectName() {
+		return entryProjectName;
+	}
+        public void setEntryProjectName(String entryProjectName) {
+		this.entryProjectName = entryProjectName;
+	}
 	public int getEntrySprintFk() {
 		return entrySprintFk;
 	}
 	public void setEntrySprintFk(int entrySprintFk) {
 		this.entrySprintFk = entrySprintFk;
 	}
+        public String getEntrySprintName() {
+		return entrySprintName;
+	}
+        public void setEntrySprintName(String entrySprintName) {
+		this.entrySprintName = entrySprintName;
+	}
 	public int getEntryUserstoryFk() {
 		return entryUserstoryFk;
 	}
 	public void setEntryUserstoryFk(int entryUserstoryFk) {
 		this.entryUserstoryFk = entryUserstoryFk;
+	}
+        public String getEntryUserstoryName() {
+		return entryUserstoryName;
+	}
+        public void setEntryUserstoryName(String entryUserstoryName) {
+		this.entryUserstoryName = entryUserstoryName;
 	}
 }

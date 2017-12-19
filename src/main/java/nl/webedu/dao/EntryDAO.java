@@ -21,18 +21,24 @@ public class EntryDAO {
         while(entrySet.next()) {
 				EntryModel entry = new EntryModel();
 				entry.setEntryId(entrySet.getInt("entry_id"));
+                                
                                 entry.setEmployeeFk(entrySet.getInt("entry_employee_fk"));
+                                System.out.println(this.getClass()+": "+entry.getEmployeeFk());
                                 entry.setEntryIsLocked(entrySet.getBoolean("entry_islocked"));
                                 entry.setIsDeleted(entrySet.getBoolean("entry_isdeleted"));
+                                
                                 entry.setEntryProjectFk(entrySet.getInt("entry_version_project_fk"));
                                 entry.setEntrySprintFk(entrySet.getInt("entry_version_sprint_fk"));
-                                entry.setEntryDescription(entrySet.getString("entry_version_description"));
                                 entry.setEntryUserstoryFk(entrySet.getInt("entry_version_userstory_fk"));
+                                
+                                entry.setEntryDescription(entrySet.getString("entry_version_description"));
 				entry.setEntryStatus(entrySet.getString("entry_status"));
                                 entry.setEntryStartTime(entrySet.getString("entry_version_starttime"));
                                 entry.setEntryEndTime(entrySet.getString("entry_version_endtime"));
                                 entry.setEntryDate(entrySet.getString("entry_version_date"));
                                 entry.setIsCurrent(entrySet.getBoolean("entry_version_current"));
+                                entry.setEntryEmployeeName(entrySet.getString("employee_version_firstname") + " " 
+                                                            + entrySet.getString("employee_version_lastname"));
 				entries.add(entry);
 			}
         }catch (SQLException e) {
@@ -100,30 +106,16 @@ public class EntryDAO {
          */
         public ArrayList<EntryModel> getEntriesFull(){
 		ArrayList<EntryModel> entry_alist = new ArrayList<EntryModel>();
-		String employee_entry_sql = "SELECT * FROM entry INNER JOIN entry_version "
-                                            + "ON entry_id=entry_version_entry_fk "
-                                            + "WHERE entry_version_current=true AND entry_isdeleted=false;";
+		String employee_entry_sql = "SELECT * FROM entry INNER JOIN entry_version ON entry_id=entry_version_entry_fk " +
+                                            "INNER JOIN employee ON employee_id=entry_employee_fk " +
+                                            "INNER JOIN employee_version ON employee_id=employee_version_employee_fk " +
+                                            "WHERE employee_version_current=true;";
+//                                            + "WHERE entry_version_current=true AND entry_isdeleted=false;";
 		try {
 			PreparedStatement entries_statement = this.connect.makeConnection().prepareStatement(employee_entry_sql);
 			
 			ResultSet entry_set = entries_statement.executeQuery();
                         entry_alist = fillModels(entry_set);
-//			while(entry_set.next()) {
-//				EntryModel entry = new EntryModel();
-//				entry.setEntryId(entry_set.getInt("entry_id"));
-//                                entry.setEmployeeFk(entry_set.getInt("entry_employee_fk"));
-//                                entry.setEntryIsLocked(entry_set.getBoolean("entry_islocked"));
-//                                entry.setIsDeleted(entry_set.getBoolean("entry_isdeleted"));
-//                                entry.setEntryProjectFk(entry_set.getInt("entry_version_project_fk"));
-//                                entry.setEntrySprintFk(entry_set.getInt("entry_version_sprint_fk"));
-//                                entry.setEntryUserstoryFk(entry_set.getInt("entry_version_userstory_fk"));
-//				entry.setEntryStatus(entry_set.getString("entry_status"));
-//                                entry.setEntryStartTime(entry_set.getString("entry_version_starttime"));
-//                                entry.setEntryEndTime(entry_set.getString("entry_version_endtime"));
-//                                entry.setEntryDate(entry_set.getString("entry_version_date"));
-//                                entry.setIsCurrent(entry_set.getBoolean("entry_version_current"));
-//				entry_alist.add(entry);
-//			}
 			entries_statement.close();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -166,9 +158,11 @@ public class EntryDAO {
 	 */
 	public ArrayList<EntryModel> entry_queued_list(int e_id){
 		ArrayList<EntryModel> entry_alist = new ArrayList<EntryModel>();
-		String employee_entry_sql = "SELECT * FROM entry_version "
-                        + "INNER JOIN entry ON entry_version_entry_fk=entry_id "
-                        + "WHERE entry.entry_status = 'queued' AND entry_version_current = true AND entry_isdeleted=false";
+		String employee_entry_sql = "SELECT * FROM entry " +
+                                            "JOIN entry_version ON entry_id=entry_version_entry_fk INNER JOIN employee ON employee_id=entry_employee_fk " +
+                                            "JOIN employee_version ON employee_id=employee_version_employee_fk " +
+                                            "WHERE entry_version_current=true AND entry_status = 'queued' " + 
+                                            "AND entry_isdeleted=false AND employee_version_current=true AND employee_isdeleted=false;";
 		try {
 			PreparedStatement entries_statement = this.connect.makeConnection().prepareStatement(employee_entry_sql);
 			

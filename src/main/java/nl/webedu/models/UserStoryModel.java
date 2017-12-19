@@ -12,6 +12,7 @@ public class UserStoryModel {
 	private String sprintName;
 	private boolean isDeleted;
 	private SprintDAO sprintDAO = new SprintDAO();
+        private boolean isCurrent;
 
 	public int getUserStoryId() {
 		return userStoryId;
@@ -69,6 +70,14 @@ public class UserStoryModel {
 
 	public void setDeleted(boolean isDeleted) {
 		this.isDeleted = isDeleted;
+	}
+        
+        public boolean isCurrent() {
+		return isCurrent;
+	}
+
+	public void setIsCurrent(boolean isCurrent) {
+		this.isCurrent = isCurrent;
 	}
 	
 }

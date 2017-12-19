@@ -11,6 +11,7 @@ public class ProjectModel {
 	private int projectSprintFk;
 	private int projectCustomerFk;
         private String projectCustomerName;
+        private boolean isCurrent;
 ;	
 
     public String getCustomerName() {
@@ -59,5 +60,21 @@ public class ProjectModel {
 	public void setProjectCustomerFk(int projectCustomerFk) {
 		this.projectCustomerFk = projectCustomerFk;
 	}
+        
+     /**
+     * @author Robert
+     * @return the isCurrent
+     */
+    public boolean getIsCurrent() {
+        return isCurrent;
+    }
+
+    /**
+     * @author Robert
+     * @param isCurrent the isCurrent to set
+     */
+    public void setIsCurrent(boolean isCurrent) {
+        this.isCurrent = isCurrent;
+    }
 
 }
