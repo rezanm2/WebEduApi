@@ -86,14 +86,14 @@ public class SprintDAO {
 		ResultSet sprintsSets = sprintsStatement.executeQuery();
 
 		while(sprintsSets.next()) {
-            SprintModel sprintContainer = new SprintModel();
-			sprintContainer.setSprintId(sprintsSets.getInt("sprint_version_sprint_fk"));
-            sprintContainer.setSprintName(sprintsSets.getString("sprint_version_name"));
-            sprintContainer.setSprintStartDate(sprintsSets.getString("sprint_version_startdate"));
-            sprintContainer.setSprintEndDate(sprintsSets.getString("sprint_version_enddate"));
+                    SprintModel sprintContainer = new SprintModel();
+                                sprintContainer.setSprintId(sprintsSets.getInt("sprint_version_sprint_fk"));
+                    sprintContainer.setSprintName(sprintsSets.getString("sprint_version_name"));
+                    sprintContainer.setSprintStartDate(sprintsSets.getString("sprint_version_startdate"));
+                    sprintContainer.setSprintEndDate(sprintsSets.getString("sprint_version_enddate"));
 
-            sprintList.add(sprintContainer);
-        }
+                    sprintList.add(sprintContainer);
+                }
 		sprintsStatement.close();
 		return sprintList;
   	}
@@ -160,8 +160,7 @@ public class SprintDAO {
 				sprint_alist.add(sprint);
 			}
 			sprintsStatement.close();
-		}
-		catch(Exception e) {
+		}catch(Exception e) {
 			e.printStackTrace();
 		}
 		return sprint_alist;
@@ -227,6 +226,7 @@ public class SprintDAO {
 				sprintModelContainer.setSprintIsDeleted(sprint_set.getBoolean("sprint_isdeleted"));
 				sprint_list.add(sprintModelContainer);
 			}
+                        sprint_statement.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -261,6 +261,7 @@ public class SprintDAO {
 				sprintModelContainer.setSprintEndDate(sprint_set.getString("sprint_version_enddate"));
 				sprint_list.add(sprintModelContainer);
 			}
+                        sprint_statement.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -288,8 +289,9 @@ public class SprintDAO {
 		createSprint.executeUpdate();
 		sprintID = createSprint.getGeneratedKeys();
 		while(sprintID.next()) {
-            generatedID = sprintID.getInt(1);
-        }
+                    generatedID = sprintID.getInt(1);
+                }
+                createSprint.close();
 		return generatedID;
 	}
 
@@ -388,11 +390,13 @@ public class SprintDAO {
 		PreparedStatement lockStatement = this.connect.makeConnection().prepareStatement(deleteSprint);
 		lockStatement.setInt(1, sprintID);
 		lockStatement.executeUpdate();
+                lockStatement.close();
 	}
         public void unRemoveSprint(int sprintID) throws Exception {
 		String deleteSprint = "UPDATE sprint SET sprint_isdeleted = false WHERE sprint_id = ?";
 		PreparedStatement lockStatement = this.connect.makeConnection().prepareStatement(deleteSprint);
 		lockStatement.setInt(1, sprintID);
 		lockStatement.executeUpdate();
+                lockStatement.close();
 	}
 }

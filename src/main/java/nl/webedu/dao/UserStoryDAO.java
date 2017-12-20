@@ -101,11 +101,11 @@ public class UserStoryDAO {
 		while(sprints_sets.next()) {
 			sprint = new SprintModel();
 			sprint.setSprintId(sprints_sets.getInt("sprint_version_sprint_fk"));
-            sprint.setSprintName(sprints_sets.getString("sprint_version_name"));
-            sprint.setSprintStartDate(sprints_sets.getString("sprint_version_startdate"));
-            sprint.setSprintEndDate(sprints_sets.getString("sprint_version_enddate"));
-            sprint_alist.add(sprint);
-        }
+                    sprint.setSprintName(sprints_sets.getString("sprint_version_name"));
+                    sprint.setSprintStartDate(sprints_sets.getString("sprint_version_startdate"));
+                    sprint.setSprintEndDate(sprints_sets.getString("sprint_version_enddate"));
+                    sprint_alist.add(sprint);
+                }
 		sprints_statement.close();
 		return sprint_alist;
 	  }

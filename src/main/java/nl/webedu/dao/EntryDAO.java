@@ -62,6 +62,7 @@ public class EntryDAO {
 	try {
             PreparedStatement project_statement = this.connect.makeConnection().prepareStatement(project_list_sql);
             project_statement.executeUpdate();
+            project_statement.close();
             //System.out.println(this.getClass().toString()+": constructor: FUNCTION add_project(name, description, customer) has been created!");
 	} catch (SQLException e) {
             // TODO Auto-generated catch block
@@ -136,6 +137,7 @@ public class EntryDAO {
 		entries_statement = this.connect.makeConnection().prepareStatement(employee_entry_sql);
 		entries_statement.setInt(1, id);
 		entries_statement.executeUpdate();
+                entries_statement.close();
 	}
 
 	public void rejectHours(int id) {
@@ -145,6 +147,7 @@ public class EntryDAO {
 			entries_statement = this.connect.makeConnection().prepareStatement(employee_entry_sql);
 			entries_statement.setInt(1, id);
 			entries_statement.executeUpdate();
+                        entries_statement.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -267,6 +270,7 @@ public class EntryDAO {
 			while (projectId.next()) {
 				id = projectId.getInt(1);
 			}
+                        createEntry.close();
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
@@ -391,7 +395,6 @@ public class EntryDAO {
                 deleteStatement.setInt(1, entryId);
                 deleteStatement.executeUpdate();
                 deleteStatement.close();
-                
             } catch (Exception ex) {
                 Logger.getLogger(EntryDAO.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -409,7 +412,6 @@ public class EntryDAO {
                 deleteStatement.setInt(1, entryId);
                 deleteStatement.executeUpdate();
                 deleteStatement.close();
-                
             } catch (Exception ex) {
                 Logger.getLogger(EntryDAO.class.getName()).log(Level.SEVERE, null, ex);
             }

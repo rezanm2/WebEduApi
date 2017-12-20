@@ -36,6 +36,7 @@ public class CustomerDAO {
 			PreparedStatement project_statement = this.connect.makeConnection().prepareStatement(project_list_sql);
 			project_statement.executeUpdate();
 			System.out.println(this.getClass().toString()+": constructor: FUNCTION add_customer(name, description) has been created!");
+                        project_statement.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -173,6 +174,7 @@ public class CustomerDAO {
 			lock_statement.executeUpdate();
                         lock_version_statement.setInt(1, cId);
                         lock_version_statement.executeUpdate();
+                        lock_version_statement.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -194,9 +196,7 @@ public class CustomerDAO {
 			insertProject.setString(3, customerDes);
 			insertProject.setBoolean(4, true);
 			insertProject.executeQuery();
-
 			insertProject.close();
-			
 		} catch (Exception e) {
 			System.out.println(e);
 			//e.printStackTrace();
@@ -225,6 +225,7 @@ public class CustomerDAO {
 			while (customerId.next()) {
 				id = customerId.getInt(1);
 			}
+                        createCustomer.close();
 		} catch (Exception e) {
 			
 		}

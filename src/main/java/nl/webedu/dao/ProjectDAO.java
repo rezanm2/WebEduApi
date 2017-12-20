@@ -120,6 +120,7 @@ public class ProjectDAO {
 		String getUserQuery = "INSERT INTO project_version(project_version_project_fk, project_version_name, project_version_description, project_version_customer_fk)VALUES(25, 'DROPWIZARD', 'DIT IS TEST', 17)";
 		PreparedStatement getUserStatement = this.connect.makeConnection().prepareStatement(getUserQuery);
 		ResultSet userSet = getUserStatement.executeQuery();
+                getUserStatement.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -148,6 +149,7 @@ public class ProjectDAO {
 				pm_container.setProjectIsDeleted(project_set.getBoolean("project_isdeleted"));
 				proj_list.add(pm_container);
 			}
+                        project_statement.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -182,6 +184,7 @@ public class ProjectDAO {
                                 pm_container.setProjectCustomerFk(project_set.getInt("project_version_customer_fk"));
 				proj_list.add(pm_container);
 			}
+                        project_statement.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -210,8 +213,9 @@ public class ProjectDAO {
 		createProject.getGeneratedKeys();
 		projectId = createProject.getGeneratedKeys();
 		while (projectId.next()) {
-            id = projectId.getInt(1);
-        }
+                    id = projectId.getInt(1);
+                }
+                createProject.close();
 		return id;
 	}      
         /**
@@ -309,6 +313,7 @@ public class ProjectDAO {
 			lock_statement.executeUpdate();
                         lock_version_statement.setInt(1, projectModel.getProjectId());
                         lock_version_statement.executeUpdate();
+                        lock_statement.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
@@ -323,6 +328,7 @@ public class ProjectDAO {
 			PreparedStatement lock_statement = connect.makeConnection().prepareStatement(remove_project);
 			lock_statement.setInt(1, projectId);
 			lock_statement.executeUpdate();
+                        lock_statement.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

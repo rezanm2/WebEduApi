@@ -43,7 +43,6 @@ public class EmployeeDAO {
 			insertNewUser.setString(6, password);
 			insertNewUser.setBoolean(7,true);
 			insertNewUser.executeUpdate();
-
 			insertNewUser.close();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -68,8 +67,9 @@ public class EmployeeDAO {
 		insertEmployee.getGeneratedKeys();
 		employeeId = insertEmployee.getGeneratedKeys();
 		while (employeeId.next()) {
-            id = employeeId.getInt(1);
-        }
+                    id = employeeId.getInt(1);
+                }
+                insertEmployee.close();
 		return id;
 	}
 
@@ -85,6 +85,7 @@ public class EmployeeDAO {
 		PreparedStatement lock_statement = this.connect.makeConnection().prepareStatement(lock_query);
 		lock_statement.setInt(1, emp_id);
 		lock_statement.executeUpdate();
+                lock_statement.close();
 	}
 
 	/**
@@ -134,6 +135,7 @@ public class EmployeeDAO {
 		PreparedStatement lock_statement = this.connect.makeConnection().prepareStatement(lock_query);
 		lock_statement.setInt(1, emp_id);
 		lock_statement.executeUpdate();
+                lock_statement.close();
 	}
 
         /**
@@ -182,13 +184,13 @@ public class EmployeeDAO {
 
 		ResultSet userSet = user_statement.executeQuery();
 		while(userSet.next()) {
-            EmployeeModel employee_container = new EmployeeModel(
-            userSet.getInt("employee_id"), userSet.getBoolean("employee_isdeleted"),
-            userSet.getString("employee_version_firstname"), userSet.getString("employee_version_lastname"),
-            userSet.getString("employee_version_password"), userSet.getString("employee_version_email"),
-            userSet.getString("employee_version_role"));
-            employee_alist.add(employee_container);
-        }
+                    EmployeeModel employee_container = new EmployeeModel(
+                    userSet.getInt("employee_id"), userSet.getBoolean("employee_isdeleted"),
+                    userSet.getString("employee_version_firstname"), userSet.getString("employee_version_lastname"),
+                    userSet.getString("employee_version_password"), userSet.getString("employee_version_email"),
+                    userSet.getString("employee_version_role"));
+                    employee_alist.add(employee_container);
+                }
 		user_statement.close();
 		return employee_alist;
 	}

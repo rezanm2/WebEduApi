@@ -22,7 +22,7 @@ public class ConnectDAO {
                     .getConnection("jdbc:postgresql://localhost:5432/webedu",
                             "postgres", "root");
         } catch(SQLException e){
-
+            e.printStackTrace();
         }
         return connect;
     }
