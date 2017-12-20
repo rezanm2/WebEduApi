@@ -33,9 +33,13 @@ public class SprintDAO {
                                     "    VALUES(pk,project_id,sprint_name,description,startdate,enddate, true); " +
                                     "END $$ LANGUAGE plpgsql;";
 	try {
-            PreparedStatement sprintProcedureStatement = this.connect.makeConnection().prepareStatement(sprintProcedureSql);
+            Connection connection = this.connect.makeConnection();
+            PreparedStatement sprintProcedureStatement = connection.prepareStatement(sprintProcedureSql);
             sprintProcedureStatement.executeUpdate();
+ 
+            //close alles
             sprintProcedureStatement.close();
+            connection.close();
             //System.out.println(this.getClass().toString()+": constructor: FUNCTION add_project(name, description, customer) has been created!");
 	} catch (SQLException e) {
             // TODO Auto-generated catch block
@@ -50,7 +54,9 @@ public class SprintDAO {
             String sprintSql = "SELECT * FROM sprint INNER JOIN sprint_version "
                                 + "ON sprint_id=sprint_version_sprint_fk "
                                 + "WHERE sprint_id=? AND sprint_version_current=true;";
-            PreparedStatement sprintStatement = this.connect.makeConnection().prepareStatement(sprintSql);
+            
+            Connection connection = this.connect.makeConnection();
+            PreparedStatement sprintStatement = connection.prepareStatement(sprintSql);
             sprintStatement.setInt(1,sprintId);
             ResultSet sprintSet = sprintStatement.executeQuery();
             
@@ -62,7 +68,12 @@ public class SprintDAO {
             sprint.setIsDeleted(sprintSet.getBoolean("sprint_isdeleted"));
             sprint.setIsCurrent(true);
             sprint.setProjectFK(sprintSet.getInt("sprint_version_project_fk"));
+            
+            //close alles zodat de connection pool niet op gaat.
+            sprintSet.close();
             sprintStatement.close();
+            connection.close();
+            
             return sprint;
         }
        
@@ -80,8 +91,9 @@ public class SprintDAO {
 				"sprint_version_description,sprint_version_startdate, sprint_version_enddate " +
 				"FROM sprint_version, project_employee WHERE project_employee_employee_fk = ? AND " +
 				"project_employee_project_fk = sprint_version_project_fk";
-
-		PreparedStatement sprintsStatement = this.connect.makeConnection().prepareStatement(projectsSprintsSql);
+                
+                Connection connection = this.connect.makeConnection();
+		PreparedStatement sprintsStatement = connection.prepareStatement(projectsSprintsSql);
 		sprintsStatement.setInt(1, employeeId);
 		ResultSet sprintsSets = sprintsStatement.executeQuery();
 
@@ -94,7 +106,11 @@ public class SprintDAO {
 
                     sprintList.add(sprintContainer);
                 }
+                
+                // close alles
+                sprintsSets.close();
 		sprintsStatement.close();
+                connection.close();
 		return sprintList;
   	}
 
@@ -108,7 +124,9 @@ public class SprintDAO {
             ArrayList<SprintModel> sprintList = new ArrayList<SprintModel>();
             String projectsSprintsSql = "SELECT *  FROM sprint_version INNER JOIN sprint ON sprint_id=sprint_version_sprint_fk";
             //+ "AND entry_version_current = 'y' ";
-            PreparedStatement sprintsStatement = this.connect.makeConnection().prepareStatement(projectsSprintsSql);
+            
+            Connection connection = this.connect.makeConnection();
+            PreparedStatement sprintsStatement = connection.prepareStatement(projectsSprintsSql);
             ResultSet sprintsSets = sprintsStatement.executeQuery();
 
             while(sprintsSets.next()) {
@@ -124,7 +142,10 @@ public class SprintDAO {
                 sprintContainer.setIsCurrent(sprintsSets.getBoolean("sprint_version_current"));
                 sprintList.add(sprintContainer);
             }
+            //close alles
+            sprintsSets.close();
             sprintsStatement.close();
+            connection.close();
             return sprintList;
 	}
 	
@@ -143,7 +164,8 @@ public class SprintDAO {
 				"AND sv.sprint_version_current=TRUE AND project_isdeleted=FALSE";
 				//+ "AND entry_version_current = 'y' ";
 		try {
-			PreparedStatement sprintsStatement = this.connect.makeConnection().prepareStatement(projectsSprintsSql);
+                        Connection connection = this.connect.makeConnection();
+			PreparedStatement sprintsStatement = connection.prepareStatement(projectsSprintsSql);
 			sprintsStatement.setInt(1, p_id);
 			ResultSet sprintsSets = sprintsStatement.executeQuery();
 			while(sprintsSets.next()) {
@@ -159,7 +181,10 @@ public class SprintDAO {
                                 sprint.setProjectFK(sprintsSets.getInt("sprint_version_project_fk"));
 				sprint_alist.add(sprint);
 			}
+                        // close alles zodat de connection pool niet op gaat
+                        sprintsSets.close();
 			sprintsStatement.close();
+                        connection.close();
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -179,7 +204,8 @@ public class SprintDAO {
 				+ "AND sprint_version_current = true "
 				+ "ORDER BY sprint_version.sprint_version_sprint_fk ASC";
 		try {
-			PreparedStatement sprint_statement = this.connect.makeConnection().prepareStatement(sprintListSQL);
+                    Connection connection = this.connect.makeConnection();
+			PreparedStatement sprint_statement = connection.prepareStatement(sprintListSQL);
 			ResultSet sprint_set = sprint_statement.executeQuery();
 			while(sprint_set.next()) {
 				SprintModel sprintModelContainer = new SprintModel();
@@ -192,7 +218,10 @@ public class SprintDAO {
 				sprintModelContainer.setProjectFK(sprint_set.getInt("sprint_version_project_fk"));
 				sprintList.add(sprintModelContainer);
 			}
-                        sprint_statement.close();
+                        // close alles zodat de connection pool niet op gaat
+                        sprint_set.close();
+			sprint_statement.close();
+                        connection.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -216,7 +245,8 @@ public class SprintDAO {
 				+ "WHERE sprint_version.sprint_version_project_fk="+projectModel.getProjectId()
 				+ " ORDER BY sprint_version.sprint_version_name ASC";
 		try {
-			PreparedStatement sprint_statement = this.connect.makeConnection().prepareStatement(sprint_list_sql);
+                    Connection connection = this.connect.makeConnection();
+			PreparedStatement sprint_statement = connection.prepareStatement(sprint_list_sql);
 			ResultSet sprint_set = sprint_statement.executeQuery();
 			while(sprint_set.next()) {
 				SprintModel sprintModelContainer = new SprintModel();
@@ -226,7 +256,10 @@ public class SprintDAO {
 				sprintModelContainer.setSprintIsDeleted(sprint_set.getBoolean("sprint_isdeleted"));
 				sprint_list.add(sprintModelContainer);
 			}
-                        sprint_statement.close();
+                        // close alles zodat de connection pool niet op gaat
+                        sprint_set.close();
+			sprint_statement.close();
+                        connection.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -247,7 +280,8 @@ public class SprintDAO {
 		ArrayList<SprintModel> sprint_list = new ArrayList<SprintModel>();
 		String sprint_list_sql = "SELECT * FROM sprint_version";
 		try {
-			PreparedStatement sprint_statement = this.connect.makeConnection().prepareStatement(sprint_list_sql);
+                    Connection connection = this.connect.makeConnection();
+			PreparedStatement sprint_statement = connection.prepareStatement(sprint_list_sql);
 			sprint_statement.setInt(1, employeeID);
 			ResultSet sprint_set = sprint_statement.executeQuery();
 			
@@ -261,7 +295,10 @@ public class SprintDAO {
 				sprintModelContainer.setSprintEndDate(sprint_set.getString("sprint_version_enddate"));
 				sprint_list.add(sprintModelContainer);
 			}
-                        sprint_statement.close();
+                        // close alles zodat de connection pool niet op gaat
+                        sprint_set.close();
+			sprint_statement.close();
+                        connection.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -284,14 +321,18 @@ public class SprintDAO {
 		PreparedStatement createSprint;
 		ResultSet sprintID = null;
 		String insertSprintStatement = "INSERT INTO sprint(sprint_isdeleted) VALUES(?)";
-		createSprint = this.connect.makeConnection().prepareStatement(insertSprintStatement, Statement.RETURN_GENERATED_KEYS);
+                Connection connection = this.connect.makeConnection();
+		createSprint = connection.prepareStatement(insertSprintStatement, Statement.RETURN_GENERATED_KEYS);
 		createSprint.setBoolean(1, false);
 		createSprint.executeUpdate();
 		sprintID = createSprint.getGeneratedKeys();
 		while(sprintID.next()) {
                     generatedID = sprintID.getInt(1);
                 }
-                createSprint.close();
+                // close alles zodat de connection pool niet op gaat
+                sprintID.close();
+		createSprint.close();
+                connection.close();
 		return generatedID;
 	}
 
@@ -300,7 +341,8 @@ public class SprintDAO {
 		String insertStatement = "SELECT add_sprint(?,?,?,?,?)";
 		
 		try {
-			addSprint = this.connect.makeConnection().prepareStatement(insertStatement);
+                    Connection connection = this.connect.makeConnection();
+			addSprint = connection.prepareStatement(insertStatement);
 			
                         Date startDateParsed = dateHelper.parseDate(sprintModel.getSprintStartDate(), "yyyy-MM-dd");
                         Date endDateParsed = dateHelper.parseDate(sprintModel.getSprintEndDate(), "yyyy-MM-dd");
@@ -311,7 +353,9 @@ public class SprintDAO {
 			addSprint.setDate(5, endDateParsed);
 			
 			addSprint.executeQuery();
+			// close alles zodat de connection pool niet op gaat
 			addSprint.close();
+                        connection.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
@@ -328,7 +372,8 @@ public class SprintDAO {
 				+ "WHERE sprint_version_sprint_fk = sprint_id";
 		
 		try {
-			PreparedStatement sprintStatement = this.connect.makeConnection().prepareStatement(sprintQuery);
+                    Connection connection = this.connect.makeConnection();
+			PreparedStatement sprintStatement = connection.prepareStatement(sprintQuery);
 			ResultSet sprint_set = sprintStatement.executeQuery();
 			while(sprint_set.next()){
 				SprintModel model = new SprintModel();
@@ -337,7 +382,10 @@ public class SprintDAO {
 				model.setSprintEndDate(sprint_set.getString("sprint_version_enddate"));
 				sprintList.add(model);
 			}
-			sprintStatement.close();
+			// close alles zodat de connection pool niet op gaat
+                        sprint_set.close();
+                        sprintStatement.close();
+                        connection.close();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -365,10 +413,13 @@ public class SprintDAO {
 		
 		
 		try {
-			PreparedStatement changeVersions= this.connect.makeConnection().prepareStatement(changePreviousVersion);
+                    Connection connection = this.connect.makeConnection();
+			PreparedStatement changeVersions= connection.prepareStatement(changePreviousVersion);
 			changeVersions.setInt(1, sprintID);
 			changeVersions.executeUpdate();
-			changeVersions.close();
+			// close alles zodat de connection pool niet op gaat
+                        changeVersions.close();
+                        
 			PreparedStatement changeSprint = this.connect.makeConnection().prepareStatement(change_sprint);
 			changeSprint.setInt(1, sprintID);
 			changeSprint.setString(2, sprintName);
@@ -378,7 +429,9 @@ public class SprintDAO {
 			changeSprint.setDate(6, sprintEndDate);
 			changeSprint.executeQuery();
 			
-			changeSprint.close();
+			// close alles zodat de connection pool niet op gaat
+                        changeSprint.close();
+                        connection.close();
 		} catch (Exception e) {
 			e.getMessage();
 		}
@@ -387,16 +440,22 @@ public class SprintDAO {
 
 	public void removeSprint(int sprintID) throws Exception {
 		String deleteSprint = "UPDATE sprint SET sprint_isdeleted = true WHERE sprint_id = ?";
-		PreparedStatement lockStatement = this.connect.makeConnection().prepareStatement(deleteSprint);
+                Connection connection = this.connect.makeConnection();
+		PreparedStatement lockStatement = connection.prepareStatement(deleteSprint);
 		lockStatement.setInt(1, sprintID);
 		lockStatement.executeUpdate();
-                lockStatement.close();
+                // close alles zodat de connection pool niet op gaat
+                        lockStatement.close();
+                        connection.close();
 	}
         public void unRemoveSprint(int sprintID) throws Exception {
 		String deleteSprint = "UPDATE sprint SET sprint_isdeleted = false WHERE sprint_id = ?";
-		PreparedStatement lockStatement = this.connect.makeConnection().prepareStatement(deleteSprint);
+                Connection connection = this.connect.makeConnection();
+		PreparedStatement lockStatement = connection.prepareStatement(deleteSprint);
 		lockStatement.setInt(1, sprintID);
 		lockStatement.executeUpdate();
+                // close alles zodat de connection pool niet op gaat
                 lockStatement.close();
+                connection.close();
 	}
 }

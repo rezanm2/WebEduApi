@@ -1,5 +1,6 @@
 package nl.webedu.dao;
 
+import java.sql.Connection;
 import nl.webedu.models.SprintModel;
 import nl.webedu.models.UserStoryModel;
 
@@ -37,7 +38,9 @@ public class UserStoryDAO {
                                 "ON userstory_id=userstory_version_userstory_fk " +
                                 "WHERE userstory_id=? AND userstory_version_current=true;";
             System.out.println(this.getClass().toString()+": "+userstoryId);
-            PreparedStatement userstoryStatement = this.connect.makeConnection().prepareStatement(userstorySql);
+            
+            Connection connection = this.connect.makeConnection();
+            PreparedStatement userstoryStatement = connection.prepareStatement(userstorySql);
             userstoryStatement.setInt(1,userstoryId);
             ResultSet userstorySet = userstoryStatement.executeQuery();
             
@@ -48,7 +51,11 @@ public class UserStoryDAO {
             userstory.setUserStoryDescription(userstorySet.getString("userstory_version_description"));
             userstory.setDeleted(userstorySet.getBoolean("userstory_isdeleted"));
             userstory.setIsCurrent(true);
+            
+            //close alles zodat de pool niet op gaat.
+            userstorySet.close();
             userstoryStatement.close();
+            connection.close();
             
             return userstory;
         }
@@ -66,7 +73,8 @@ public class UserStoryDAO {
 				+ "WHERE userstory_version_project_fk = ? "
 				+ "AND userstory_version_current = true";
 		try {
-			PreparedStatement userstories_statement = this.connect.makeConnection().prepareStatement(projects_userstories_sql);
+                    Connection connection = this.connect.makeConnection();
+			PreparedStatement userstories_statement = connection.prepareStatement(projects_userstories_sql);
 			userstories_statement.setInt(1, p_id);
 			ResultSet userstories_sets = userstories_statement.executeQuery();
 			while(userstories_sets.next()) {
@@ -75,7 +83,10 @@ public class UserStoryDAO {
 				userstory.setUserStoryName(userstories_sets.getString("userstory_version_name"));
 				userstory_alist.add(userstory);
 			}
+                        //close all
+                        userstories_sets.close();
 			userstories_statement.close();
+                        connection.close();
 		}
 		catch(Exception e) {
 			e.printStackTrace();
@@ -95,6 +106,7 @@ public class UserStoryDAO {
 		ArrayList<SprintModel> sprint_alist = new ArrayList<SprintModel>();
 		String projects_sprints_sql = "SELECT *  FROM sprint_version where sprint_version_project_fk = ? ";
 				//+ "AND entry_version_current = 'y' ";
+                Connection connection = this.connect.makeConnection();
 		PreparedStatement sprints_statement = this.connect.makeConnection().prepareStatement(projects_sprints_sql);
 		sprints_statement.setInt(1, sprintID);
 		ResultSet sprints_sets = sprints_statement.executeQuery();
@@ -123,6 +135,7 @@ public class UserStoryDAO {
 		String sprints_userStorys_sql = "SELECT *  FROM userStory_version where userStory_version_sprint_fk = ? ";
 				//+ "AND entry_version_current = 'y' ";
 		try {
+                    Connection connection = this.connect.makeConnection();
 			PreparedStatement userStorys_statement = this.connect.makeConnection().prepareStatement(sprints_userStorys_sql);
 			userStorys_statement.setInt(1, userStoryID);
 			ResultSet userStoriesSet = userStorys_statement.executeQuery();
@@ -151,6 +164,7 @@ public class UserStoryDAO {
 		ArrayList<UserStoryModel> userStory_alist = new ArrayList<UserStoryModel>();
 		String userStorys_userStorys_sql = "SELECT *  FROM userStory_version where userStory_version_userStory_fk = ? ";
 				//+ "AND entry_version_current = 'y' ";
+                Connection connection = this.connect.makeConnection();
 		PreparedStatement userStorys_statement = this.connect.makeConnection().prepareStatement(userStorys_userStorys_sql);
 		userStorys_statement.setInt(1, p_id);
 		ResultSet userStoriesSet = userStorys_statement.executeQuery();
@@ -182,6 +196,7 @@ public class UserStoryDAO {
 				"AND usv.userstory_version_current=TRUE AND sv.sprint_version_current=true ";
 
 		try {
+                        Connection connection = this.connect.makeConnection();
 			PreparedStatement userStory_statement = this.connect.makeConnection().prepareStatement(userStoryListSQL);
 			ResultSet userStory_set = userStory_statement.executeQuery();
 			while(userStory_set.next()) {

@@ -42,7 +42,8 @@ public class EntryService {
             entries.removeAll(entriesDelete);
         }
         //deze lijst wordt straks doorzocht om te kijken of er employees bij zitten die ook in de 
-//        ArrayList<EmployeeModel> employees = employeeDao.getAllEmployees();
+//        ArrayList<SprintModel> sprints = sprintDao.allSprints();
+//        ArrayList<ProjectModel> projects = projectDao.getAllProjects();
         for(EntryModel entry: entries){
             
             //als de entry een userstoryb heeft dan is de waarde boven 0. 
