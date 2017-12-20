@@ -1,5 +1,6 @@
 package nl.webedu.dao;
 
+import java.sql.Connection;
 import nl.webedu.models.EmployeeModel;
 
 import java.sql.PreparedStatement;
@@ -33,7 +34,8 @@ public class EmployeeDAO {
 				+ "employee_version_email, employee_version_password, employee_version_current) " +
 				"values (?, ?, ?, ?::enum_role, ?, ?,?)";
 		try {
-			insertNewUser = this.connect.makeConnection().prepareStatement(insertUser_sql);
+                    Connection connection = this.connect.makeConnection();
+			insertNewUser = connection.prepareStatement(insertUser_sql);
 
 			insertNewUser.setInt(1, createEmployee());
 			insertNewUser.setString(2, firstName);
@@ -43,7 +45,10 @@ public class EmployeeDAO {
 			insertNewUser.setString(6, password);
 			insertNewUser.setBoolean(7,true);
 			insertNewUser.executeUpdate();
+                        
+                        // close stuff
 			insertNewUser.close();
+                        connection.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -59,8 +64,8 @@ public class EmployeeDAO {
 		PreparedStatement insertEmployee;
 		ResultSet employeeId = null;
 		String insertEmployee_sql = "insert into employee (employee_isdeleted) values (?)";
-
-		insertEmployee = this.connect.makeConnection().prepareStatement(insertEmployee_sql, Statement.RETURN_GENERATED_KEYS);
+                Connection connection = this.connect.makeConnection();
+		insertEmployee = connection.prepareStatement(insertEmployee_sql, Statement.RETURN_GENERATED_KEYS);
 
 		insertEmployee.setBoolean(1, false);
 		insertEmployee.executeUpdate();
@@ -70,6 +75,7 @@ public class EmployeeDAO {
                     id = employeeId.getInt(1);
                 }
                 insertEmployee.close();
+                connection.close();
 		return id;
 	}
 
@@ -82,10 +88,12 @@ public class EmployeeDAO {
 		String lock_query = "UPDATE employee "
 				+ "SET employee_isdeleted = false "
 				+ "WHERE employee_id = ?";
-		PreparedStatement lock_statement = this.connect.makeConnection().prepareStatement(lock_query);
+                Connection connection = this.connect.makeConnection();
+		PreparedStatement lock_statement = connection.prepareStatement(lock_query);
 		lock_statement.setInt(1, emp_id);
 		lock_statement.executeUpdate();
                 lock_statement.close();
+                connection.close();
 	}
 
 	/**
@@ -103,7 +111,8 @@ public class EmployeeDAO {
 		PreparedStatement login_statement;
 		
 		try {
-			login_statement = this.connect.makeConnection().prepareStatement(login_sql);
+                    Connection connection = this.connect.makeConnection();
+			login_statement = connection.prepareStatement(login_sql);
 			login_statement.setString(1, email);
 			login_statement.setString(2, pw);
 			ResultSet user_set = login_statement.executeQuery();
@@ -118,7 +127,9 @@ public class EmployeeDAO {
 						user_set.getString("employee_version_email"),
 						user_set.getString("employee_version_role"));
 			}
+                        user_set.close();
 			login_statement.close();
+                        connection.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -132,10 +143,12 @@ public class EmployeeDAO {
 	 */
 	public void lockEmployee(int emp_id) throws Exception {
 		String lock_query = "UPDATE employee SET employee_isdeleted = true WHERE employee_id = ?";
-		PreparedStatement lock_statement = this.connect.makeConnection().prepareStatement(lock_query);
+                Connection connection = this.connect.makeConnection();
+		PreparedStatement lock_statement = connection.prepareStatement(lock_query);
 		lock_statement.setInt(1, emp_id);
 		lock_statement.executeUpdate();
                 lock_statement.close();
+                connection.close();
 	}
 
         /**
@@ -148,19 +161,22 @@ public class EmployeeDAO {
 		
 		String employee_entry_sql = "SELECT * FROM employee_version ";
                 try{
-		PreparedStatement user_statement = this.connect.makeConnection().prepareStatement(employee_entry_sql);
+                    Connection connection = this.connect.makeConnection();
+                    PreparedStatement user_statement = connection.prepareStatement(employee_entry_sql);
 
-		ResultSet userSet = user_statement.executeQuery();
-		while(userSet.next()) {
-                EmployeeModel employee = new EmployeeModel();
-                    employee.setEmployeeId(userSet.getInt("employee_version_employee_fk"));
-                    employee.setEmployeeFirstname(userSet.getString("employee_version_firstname"));
-                    employee.setEmployeeEmail(userSet.getString("employee_version_email"));
-                    employee.setEmployeePassword(userSet.getString("employee_version_password"));
-                    employee.setEmployeeRole(userSet.getString("employee_version_role"));
-                    employee_alist.add(employee);
-            }
+                    ResultSet userSet = user_statement.executeQuery();
+                    while(userSet.next()) {
+                        EmployeeModel employee = new EmployeeModel();
+                            employee.setEmployeeId(userSet.getInt("employee_version_employee_fk"));
+                            employee.setEmployeeFirstname(userSet.getString("employee_version_firstname"));
+                            employee.setEmployeeEmail(userSet.getString("employee_version_email"));
+                            employee.setEmployeePassword(userSet.getString("employee_version_password"));
+                            employee.setEmployeeRole(userSet.getString("employee_version_role"));
+                            employee_alist.add(employee);
+                    }
+                userSet.close();
                     user_statement.close();
+                    connection.close();
                     return employee_alist;
             }catch(Exception c){
                 c.getMessage();
@@ -180,7 +196,8 @@ public class EmployeeDAO {
 		String employee_entry_sql = "SELECT * FROM employee, employee_version "
 				+ "WHERE  employee_id = employee_version_employee_fk "
 				+ "AND employee_isdeleted = false AND employee_version_current=TRUE";
-		PreparedStatement user_statement = this.connect.makeConnection().prepareStatement(employee_entry_sql);
+                Connection connection = this.connect.makeConnection();
+		PreparedStatement user_statement = connection.prepareStatement(employee_entry_sql);
 
 		ResultSet userSet = user_statement.executeQuery();
 		while(userSet.next()) {
@@ -191,7 +208,9 @@ public class EmployeeDAO {
                     userSet.getString("employee_version_role"));
                     employee_alist.add(employee_container);
                 }
+                userSet.close();
 		user_statement.close();
+                connection.close();
 		return employee_alist;
 	}
 
@@ -207,7 +226,8 @@ public class EmployeeDAO {
 				+ "WHERE  employee_id = employee_version_employee_fk "
 				+ "AND employee_isdeleted = true";
 		try {
-			PreparedStatement user_statement = this.connect.makeConnection().prepareStatement(employee_entry_sql);
+                    Connection connection = this.connect.makeConnection();
+			PreparedStatement user_statement = connection.prepareStatement(employee_entry_sql);
 
 			ResultSet userSet = user_statement.executeQuery();
 			while(userSet.next()) {
@@ -220,7 +240,9 @@ public class EmployeeDAO {
 				);	
 				employee_alist.add(employee_container);
 			}
+                        userSet.close();
 			user_statement.close();
+                        connection.close();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -238,7 +260,8 @@ public class EmployeeDAO {
 		PreparedStatement employee_statement;
 		
 		try {
-			employee_statement = this.connect.makeConnection().prepareStatement(employee_sql);
+                    Connection connection = this.connect.makeConnection();
+			employee_statement = connection.prepareStatement(employee_sql);
 			employee_statement.setInt(1, e_id);
 			ResultSet user_set = employee_statement.executeQuery();
 			
@@ -253,7 +276,9 @@ public class EmployeeDAO {
 						user_set.getString("employee_version_role"));
 				return user;
 			}
+                        user_set.close();
 			employee_statement.close();
+                        connection.close();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -269,13 +294,14 @@ public class EmployeeDAO {
 				"employee_version_password,employee_version_current)" +
 				"VALUES(?,?,?,?::enum_role,?,?,?)";
 		try {
-			PreparedStatement changeVersions= this.connect.makeConnection().prepareStatement(oldVersionDisableSql);
+                    Connection connection = this.connect.makeConnection();
+			PreparedStatement changeVersions= connection.prepareStatement(oldVersionDisableSql);
 			changeVersions.setInt(1, employeeModel.getEmployeeId());
 
 			changeVersions.executeUpdate();
 			changeVersions.close();
 
-			PreparedStatement addVersionStatement = this.connect.makeConnection().prepareStatement(addNewVersionSql);
+			PreparedStatement addVersionStatement = connection.prepareStatement(addNewVersionSql);
 			addVersionStatement.setInt(1,employeeModel.getEmployeeId());
 			addVersionStatement.setString(2,employeeModel.getEmployeeFirstname());
 			addVersionStatement.setString(3,employeeModel.getEmployeeLastName());
@@ -286,6 +312,7 @@ public class EmployeeDAO {
 
 			addVersionStatement.executeQuery();
 			addVersionStatement.close();
+                        connection.close();
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
