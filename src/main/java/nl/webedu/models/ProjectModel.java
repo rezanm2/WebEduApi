@@ -6,9 +6,6 @@ public class ProjectModel {
         private String projectName;
         private String projectDescription;
 	private boolean projectIsDeleted;
-	private int projectEntryFk;
-	private int projectUserStoryFk;
-	private int projectSprintFk;
 	private int projectCustomerFk;
         private String projectCustomerName;
         private boolean isCurrent;
@@ -66,7 +63,7 @@ public class ProjectModel {
      * @return the isCurrent
      */
     public boolean getIsCurrent() {
-        return isCurrent;
+        return isCurrent;   
     }
 
     /**
