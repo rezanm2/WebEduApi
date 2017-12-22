@@ -5,12 +5,17 @@
  */
 package nl.webedu.services;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import nl.webedu.helpers.DateHelper;
 import nl.webedu.models.*;
 import nl.webedu.dao.*;
+import nl.webedu.models.entrymodels.DayModel;
+import nl.webedu.models.entrymodels.WeekModel;
 
 /**
  *
@@ -88,5 +93,84 @@ public class EntryService {
         }
         
         return entries;
+    }
+
+    public WeekModel getEntriesWeek(EmployeeModel loggedInEmployee, Date startDate){
+        DateHelper dateHelper = new DateHelper();
+        Date endDate = dateHelper.incrementDays(startDate, 6);
+        ArrayList<EntryModel> entries = entryDao.getEntriesWithinTimePeriod(startDate, endDate);
+        System.out.println(this.getClass().toString()+": entries size: "+entries.size());
+
+        System.out.println(this.getClass().toString()+": employee id: "+loggedInEmployee.getEmployeeId());
+        if(loggedInEmployee.getEmployeeRole().equals("employee")){
+            ArrayList<EntryModel> entriesDelete = new ArrayList<EntryModel>();
+            // Verwijder alle entries die niet van de employees zijn en die niet
+            // up-to-date zijn
+            for (int i=0; i<entries.size();i++) {
+                EntryModel entry = entries.get(i);
+                System.out.println("employeefk"+entry.getEmployeeFk()+"iscurrent: "+entry.getIsCurrent()+" isdeleted: "+entry.getIsDeleted());
+                if(entry.getEmployeeFk()!=loggedInEmployee.getEmployeeId()||!entry.getIsCurrent()||entry.getIsDeleted()){
+//                    entries.remove(entry);
+                    entriesDelete.add(entry);
+                }
+            }
+            entries.removeAll(entriesDelete);
+        }
+        //deze lijst wordt straks doorzocht om te kijken of er employees bij zitten die ook in de
+//        ArrayList<SprintModel> sprints = sprintDao.allSprints();
+//        ArrayList<ProjectModel> projects = projectDao.getAllProjects();
+        for(EntryModel entry: entries){
+
+            //als de entry een userstoryb heeft dan is de waarde boven 0.
+            //Dan vraag je userstoryDao om een enkele instantie van de userstory en dan om zijn naam
+            if(entry.getEntryUserstoryFk() > 0){
+                try {
+                    entry.setEntryUserstoryName(userstoryDao.getUserstory(entry.getEntryUserstoryFk()).getUserStoryName());
+                } catch (java.lang.Exception ex) {
+                    Logger.getLogger(EntryService.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+
+            //als de entry een project heeft dan is de waarde boven 0.
+            //Dan vraag je projectDao om een enkele instantie van de userstorye n dan om zijn naam
+            if(entry.getEntryProjectFk()> 0){
+                try {
+                    entry.setEntryProjectName(projectDao.getProject(entry.getEntryProjectFk()).getProjectName());
+                } catch (java.lang.Exception ex) {
+                    Logger.getLogger(EntryService.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+
+            //als de entry een project heeft dan is de waarde boven 0.
+            //Dan vraag je projectDao om een enkele instantie van de userstorye n dan om zijn naam
+            if(entry.getEntrySprintFk()> 0){
+                try {
+                    entry.setEntrySprintName(sprintDao.getSprint(entry.getEntrySprintFk()).getSprintName());
+                } catch (java.lang.Exception ex) {
+                    Logger.getLogger(EntryService.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+
+        System.out.println(this.getClass().toString()+": entries size: "+entries.size());
+        Date dayDate = new Date(startDate.getTime());
+        WeekModel weekModel = new WeekModel(startDate,endDate);
+        while (dayDate.compareTo(endDate)<=0){
+            System.out.println(this.getClass().toString()+": weekModel creation");
+            ArrayList<EntryModel> entriesDelete = new ArrayList<EntryModel>();
+            //maak de dag
+            DayModel dayModel = new DayModel(dayDate);
+            for (EntryModel entry: entries) {
+                if(dateHelper.parseDate(entry.getEntryDate(),"yyyy-MM-dd").compareTo(dayDate)==0){
+                    System.out.println(this.getClass().toString()+": add entry!");
+                    dayModel.getEntryModels().add(entry);
+                    entriesDelete.add(entry);
+                }
+            }
+            entries.removeAll(entriesDelete);
+            weekModel.getDayModels().add(dayModel);
+            dayDate=dateHelper.incrementDays(dayDate,1);
+        }
+        return weekModel;
     }
 }

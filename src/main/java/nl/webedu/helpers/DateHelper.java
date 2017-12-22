@@ -9,6 +9,7 @@ import java.sql.Date;
 import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -55,5 +56,20 @@ public class DateHelper {
             Logger.getLogger(DateHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
+    }
+
+    /**
+     * Dagen erbij of eraf. Spreekt voor zich tbqh fam
+     *
+     * @author  Robert
+     * @param startDate datum waar je mee begint
+     * @param change    dagen die erbij (of eraf) moeten
+     * @return new Date
+     */
+    public Date incrementDays(Date startDate, int change) {
+        Calendar c = Calendar.getInstance();
+        c.setTime(startDate);
+        c.add(Calendar.DATE, change);  // number of days to add
+        return new Date(c.getTime().getTime());
     }
 }

@@ -113,11 +113,50 @@ public class EntryDAO {
                                             "WHERE employee_version_current=true;";
 //                                            + "WHERE entry_version_current=true AND entry_isdeleted=false;";
 		try {
-			PreparedStatement entries_statement = this.connect.makeConnection().prepareStatement(employee_entry_sql);
+			Connection connection = this.connect.makeConnection();
+			PreparedStatement entries_statement = connection.prepareStatement(employee_entry_sql);
 			
 			ResultSet entry_set = entries_statement.executeQuery();
                         entry_alist = fillModels(entry_set);
+			entry_set.close();
 			entries_statement.close();
+			connection.close();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return entry_alist;
+	}
+
+	/**
+	 * Geeft alle entriees binnen een bepaalde tijdsperiode.
+	 *
+	 * @author Robert
+	 * @param beginDate meest vroege teogestane datum
+	 * @param endDate	meest late toegestane datum
+	 * @return entry_alist
+	 */
+	public ArrayList<EntryModel> getEntriesWithinTimePeriod(Date beginDate, Date endDate){
+		System.out.println(this.getClass().toString()+": getEntriesWithintTimePeriod BEGIN");
+		ArrayList<EntryModel> entry_alist = new ArrayList<EntryModel>();
+		String employee_entry_sql = "SELECT * FROM entry \n" +
+									"INNER JOIN entry_version ON entry_id=entry_version_entry_fk " +
+									"INNER JOIN employee ON employee_id=entry_employee_fk " +
+									"INNER JOIN employee_version ON employee_id=employee_version_employee_fk " +
+									"WHERE employee_version_current=true AND entry_version_date >= ? AND entry_version_date <= ? " +
+									"ORDER BY entry_version_date, entry_version_starttime ASC;";
+//                                            + "WHERE entry_version_current=true AND entry_isdeleted=false;";
+		try {
+			Connection connection = this.connect.makeConnection();
+			PreparedStatement entries_statement = connection.prepareStatement(employee_entry_sql);
+			entries_statement.setDate(1,beginDate);
+			entries_statement.setDate(2,endDate);
+			ResultSet entry_set = entries_statement.executeQuery();
+			System.out.println(this.getClass().toString()+": getEntriesWithintTimePeriod EXECUTED");
+			entry_alist = fillModels(entry_set);
+			entry_set.close();
+			entries_statement.close();
+			connection.close();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -134,20 +173,25 @@ public class EntryDAO {
 	public void approveHours(int id) throws Exception {
 		String employee_entry_sql = "UPDATE entry SET entry_status = 'approved' WHERE entry_id = ? ";
 		PreparedStatement entries_statement;
-		entries_statement = this.connect.makeConnection().prepareStatement(employee_entry_sql);
+		Connection connection = this.connect.makeConnection();
+		entries_statement = connection.prepareStatement(employee_entry_sql);
 		entries_statement.setInt(1, id);
 		entries_statement.executeUpdate();
                 entries_statement.close();
+		connection.close();
 	}
 
 	public void rejectHours(int id) {
-		String employee_entry_sql = "UPDATE entry SET entry_status = 'rejected' WHERE entry_id = ? ";
+
 		try {
+			Connection connection = this.connect.makeConnection();
+			String employee_entry_sql = "UPDATE entry SET entry_status = 'rejected' WHERE entry_id = ? ";
 			PreparedStatement entries_statement;
-			entries_statement = this.connect.makeConnection().prepareStatement(employee_entry_sql);
+			entries_statement = connection.prepareStatement(employee_entry_sql);
 			entries_statement.setInt(1, id);
 			entries_statement.executeUpdate();
                         entries_statement.close();
+			connection.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

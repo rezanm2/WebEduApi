@@ -27,16 +27,6 @@ public class Auth implements Authenticator<BasicCredentials, EmployeeModel>{
             }
         }
         
-//        for(int x=0;x<employeeDao.getAllEmployees().size();x++)// Haalt alle emplopyees vanuit de dao klasse
-//            // Checkt of de gebruiker bestaat
-//        {
-//            if(employeeDao.getAllEmployees().get(x).getEmployeeEmail().equals(c.getUsername())
-//                    && employeeDao.getAllEmployees().get(x).getEmployeePassword().equals(c.getPassword()))
-//            {
-//                 currentEmployee = employeeDao.getAllEmployees().get(x);//Zo ja, wordt het model teruggestuurd.
-//            }
-//        }
-        
         if(currentEmployee != null)
         {
             return Optional.of(currentEmployee);

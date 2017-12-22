@@ -30,6 +30,8 @@ import nl.webedu.dao.EntryDAO;
 import javax.ws.rs.Path;
 import nl.webedu.models.EmployeeModel;
 import javax.inject.Inject;
+
+import nl.webedu.models.entrymodels.WeekModel;
 import nl.webedu.services.*;
 
 /**
@@ -53,9 +55,11 @@ public class EntryResource {
     @JsonProperty
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public ArrayList<EntryModel> read(@Auth EmployeeModel employeeModel){
-        System.out.println(employeeModel.getEmployeeRole());
-        return this.entryService.getEntries(employeeModel);
+    public WeekModel read(@Auth EmployeeModel employeeModel,
+                          @QueryParam("startDate") Optional<String> startDate){
+        DateHelper dateHelper = new DateHelper();
+        System.out.println(employeeModel.getEmployeeRole()+ startDate.get());
+        return this.entryService.getEntriesWeek(employeeModel, dateHelper.parseDate(startDate.get(), "dd-MM-yyyy"));
     }
     @GET
     @Path("/queued")
