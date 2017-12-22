@@ -56,7 +56,7 @@ public class EntryResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public WeekModel read(@Auth EmployeeModel employeeModel,
-                          @QueryParam("startDate") Optional<String> startDate){
+                          @QueryParam("startdate") Optional<String> startDate){
         DateHelper dateHelper = new DateHelper();
         System.out.println(employeeModel.getEmployeeRole()+ startDate.get());
         return this.entryService.getEntriesWeek(employeeModel, dateHelper.parseDate(startDate.get(), "dd-MM-yyyy"));
