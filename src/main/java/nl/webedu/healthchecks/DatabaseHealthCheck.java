@@ -14,6 +14,7 @@ public class DatabaseHealthCheck extends HealthCheck{
 
     @Override
     protected Result check() throws Exception {
+        System.out.println("healthcheck starts");
         return Result.healthy();
     }
     
