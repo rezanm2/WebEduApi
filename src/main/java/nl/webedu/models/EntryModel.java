@@ -1,5 +1,7 @@
 package nl.webedu.models;
 
+import java.sql.Date;
+
 /**
  * Date: 9-10-2017
  * @author Robert
@@ -10,7 +12,7 @@ public class EntryModel {
 	private String entryDescription;
 //	private Exception entryException;
 	private String entryStatus;
-	private String entryDate;
+	private Date entryDate;
 	private String entryStartTime;
 	private String entryEndTime;
 	private Boolean entryIsLocked;
@@ -107,10 +109,11 @@ public class EntryModel {
 	public void setEntryStatus(String entryStatus) {
 		this.entryStatus = entryStatus;
 	}
-	public String getEntryDate() {
+	public Date getEntryDate() {
 		return entryDate;
 	}
-	public void setEntryDate(String entryDate) {
+	public void setEntryDate(Date entryDate) {
+            System.out.println(this.getClass().toString()+": "+entryDate);
 		this.entryDate = entryDate;
 	}
 	public String getEntryStartTime() {

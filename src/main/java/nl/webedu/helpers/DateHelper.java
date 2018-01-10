@@ -19,12 +19,13 @@ import java.util.logging.Logger;
  */
 public class DateHelper {
     /**
-     * Maakt een sql.Date object van een dateString en een formatString
+     * Maakt een sql.Date object van een dateString en een formatString die 
+     * vertelt hoe de datestring geinterpreteerd moet worden
      * 
      * @author Robert den Blaauwen
      * @param  dateString   string met datum
      * @param  formatString string met format
-     * @return sqlDate      sql.Date object 
+     * @return sqlDate      sql.Date object , null if failed
      */
     public Date parseDate(String dateString, String formatString){
         SimpleDateFormat sdf1 = new SimpleDateFormat(formatString);
@@ -37,6 +38,19 @@ public class DateHelper {
             Logger.getLogger(DateHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
+    }
+    
+    /**
+     * Veranderd sql.Date naar een string
+     * 
+     * @param date          De sql.Date
+     * @param outputString  de string die het gewenste format geeft
+     * @return String 
+     */
+    public String formatString(Date date, String outputString){
+        SimpleDateFormat sdf1 = new SimpleDateFormat(outputString);
+        java.sql.Date sqlDate = new java.sql.Date(date.getTime());
+        return sdf1.format(date);
     }
     
     /**

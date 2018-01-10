@@ -6,6 +6,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import nl.webedu.helpers.DateHelper;
 
 public class EntryDAO {
     private ConnectDAO connect;
@@ -16,6 +17,7 @@ public class EntryDAO {
     }
     
     private ArrayList<EntryModel> fillModels(ResultSet entrySet){
+        DateHelper dateHelper = new DateHelper();
         ArrayList<EntryModel> entries = new ArrayList<EntryModel>();
         try{
         while(entrySet.next()) {
@@ -35,7 +37,7 @@ public class EntryDAO {
 				entry.setEntryStatus(entrySet.getString("entry_status"));
                                 entry.setEntryStartTime(entrySet.getString("entry_version_starttime"));
                                 entry.setEntryEndTime(entrySet.getString("entry_version_endtime"));
-                                entry.setEntryDate(entrySet.getString("entry_version_date"));
+                                entry.setEntryDate(entrySet.getDate("entry_version_date"));
                                 entry.setIsCurrent(entrySet.getBoolean("entry_version_current"));
                                 entry.setEntryEmployeeName(entrySet.getString("employee_version_firstname") + " " 
                                                             + entrySet.getString("employee_version_lastname"));
@@ -249,7 +251,7 @@ public class EntryDAO {
          */
 	public void addEntry(int employeeId, int pId, int spId, Date date, String description, Time startTime, Time endTime, int userId){               
 		PreparedStatement insertProject;
-		String addEntrySQL = "SELECT add_entry(?,?,?,?,?,?,?,?);";;
+		String addEntrySQL = "SELECT add_entry(?,?,?,?,?,?,?,?);";
 		try {
 			insertProject = this.connect.makeConnection().prepareStatement(addEntrySQL);
 			
@@ -415,7 +417,7 @@ public class EntryDAO {
 				entry_container.setEntryStatus(entry_set.getString("entry_status"));
 				entry_container.setEntryStartTime(entry_set.getString("entry_version_starttime"));
 				entry_container.setEntryEndTime(entry_set.getString("entry_version_endtime"));
-				entry_container.setEntryDate(entry_set.getString("entry_version_creationtime"));
+				entry_container.setEntryDate(entry_set.getDate("entry_version_date"));
 				
 				entry_alist.add(entry_container);
 			}

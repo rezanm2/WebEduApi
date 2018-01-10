@@ -161,7 +161,7 @@ public class EntryService {
             //maak de dag
             DayModel dayModel = new DayModel(dayDate);
             for (EntryModel entry: entries) {
-                if(dateHelper.parseDate(entry.getEntryDate(),"yyyy-MM-dd").compareTo(dayDate)==0){
+                if(entry.getEntryDate().compareTo(dayDate)==0){
                     System.out.println(this.getClass().toString()+": add entry!");
                     dayModel.getEntryModels().add(entry);
                     entriesDelete.add(entry);
