@@ -21,25 +21,19 @@ public class Auth implements Authenticator<BasicCredentials, EmployeeModel>{
         EmployeeModel currentEmployee = null;
         
         ArrayList<EmployeeModel> employees = employeeDao.getAllEmployees();
-        for(EmployeeModel employee : employees){
-            if(employee.getEmployeeEmail().equals(c.getUsername())&&employee.getEmployeePassword().equals(c.getPassword())){
-                currentEmployee = employee;
+        if(employees!=null){
+            for(EmployeeModel employee : employees){
+                if(employee.getEmployeeEmail().equals(c.getUsername())&&employee.getEmployeePassword().equals(c.getPassword())){
+                    currentEmployee = employee;
+                }
             }
-        }
-        
-//        for(int x=0;x<employeeDao.getAllEmployees().size();x++)// Haalt alle emplopyees vanuit de dao klasse
-//            // Checkt of de gebruiker bestaat
-//        {
-//            if(employeeDao.getAllEmployees().get(x).getEmployeeEmail().equals(c.getUsername())
-//                    && employeeDao.getAllEmployees().get(x).getEmployeePassword().equals(c.getPassword()))
-//            {
-//                 currentEmployee = employeeDao.getAllEmployees().get(x);//Zo ja, wordt het model teruggestuurd.
-//            }
-//        }
-        
-        if(currentEmployee != null)
-        {
-            return Optional.of(currentEmployee);
+            if(currentEmployee != null)
+            {
+                return Optional.of(currentEmployee);
+            }else
+            {
+                return Optional.absent();
+            }
         }
         else
         {

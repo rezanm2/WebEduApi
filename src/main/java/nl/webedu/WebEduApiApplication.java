@@ -33,6 +33,7 @@ public class WebEduApiApplication extends Application<WebEduApiConfiguration> {
 //        System.out.println(dateHelper.parseTime("17:51:05", "HH:mm:ss"));
 //        InetAddress locIP = InetAddress.getByName("192.168.1.68");
 //        ServerSocket serverSocket = new ServerSocket(9999, 0, locIP);
+        System.out.println("Opstarten 1");
         new WebEduApiApplication().run(args);
     }
     /**
@@ -63,6 +64,7 @@ public class WebEduApiApplication extends Application<WebEduApiConfiguration> {
         /**
          * Load resources into environment
          */
+        System.out.println("Opstarten 2");
         environment.healthChecks().register("database", new DatabaseHealthCheck());//Voert healthcheck uit(controlleer de connectie met de database)
         environment.jersey().register(new UserResource());
         environment.jersey().register(new ProjectResource());
@@ -75,6 +77,7 @@ public class WebEduApiApplication extends Application<WebEduApiConfiguration> {
                         "Security realm",
                         EmployeeModel.class
                 )));
+        System.out.println("Opstarten 3");
 
 
         /**
@@ -91,6 +94,8 @@ public class WebEduApiApplication extends Application<WebEduApiConfiguration> {
 
         // Add URL mapping
         cors.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");
+
+        System.out.println("Opstarten 4");
     }
 
 }
