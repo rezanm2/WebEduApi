@@ -103,22 +103,9 @@ public class EntryService {
 
         System.out.println(this.getClass().toString()+": employee id: "+loggedInEmployee.getEmployeeId());
         if(loggedInEmployee.getEmployeeRole().equals("employee")){
-            ArrayList<EntryModel> entriesDelete = new ArrayList<EntryModel>();
-            // Verwijder alle entries die niet van de employees zijn en die niet
-            // up-to-date zijn
-            for (int i=0; i<entries.size();i++) {
-                EntryModel entry = entries.get(i);
-                System.out.println("employeefk"+entry.getEmployeeFk()+"iscurrent: "+entry.getIsCurrent()+" isdeleted: "+entry.getIsDeleted());
-                if(entry.getEmployeeFk()!=loggedInEmployee.getEmployeeId()||!entry.getIsCurrent()||entry.getIsDeleted()){
-//                    entries.remove(entry);
-                    entriesDelete.add(entry);
-                }
-            }
-            entries.removeAll(entriesDelete);
+            entries=removeWrongEntries(entries, loggedInEmployee);
         }
         //deze lijst wordt straks doorzocht om te kijken of er employees bij zitten die ook in de
-//        ArrayList<SprintModel> sprints = sprintDao.allSprints();
-//        ArrayList<ProjectModel> projects = projectDao.getAllProjects();
         for(EntryModel entry: entries){
 
             //als de entry een userstoryb heeft dan is de waarde boven 0.
@@ -172,5 +159,29 @@ public class EntryService {
             dayDate=dateHelper.incrementDays(dayDate,1);
         }
         return weekModel;
+    }
+    
+    /**
+     * Verwijder alle entries die niet van de employees zijn en die niet up-to-date zijn.
+     * 
+     * @author  Robert
+     * @param entries           De lijst van entries.
+     * @param loggedInEmployee  De employee die nu ingelogd is.
+     * @return entries      de lijst van entries nadat foute entries zijn verwijderd.
+     */
+    private ArrayList<EntryModel> removeWrongEntries(ArrayList<EntryModel> entries, EmployeeModel loggedInEmployee){
+        ArrayList<EntryModel> entriesDelete = new ArrayList<EntryModel>();
+            for (int i=0; i<entries.size();i++) {
+                EntryModel entry = entries.get(i);
+                System.out.println("employeefk"+entry.getEmployeeFk()+"iscurrent: "+entry.getIsCurrent()+" isdeleted: "+entry.getIsDeleted());
+                if(entry.getEmployeeFk()!=loggedInEmployee.getEmployeeId()||!entry.getIsCurrent()||entry.getIsDeleted()){
+                    entriesDelete.add(entry);
+                }
+            }
+            entries.removeAll(entriesDelete);
+            return entries;
+    }
+    
+    public void createEntry(){
     }
 }

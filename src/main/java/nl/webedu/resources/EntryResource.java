@@ -17,14 +17,10 @@ import java.util.logging.Logger;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
-import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import nl.webedu.dao.*;
 import nl.webedu.models.EntryModel;
-import nl.webedu.models.ProjectModel;
 import nl.webedu.helpers.DateHelper;
-import javax.ws.rs.Path;
 import nl.webedu.dao.EntryDAO;
 
 import javax.ws.rs.Path;
@@ -51,10 +47,8 @@ public class EntryResource {
     }
 
     @GET
-//    @Path("/read")
     @JsonProperty
     @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
     public WeekModel read(@Auth EmployeeModel employeeModel,
                           @QueryParam("startdate") Optional<String> startDate){
         DateHelper dateHelper = new DateHelper();
@@ -127,7 +121,6 @@ public class EntryResource {
     }
     
     @POST
-    @Path("/create")
     @JsonProperty
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
