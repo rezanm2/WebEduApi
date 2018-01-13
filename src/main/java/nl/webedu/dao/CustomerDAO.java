@@ -14,7 +14,7 @@ public class CustomerDAO {
 
 	public CustomerDAO(){
 		this.connect = new ConnectDAO();
-                createAddCustomerFunction();
+		createAddCustomerFunction();
 	}
 
 	 /**

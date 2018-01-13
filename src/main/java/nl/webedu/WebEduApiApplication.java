@@ -7,10 +7,7 @@ import io.dropwizard.auth.basic.BasicAuthFactory;
 import io.dropwizard.bundles.assets.ConfiguredAssetsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
-import java.net.InetAddress;
-import java.net.ServerSocket;
 import nl.webedu.auth.Auth;
-import nl.webedu.healthchecks.DatabaseHealthCheck;
 import nl.webedu.models.EmployeeModel;
 import nl.webedu.resources.ProjectResource;
 import nl.webedu.resources.UserResource;
@@ -19,7 +16,6 @@ import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration;
 import java.util.EnumSet;
 import nl.webedu.resources.*;
-import nl.webedu.helpers.*;
 
 /**
  * Deze klasse is de startpunt van de api
