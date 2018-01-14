@@ -38,9 +38,11 @@ import nl.webedu.models.EmployeeModel;
 @Path("/sprints")
 public class SprintResource {
     private SprintDAO sprintDao;
+
     public SprintResource(){
         sprintDao = new SprintDAO();
     }
+
     @GET
     @Path("/read")
     @JsonProperty
@@ -54,22 +56,9 @@ public class SprintResource {
             return null;
         }
     }
-    
+
     @PUT
-    @Path("/byemployee")
-    @JsonProperty
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    public ArrayList<SprintModel> readByEmployee(@FormParam("empid") Optional<String> employeeId){
-        try {
-            return this.sprintDao.allSprintsEmployee(Integer.parseInt(employeeId.get()));
-        } catch (Exception ex) {
-            Logger.getLogger(SprintResource.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
-        }
-    }
-    @PUT
-    @Path("/byemployee/url")
+    @Path("/by_employee/url")
     @JsonProperty
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -81,22 +70,9 @@ public class SprintResource {
             return null;
         }
     }
-    
+
     @PUT
-    @Path("/byproject")
-    @JsonProperty
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    public ArrayList<SprintModel> readByProject(@FormParam("projid") Optional<String> projectId){
-        try {
-            return this.sprintDao.sprintsProjects(Integer.parseInt(projectId.get()));
-        } catch (Exception ex) {
-            Logger.getLogger(SprintResource.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
-        }
-    }
-    @PUT
-    @Path("/byproject/url")
+    @Path("/by_project/")
     @JsonProperty
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -129,24 +105,6 @@ public class SprintResource {
         return true;
     }
     
-//    @POST
-//    @Path("/url")
-//    @JsonProperty
-//    @Produces(MediaType.APPLICATION_JSON)
-//    @Consumes(MediaType.APPLICATION_JSON)
-//    public boolean createByUrl(@QueryParam("projid") Optional<String> projectId,
-//                        @QueryParam("name") Optional<String> name,
-//                        @QueryParam("description") Optional<String> description,
-//                        @QueryParam("startdate") Optional<String> startDate,
-//                        @QueryParam("enddate") Optional<String> endDate){
-//        DateHelper dateHelper = new DateHelper();
-//        Date startDateParsed = dateHelper.parseDate(startDate.get(), "dd-MM-yyyy");
-//        Date endDateParsed = dateHelper.parseDate(endDate.get(), "dd-MM-yyyy");
-//        sprintDao.addSprintToDatabase(Integer.parseInt(projectId.get()), name.get(), 
-//                description.get(), startDateParsed, endDateParsed);
-//        return true;
-//    }
-    
     @PUT
     @Path("/update")
     @JsonProperty
@@ -166,48 +124,13 @@ public class SprintResource {
                 description.get(), startDateParsed, endDateParsed);
         return true;
     }
-    @PUT
-    @Path("/url")
-    @JsonProperty
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    public boolean updateByUrl(@QueryParam("sprintid") Optional<String> sprintId,
-                        @QueryParam("projid") Optional<String> projectId,
-                        @QueryParam("name") Optional<String> name,
-                        @QueryParam("description") Optional<String> description,
-                        @QueryParam("startdate") Optional<String> startDate,
-                        @QueryParam("endDate") Optional<String> endDate){
-        
-        DateHelper dateHelper = new DateHelper();
-        Date startDateParsed = dateHelper.parseDate(startDate.get(), "dd-MM-yyyy");
-        Date endDateParsed = dateHelper.parseDate(endDate.get(), "dd-MM-yyyy");
-        
-        sprintDao.modifySprint(Integer.parseInt(sprintId.get()),
-                name.get(), Integer.parseInt(projectId.get()),  
-                description.get(), startDateParsed, endDateParsed);
-        return true;
-    }
     
     @DELETE
     @Path("/delete")
     @JsonProperty
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public boolean delete(@FormParam("sprintid") Optional<String> sprintId){
-        try {
-            sprintDao.removeSprint(Integer.parseInt(sprintId.get()));
-        } catch (Exception ex) {
-            Logger.getLogger(SprintResource.class.getName()).log(Level.SEVERE, null, ex);
-            return false;
-        }
-        return true;
-    }
-    @DELETE
-    @Path("/url")
-    @JsonProperty
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    public boolean deleteByUrl(@QueryParam("sprintid") Optional<String> sprintId){
+    public boolean delete(@QueryParam("sprintid") Optional<String> sprintId){
         try {
             sprintDao.removeSprint(Integer.parseInt(sprintId.get()));
         } catch (Exception ex) {
@@ -222,23 +145,9 @@ public class SprintResource {
     @JsonProperty
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public boolean unDelete(@FormParam("sprintid") Optional<String> sprintId){
+    public boolean unDelete(@QueryParam("sprintid") String sprintId){
         try {
-            sprintDao.unRemoveSprint(Integer.parseInt(sprintId.get()));
-        } catch (Exception ex) {
-            Logger.getLogger(SprintResource.class.getName()).log(Level.SEVERE, null, ex);
-            return false;
-        }
-        return true;
-    }
-    @PUT
-    @Path("/undelete/url")
-    @JsonProperty
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    public boolean unDeleteByUrl(@QueryParam("sprintid") Optional<String> sprintId){
-        try {
-            sprintDao.unRemoveSprint(Integer.parseInt(sprintId.get()));
+            sprintDao.unRemoveSprint(Integer.parseInt(sprintId));
         } catch (Exception ex) {
             Logger.getLogger(SprintResource.class.getName()).log(Level.SEVERE, null, ex);
             return false;

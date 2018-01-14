@@ -41,64 +41,22 @@ public class ProjectResource {
         return this.projectDAO.getAllProjects();
     }
 
-//    @GET
-//    @Path("/read/all")
-//    @JsonProperty
-//    @Produces(MediaType.APPLICATION_JSON)
-//    @Consumes(MediaType.APPLICATION_JSON)
-//    public ArrayList<ProjectModel> AllProjects(){
-//        return this.projectDAO.getAllProjects();
-//    }
-//
-//    @GET
-//    @Path("/read/project-by-employee")
-//    @JsonProperty
-//    @Produces(MediaType.APPLICATION_JSON)
-//    @Consumes(MediaType.APPLICATION_JSON)
-//    public ArrayList<ProjectModel> read(@FormParam("empid") Optional<String> employeeId){
-//        int employeeId_parse = Integer.parseInt(employeeId.get());
-//        System.out.println(this.getClass().toString()+": read werkt!");
-//        return projectDAO.project_list_employee(employeeId_parse);
-//    }
-
     @GET
-    @Path("/read/byemployee/url")
+    @Path("/read/by_employee/")
     @JsonProperty
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public ArrayList<ProjectModel> readFromUrl(@QueryParam("empid") Optional<String> employeeId){
         int employeeId_parse = Integer.parseInt(employeeId.get());
-        System.out.println(this.getClass().toString()+": read werkt!");
         return this.projectDAO.project_list_employee(employeeId_parse);
     }
     
     @POST
     @Path("/create")
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
     public boolean createProject(@Valid ProjectModel projectModel){
         projectDAO.addProject(projectModel);
-        System.out.println(this.getClass().toString()+": create werkt!: ");
         return true;
     }
-
-//    @POST
-//    @Path("/create/url")
-//    @Produces(MediaType.APPLICATION_JSON)
-//    @Consumes(MediaType.APPLICATION_JSON)
-//    public boolean createByUrl(@QueryParam("name") Optional<String> name,
-//            @QueryParam("description") Optional<String> description,
-//            @QueryParam("custid") Optional<String> customerId){
-//        String name_parse = name.get();
-//        System.out.println(name_parse);
-//        String description_parse = description.get();
-//        System.out.println(description_parse);
-//        int customerId_parse = Integer.parseInt(customerId.get());
-//        System.out.println(customerId_parse);
-//        this.projectDAO.addProject(name_parse, description_parse, customerId_parse);
-//        System.out.println(this.getClass().toString()+": create werkt!: "+name_parse+description_parse+customerId_parse);
-//        return true;
-//    }
         
     /**
      * De method mist een manier om de de klant aan te passen,
@@ -111,9 +69,7 @@ public class ProjectResource {
     @Path("/update")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-
     public boolean update(@Valid ProjectModel projectModel){
-
         try {
             projectDAO.modifyProject(projectModel);
         } catch (Exception ex) {
@@ -123,21 +79,6 @@ public class ProjectResource {
         System.out.println(this.getClass().toString()+": update werkt!: ");
         return true;
     }
-
-//    @POST
-//    @Path("/update/url")
-//    @Produces(MediaType.APPLICATION_JSON)
-//    @Consumes(MediaType.APPLICATION_JSON)
-//    public boolean updateByUrl(@QueryParam("pid") Optional<String> projectId,
-//            @QueryParam("name") Optional<String> name,
-//            @QueryParam("description") Optional<String> description) throws Exception{
-//        int projectId_parse = Integer.parseInt(projectId.get());
-//        String name_parse = name.get();
-//        String description_parse = description.get();
-//        projectDAO.modifyProject(projectId_parse, name_parse, description_parse);
-//        System.out.println(this.getClass().toString()+": update werkt!: "+name_parse+description_parse);
-//        return true;
-//    }
 
     @POST
     @Path("/delete")
@@ -149,45 +90,14 @@ public class ProjectResource {
         return true;
     }
 
-//    @POST
-//    @Path("/delete/url")
-//    @Produces(MediaType.APPLICATION_JSON)
-//    @Consumes(MediaType.APPLICATION_JSON)
-//    public boolean deleteByUrl(@QueryParam("pid") Optional<String> projectId){
-//        int projectId_parse = Integer.parseInt(projectId.get());
-//        this.projectDAO.removeProject(projectId_parse);
-//        System.out.println(this.getClass().toString()+": update werkt!: ");
-//        return true;
-//    }
-
-    @POST
-    @Path("/undelete")
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    public boolean unDelete(@FormParam("pid") Optional<String> projectId){
-
-        int projectId_parse = Integer.parseInt(projectId.get());
-        projectDAO.unRemoveProject(projectId_parse);
-        System.out.println(this.getClass().toString()+": update werkt!: ");
-        return true;
-    }
     @POST
     @Path("/undelete/url")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-        public boolean unDeleteByUrl(@QueryParam("pid") Optional<String> projectId){
+    public boolean unDeleteByUrl(@QueryParam("pid") Optional<String> projectId){
         int projectId_parse = Integer.parseInt(projectId.get());
         this.projectDAO.unRemoveProject(projectId_parse);
         System.out.println(this.getClass().toString()+": update werkt!: ");
         return true;
-    }
-        
-    @GET
-    @Path("/secured")
-    @JsonProperty
-    @Produces(MediaType.TEXT_PLAIN)
-    @Consumes(MediaType.TEXT_PLAIN)
-    public String test(@Auth EmployeeModel employeeModel){
-        return "SECURED";
     }
 }

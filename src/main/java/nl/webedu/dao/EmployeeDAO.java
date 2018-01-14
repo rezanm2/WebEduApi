@@ -20,7 +20,6 @@ public class EmployeeDAO {
         
 	/**Deze methode voegt een nieuwe user toe. In tegenstelling tot createEmployee()
 	 * voegt hij een version toe
-	 *
 	 * @param firstName firstname
 	 * @param lastName  lastname
 	 * @param role  role
@@ -34,7 +33,7 @@ public class EmployeeDAO {
 				+ "employee_version_email, employee_version_password, employee_version_current) " +
 				"values (?, ?, ?, ?::enum_role, ?, ?,?)";
 		try {
-                    Connection connection = this.connect.makeConnection();
+            Connection connection = this.connect.makeConnection();
 			insertNewUser = connection.prepareStatement(insertUser_sql);
 
 			insertNewUser.setInt(1, createEmployee());
@@ -46,9 +45,9 @@ public class EmployeeDAO {
 			insertNewUser.setBoolean(7,true);
 			insertNewUser.executeUpdate();
                         
-                        // close stuff
+            // close stuff
 			insertNewUser.close();
-                        connection.close();
+            connection.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -72,17 +71,17 @@ public class EmployeeDAO {
 		insertEmployee.getGeneratedKeys();
 		employeeId = insertEmployee.getGeneratedKeys();
 		while (employeeId.next()) {
-                    id = employeeId.getInt(1);
-                }
-                insertEmployee.close();
-                connection.close();
+            id = employeeId.getInt(1);
+        }
+        insertEmployee.close();
+        connection.close();
 		return id;
 	}
 
 	/**
 	 * Unlock an employee
 	 * @param emp_id id to lock
-         * @throws Exception Een sql exception en normale exception
+	 * @throws Exception Een sql exception en normale exception
 	 */
 	public void unlockEmployee(int emp_id) throws Exception {
 		String lock_query = "UPDATE employee "
@@ -92,8 +91,8 @@ public class EmployeeDAO {
 		PreparedStatement lock_statement = connection.prepareStatement(lock_query);
 		lock_statement.setInt(1, emp_id);
 		lock_statement.executeUpdate();
-                lock_statement.close();
-                connection.close();
+        lock_statement.close();
+        connection.close();
 	}
 
 	/**
@@ -104,14 +103,13 @@ public class EmployeeDAO {
 	 * @return a user model if login was successful
 	 */
 	public EmployeeModel loginAssignment(String email, String pw){
-
 		String login_sql = "SELECT * FROM employee, employee_version "
 				+ "WHERE employee_version_email = ? AND employee_version_password = ?"
 				+ "AND employee_id = employee_version_employee_fk";
 		PreparedStatement login_statement;
 		
 		try {
-                    Connection connection = this.connect.makeConnection();
+            Connection connection = this.connect.makeConnection();
 			login_statement = connection.prepareStatement(login_sql);
 			login_statement.setString(1, email);
 			login_statement.setString(2, pw);
@@ -127,9 +125,9 @@ public class EmployeeDAO {
 						user_set.getString("employee_version_email"),
 						user_set.getString("employee_version_role"));
 			}
-                        user_set.close();
+            user_set.close();
 			login_statement.close();
-                        connection.close();
+            connection.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -139,22 +137,22 @@ public class EmployeeDAO {
 	/**
 	 * Lock an employee
 	 * @param emp_id id to lock
-         * @throws Exception een SQL exceptione n normale exception
+	 * @throws Exception een SQL exceptione n normale exception
 	 */
 	public void lockEmployee(int emp_id) throws Exception {
 		String lock_query = "UPDATE employee SET employee_isdeleted = true WHERE employee_id = ?";
-                Connection connection = this.connect.makeConnection();
+        Connection connection = this.connect.makeConnection();
 		PreparedStatement lock_statement = connection.prepareStatement(lock_query);
 		lock_statement.setInt(1, emp_id);
 		lock_statement.executeUpdate();
-                lock_statement.close();
-                connection.close();
+        lock_statement.close();
+        connection.close();
 	}
 
-        /**
-         * 
-         * @return employee_alist arraylist met employees
-         */
+	/**
+	 *
+	 * @return employee_alist arraylist met employees
+ 	*/
 	public ArrayList<EmployeeModel> getAllEmployees(){
 		//Empty list to return
 		ArrayList<EmployeeModel> employee_alist = new ArrayList<EmployeeModel>();
@@ -175,9 +173,9 @@ public class EmployeeDAO {
                             employee_alist.add(employee);
                     }
                 userSet.close();
-                    user_statement.close();
-                    connection.close();
-                    return employee_alist;
+                user_statement.close();
+                connection.close();
+                return employee_alist;
             }catch(Exception c){
                 c.getMessage();
             }
@@ -255,7 +253,7 @@ public class EmployeeDAO {
 	 * @param e_id - use the employee ID to link user to model
 	 * @return employee model with given information
 	 */
-	public EmployeeModel employee_information(int e_id) {
+	public EmployeeModel employeeInformation(int e_id) {
 		String employee_sql = "SELECT * FROM employee, employee_version WHERE employee_id = ?";
 		PreparedStatement employee_statement;
 		
@@ -289,12 +287,13 @@ public class EmployeeDAO {
 	public void editEmployee(EmployeeModel employeeModel){
 		String oldVersionDisableSql = "UPDATE employee_version SET employee_version_current=false" +
 				" WHERE employee_version_employee_fk = ? AND employee_version_current = true";
+
 		String addNewVersionSql = "INSERT INTO employee_version(employee_version_employee_fk," +
 				"employee_version_firstname,employee_version_lastname,employee_version_role,employee_version_email," +
 				"employee_version_password,employee_version_current)" +
 				"VALUES(?,?,?,?::enum_role,?,?,?)";
 		try {
-                    Connection connection = this.connect.makeConnection();
+			Connection connection = this.connect.makeConnection();
 			PreparedStatement changeVersions= connection.prepareStatement(oldVersionDisableSql);
 			changeVersions.setInt(1, employeeModel.getEmployeeId());
 
@@ -312,7 +311,7 @@ public class EmployeeDAO {
 
 			addVersionStatement.executeQuery();
 			addVersionStatement.close();
-                        connection.close();
+			connection.close();
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
