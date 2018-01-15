@@ -75,7 +75,7 @@ public class EntryService {
             //Dan vraag je projectDao om een enkele instantie van de userstorye n dan om zijn naam
             if(entry.getEntrySprintFk()> 0){
                 try {
-                    entry.setEntrySprintName(sprintDao.getSprint(entry.getEntrySprintFk()).getSprintName());
+                    entry.setEntrySprintName(sprintDao.getSprint(entry.getEntrySprintFk()).getCategoryName());
                 } catch (java.lang.Exception ex) {
                     Logger.getLogger(EntryService.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -132,7 +132,7 @@ public class EntryService {
             //Dan vraag je projectDao om een enkele instantie van de userstorye n dan om zijn naam
             if(entry.getEntrySprintFk()> 0){
                 try {
-                    entry.setEntrySprintName(sprintDao.getSprint(entry.getEntrySprintFk()).getSprintName());
+                    entry.setEntrySprintName(sprintDao.getSprint(entry.getEntrySprintFk()).getCategoryName());
                 } catch (java.lang.Exception ex) {
                     Logger.getLogger(EntryService.class.getName()).log(Level.SEVERE, null, ex);
                 }
