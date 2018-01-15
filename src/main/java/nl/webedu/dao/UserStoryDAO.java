@@ -101,9 +101,9 @@ public class UserStoryDAO {
 	 * @return  sprint_alist
          * @throws Exception SQL exception en normale exception
 	 */
-	public ArrayList<SprintModel> sprintsProjects(int sprintID) throws Exception {
-		SprintModel sprint;
-		ArrayList<SprintModel> sprint_alist = new ArrayList<SprintModel>();
+	public ArrayList<CategoryModel> sprintsProjects(int sprintID) throws Exception {
+		CategoryModel sprint;
+		ArrayList<CategoryModel> sprint_alist = new ArrayList<CategoryModel>();
 		String projects_sprints_sql = "SELECT *  FROM sprint_version where sprint_version_project_fk = ? ";
 				//+ "AND entry_version_current = 'y' ";
                 Connection connection = this.connect.makeConnection();
@@ -111,11 +111,11 @@ public class UserStoryDAO {
 		sprints_statement.setInt(1, sprintID);
 		ResultSet sprints_sets = sprints_statement.executeQuery();
 		while(sprints_sets.next()) {
-			sprint = new SprintModel();
-			sprint.setSprintId(sprints_sets.getInt("sprint_version_sprint_fk"));
-                    sprint.setSprintName(sprints_sets.getString("sprint_version_name"));
-                    sprint.setSprintStartDate(sprints_sets.getString("sprint_version_startdate"));
-                    sprint.setSprintEndDate(sprints_sets.getString("sprint_version_enddate"));
+			sprint = new CategoryModel();
+			sprint.setCategoryId(sprints_sets.getInt("sprint_version_sprint_fk"));
+                    sprint.setCategoryName(sprints_sets.getString("sprint_version_name"));
+                    sprint.setCategoryStartDate(sprints_sets.getString("sprint_version_startdate"));
+                    sprint.setCategoryEndDate(sprints_sets.getString("sprint_version_enddate"));
                     sprint_alist.add(sprint);
                 }
 		sprints_statement.close();
