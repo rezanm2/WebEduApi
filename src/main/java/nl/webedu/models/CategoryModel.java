@@ -9,15 +9,15 @@ import java.util.ArrayList;
  * 
  * @author Robert
  */
-public class SprintModel {
+public class CategoryModel {
 
     
-	private int sprintId;
-	private boolean sprintIsDeleted;
-	private String sprintName;
-	private String sprintStartDate;
-	private String sprintEndDate;
-	private String sprintDescription;
+	private int categoryId;
+	private boolean categoryIsDeleted;
+	private String categoryName;
+	private String categoryStartDate;
+	private String categoryEndDate;
+	private String categoryDescription;
 	private int projectFK;
 	private String projectName;
         private boolean isCurrent;
@@ -25,29 +25,29 @@ public class SprintModel {
 	private ArrayList<EntryModel> entries;
         private boolean isDeleted;
 	
-	public String getSprintName() {
-		return sprintName;
+	public String getCategoryName() {
+		return categoryName;
 	}
-	public void setSprintName(String sprintName) {
-		this.sprintName = sprintName;
+	public void setCategoryName(String categoryName) {
+		this.categoryName = categoryName;
 	}
-	public String getSprintStartDate() {
-		return sprintStartDate;
+	public String getCategoryStartDate() {
+		return categoryStartDate;
 	}
-	public void setSprintStartDate(String sprintStartDate) {
-		this.sprintStartDate = sprintStartDate;
+	public void setCategoryStartDate(String categoryStartDate) {
+		this.categoryStartDate = categoryStartDate;
 	}
-	public String getSprintEndDate() {
-		return sprintEndDate;
+	public String getCategoryEndDate() {
+		return categoryEndDate;
 	}
-	public void setSprintEndDate(String sprintEndDate) {
-		this.sprintEndDate = sprintEndDate;
+	public void setCategoryEndDate(String categoryEndDate) {
+		this.categoryEndDate = categoryEndDate;
 	}
-	public String getSprintDescription() {
-		return sprintDescription;
+	public String getCategoryDescription() {
+		return categoryDescription;
 	}
-	public void setSprintDescription(String sprintDescription) {
-		this.sprintDescription = sprintDescription;
+	public void setCategoryDescription(String categoryDescription) {
+		this.categoryDescription = categoryDescription;
 	}
 	public ArrayList<EntryModel> getEntries() {
 		return entries;
@@ -55,17 +55,17 @@ public class SprintModel {
 	public void setEntries(ArrayList<EntryModel> entries) {
 		this.entries = entries;
 	}
-	public int getSprintId() {
-		return sprintId;
+	public int getCategoryId() {
+		return categoryId;
 	}
-	public void setSprintId(int sprintId) {
-		this.sprintId = sprintId;
+	public void setCategoryId(int categoryId) {
+		this.categoryId = categoryId;
 	}
-	public boolean isSprintIsDeleted() {
-		return sprintIsDeleted;
+	public boolean isCategoryIsDeleted() {
+		return categoryIsDeleted;
 	}
-	public void setSprintIsDeleted(boolean sprintIsDeleted) {
-		this.sprintIsDeleted = sprintIsDeleted;
+	public void setCategoryIsDeleted(boolean categoryIsDeleted) {
+		this.categoryIsDeleted = categoryIsDeleted;
 	}
 	public int getProjectFK() {
 		return projectFK;

@@ -6,6 +6,7 @@
 package nl.webedu.services;
 
 import java.sql.Date;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.logging.Level;
@@ -75,7 +76,7 @@ public class EntryService {
             //Dan vraag je projectDao om een enkele instantie van de userstorye n dan om zijn naam
             if(entry.getEntrySprintFk()> 0){
                 try {
-                    entry.setEntrySprintName(sprintDao.getSprint(entry.getEntrySprintFk()).getSprintName());
+                    entry.setEntrySprintName(sprintDao.getSprint(entry.getEntrySprintFk()).getCategoryName());
                 } catch (java.lang.Exception ex) {
                     Logger.getLogger(EntryService.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -132,7 +133,7 @@ public class EntryService {
             //Dan vraag je projectDao om een enkele instantie van de userstorye n dan om zijn naam
             if(entry.getEntrySprintFk()> 0){
                 try {
-                    entry.setEntrySprintName(sprintDao.getSprint(entry.getEntrySprintFk()).getSprintName());
+                    entry.setEntrySprintName(sprintDao.getSprint(entry.getEntrySprintFk()).getCategoryName());
                 } catch (java.lang.Exception ex) {
                     Logger.getLogger(EntryService.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -182,6 +183,24 @@ public class EntryService {
             return entries;
     }
     
-    public void createEntry(){
+    public void createEntry(EmployeeModel employeeModel, EntryModel entryModel){
+        DateHelper dateHelper = new DateHelper();
+        Time parsedStartTime = dateHelper.parseTime(entryModel.getEntryStartTime(), "HH:mm");
+//        Time parsedEndTime = dateHelper.parseTime(entryModel.getEntryEndTime(), "HH:mm:ss");
+       System.out.println(this.getClass().toString()+": voor "+entryModel.getEntryStartTime()+" na "+parsedStartTime.toString());
+       
+//        try {
+//            entryDao.addEntry(Integer.parseInt(employeeId.get()), 
+//                    Integer.parseInt(projectId.get()), 
+//                    Integer.parseInt(sprintId.get()), 
+//                    parsedDate, 
+//                    description.get(), 
+//                    parsedStartTime, 
+//                    parsedEndTime, 
+//                    Integer.parseInt(userstoryId.get()));
+//        } catch (NumberFormatException ex) {
+//            Logger.getLogger(EntryResource.class.getName()).log(Level.SEVERE, null, ex);
+//            return false;
+//        }
     }
 }

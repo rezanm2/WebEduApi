@@ -47,9 +47,9 @@ public class UserStoryModel {
 		
 		for(int counter = 0; counter < this.sprintDAO.allSprints().size(); counter++)
 		{
-			if(sprintFK == sprintDAO.allSprints().get(counter).getSprintId())
+			if(sprintFK == sprintDAO.allSprints().get(counter).getCategoryId())
 			{
-				this.setSprintName(sprintDAO.allSprints().get(counter).getSprintName());
+				this.setSprintName(sprintDAO.allSprints().get(counter).getCategoryName());
 				System.out.println("sprintDAO.sprint_list().get(counter).getSprintName()");
 			};
 		}
