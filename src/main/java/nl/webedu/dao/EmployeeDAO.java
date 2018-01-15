@@ -18,6 +18,41 @@ public class EmployeeDAO {
 		this.connect = new ConnectDAO();
 	}
         
+        public boolean updateEmployee(EmployeeModel employeeModel){
+            String setCurrentVersionToFalse = "UPDATE employee_version "
+				+ "SET employee_version_current = false "
+				+ "WHERE employee_version_employee_fk = ?";
+            String insertUser_sql = "insert into employee_version (employee_version_employee_fk, " +
+				"employee_version_firstname, employee_version_lastname, employee_version_role, "
+				+ "employee_version_email, employee_version_password, employee_version_current) " +
+				"values (?, ?, ?, ?::enum_role, ?, ?,true)";
+    
+            try {
+                Connection connection = this.connect.makeConnection();
+                PreparedStatement setCurrentFalse = connection.prepareStatement(setCurrentVersionToFalse);
+                setCurrentFalse.setInt(1, employeeModel.getEmployeeId());
+                setCurrentFalse.executeUpdate();
+                setCurrentFalse.close();
+                
+                PreparedStatement insertEmployeeVersion = connection.prepareStatement(insertUser_sql);
+                insertEmployeeVersion.setInt(1, employeeModel.getEmployeeId());
+                insertEmployeeVersion.setString(2, employeeModel.getEmployeeFirstname());
+                insertEmployeeVersion.setString(3, employeeModel.getEmployeeLastName());
+                insertEmployeeVersion.setString(4, employeeModel.getEmployeeRole());
+                insertEmployeeVersion.setString(5, employeeModel.getEmployeeEmail());
+                insertEmployeeVersion.setString(6, employeeModel.getEmployeePassword());
+                insertEmployeeVersion.executeUpdate();
+                        
+                    // close stuff
+                insertEmployeeVersion.close();
+                connection.close();
+                return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+                return false;
+        }
+        
 	/**Deze methode voegt een nieuwe user toe. In tegenstelling tot createEmployee()
 	 * voegt hij een version toe
 	 *
@@ -28,7 +63,7 @@ public class EmployeeDAO {
 	 * @param password password
 	 */
 	public boolean createEmployeeVersion(EmployeeModel employeeModel){
-            String insertEmployee_sql = "insert into employee (employee_isdeleted) values (false)";
+            String insertEmployee_sql = "insert into employee (employee_isdeleted)values(false)returning employee_id";
             String insertUser_sql = "insert into employee_version (employee_version_employee_fk, " +
 				"employee_version_firstname, employee_version_lastname, employee_version_role, "
 				+ "employee_version_email, employee_version_password, employee_version_current) " +
@@ -38,16 +73,13 @@ public class EmployeeDAO {
 		
 		try {
                     Connection connection = this.connect.makeConnection();
-                    insertEmployee = connection.prepareStatement(insertEmployee_sql, Statement.RETURN_GENERATED_KEYS);
-                    insertEmployee.executeUpdate();
-                    ResultSet employee = insertEmployee.getGeneratedKeys();
-                    int employeeId = 0;
-                    while(employee.next()){
-                        employeeId = employee.getInt(1);
-                    }
+                    insertEmployee = connection.prepareStatement(insertEmployee_sql);
+                    ResultSet rs = insertEmployee.executeQuery();
+                    rs.next();
+                    int employeeId = rs.getInt(1);
                     insertEmployee.close();
                     
-                    
+                
                     insertEmployeeVersion = connection.prepareStatement(insertUser_sql);
                     insertEmployeeVersion.setInt(1, employeeId);
                     insertEmployeeVersion.setString(2, employeeModel.getEmployeeFirstname());
@@ -157,6 +189,7 @@ public class EmployeeDAO {
                         EmployeeModel employee = new EmployeeModel();
                             employee.setEmployeeId(userSet.getInt("employee_version_employee_fk"));
                             employee.setEmployeeFirstname(userSet.getString("employee_version_firstname"));
+                            employee.setEmployeeLastname(userSet.getString("employee_version_lastname"));
                             employee.setEmployeeEmail(userSet.getString("employee_version_email"));
                             employee.setEmployeePassword(userSet.getString("employee_version_password"));
                             employee.setEmployeeRole(userSet.getString("employee_version_role"));

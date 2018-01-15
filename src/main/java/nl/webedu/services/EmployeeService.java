@@ -16,4 +16,8 @@ public class EmployeeService {
         return this.employeeDao.getAllEmployees();
     }
     
+    public boolean updateEmployee(EmployeeModel employeeModel){
+        return this.employeeDao.updateEmployee(employeeModel);
+    }
+    
 }

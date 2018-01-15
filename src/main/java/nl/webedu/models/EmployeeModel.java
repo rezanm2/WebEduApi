@@ -6,8 +6,8 @@ public class EmployeeModel{
 	 */
 	private int employeeId;
 	
-	private String employeeFirstName;
-	private String employeeLastName;
+	private String employeeFirstname;
+	private String employeeLastname;
 	private String employeePassword;
 	private String employeeEmail;
 	
@@ -17,8 +17,8 @@ public class EmployeeModel{
 
 	public EmployeeModel(int id, boolean isdeleted, String firstname, String lastname, String wachtwoord, String email, String role){
 		this.employeeId = id;
-		this.employeeFirstName = firstname;
-		this.employeeLastName = lastname;
+		this.employeeFirstname = firstname;
+		this.employeeLastname = lastname;
 		this.employeePassword = wachtwoord;
 		this.employeeEmail = email;
 		this.employeeRole = role;
@@ -31,17 +31,17 @@ public class EmployeeModel{
 		this.employeeId = employeeId;
 	}
 	public String getEmployeeFirstname() {
-		return employeeFirstName;
+		return employeeFirstname;
 	}
 
 	public String getEmployeeLastName() {
-		return employeeLastName;
+		return employeeLastname;
 	}
-	public void setEmployeeFirstname(String employeeFirstName) {
-		this.employeeFirstName = employeeFirstName;
+	public void setEmployeeFirstname(String employeeFirstname) {
+		this.employeeFirstname = employeeFirstname;
 	}
-	public void setEmployeeLastname(String employeeLastName) {
-		this.employeeLastName = employeeLastName;
+	public void setEmployeeLastname(String employeeLastname) {
+		this.employeeLastname = employeeLastname;
 	}
 	public String getEmployeePassword() {
 		return employeePassword;
