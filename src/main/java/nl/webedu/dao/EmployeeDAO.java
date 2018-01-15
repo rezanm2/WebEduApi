@@ -37,7 +37,7 @@ public class EmployeeDAO {
                 PreparedStatement insertEmployeeVersion = connection.prepareStatement(insertUser_sql);
                 insertEmployeeVersion.setInt(1, employeeModel.getEmployeeId());
                 insertEmployeeVersion.setString(2, employeeModel.getEmployeeFirstname());
-                insertEmployeeVersion.setString(3, employeeModel.getEmployeeLastName());
+                insertEmployeeVersion.setString(3, employeeModel.getEmployeeLastname());
                 insertEmployeeVersion.setString(4, employeeModel.getEmployeeRole());
                 insertEmployeeVersion.setString(5, employeeModel.getEmployeeEmail());
                 insertEmployeeVersion.setString(6, employeeModel.getEmployeePassword());
@@ -83,7 +83,7 @@ public class EmployeeDAO {
                     insertEmployeeVersion = connection.prepareStatement(insertUser_sql);
                     insertEmployeeVersion.setInt(1, employeeId);
                     insertEmployeeVersion.setString(2, employeeModel.getEmployeeFirstname());
-                    insertEmployeeVersion.setString(3, employeeModel.getEmployeeLastName());
+                    insertEmployeeVersion.setString(3, employeeModel.getEmployeeLastname());
                     insertEmployeeVersion.setString(4, employeeModel.getEmployeeRole());
                     insertEmployeeVersion.setString(5, employeeModel.getEmployeeEmail());
                     insertEmployeeVersion.setString(6, employeeModel.getEmployeePassword());
@@ -179,7 +179,7 @@ public class EmployeeDAO {
 		//Empty list to return
 		ArrayList<EmployeeModel> employee_alist = new ArrayList<EmployeeModel>();
 		
-		String employee_entry_sql = "SELECT * FROM employee_version ";
+		String employee_entry_sql = "SELECT * FROM employee_version WHERE employee_version_current = true";
                 try{
                     Connection connection = this.connect.makeConnection();
                     PreparedStatement user_statement = connection.prepareStatement(employee_entry_sql);
@@ -325,7 +325,7 @@ public class EmployeeDAO {
 			PreparedStatement addVersionStatement = connection.prepareStatement(addNewVersionSql);
 			addVersionStatement.setInt(1,employeeModel.getEmployeeId());
 			addVersionStatement.setString(2,employeeModel.getEmployeeFirstname());
-			addVersionStatement.setString(3,employeeModel.getEmployeeLastName());
+			addVersionStatement.setString(3,employeeModel.getEmployeeLastname());
 			addVersionStatement.setString(4,employeeModel.getEmployeeRole());
 			addVersionStatement.setString(5,employeeModel.getEmployeeEmail());
 			addVersionStatement.setString(6,employeeModel.getEmployeePassword());

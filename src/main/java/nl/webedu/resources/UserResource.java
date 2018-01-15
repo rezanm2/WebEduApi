@@ -41,17 +41,12 @@ public class UserResource {
 
     @GET
     @Path("/login")
-    public ArrayList<EmployeeModel> UserName(@Auth EmployeeModel employeeModel){
-        try{
-            return this.employeeService.getAllEmployees();
-        } catch(Exception e){
-            e.printStackTrace();
-        }
-        return null;
+    public EmployeeModel UserName(@Auth EmployeeModel employeeModel){
+        return employeeModel;
     }
     
     @GET
-    public ArrayList<EmployeeModel> Users() {
+    public ArrayList<EmployeeModel> Users(@Auth EmployeeModel employeeModel) {
         try {
             return this.employeeService.getAllEmployees();
         } catch (Exception e) {
