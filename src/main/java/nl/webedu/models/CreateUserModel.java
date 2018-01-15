@@ -74,8 +74,8 @@ public class CreateUserModel {
 	}
 	
 	public void createUser() { 
-		EmployeeDAO doa = new EmployeeDAO();
-                doa.createEmployeeVersion(getFirstName(), getLastName(), getRol(), getEmail(), getPassword());
+		//EmployeeDAO doa = new EmployeeDAO();
+                //doa.createEmployeeVersion(getFirstName(), getLastName(), getRol(), getEmail(), getPassword());
 	}
 
 }
