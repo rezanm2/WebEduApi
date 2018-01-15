@@ -1,7 +1,7 @@
 package nl.webedu.dao;
 
 import nl.webedu.models.ProjectModel;
-import nl.webedu.models.SprintModel;
+import nl.webedu.models.CategoryModel;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -50,7 +50,7 @@ public class SprintDAO {
 	}
     }
     
-    public SprintModel getSprint(int sprintId) throws Exception{
+    public CategoryModel getSprint(int sprintId) throws Exception{
             String sprintSql = "SELECT * FROM sprint INNER JOIN sprint_version "
                                 + "ON sprint_id=sprint_version_sprint_fk "
                                 + "WHERE sprint_id=? AND sprint_version_current=true;";
@@ -61,10 +61,10 @@ public class SprintDAO {
             ResultSet sprintSet = sprintStatement.executeQuery();
             
             sprintSet.next();
-            SprintModel sprint = new SprintModel();
-            sprint.setSprintId(sprintSet.getInt("sprint_id"));
-            sprint.setSprintName(sprintSet.getString("sprint_version_name"));
-            sprint.setSprintDescription(sprintSet.getString("sprint_version_description"));
+            CategoryModel sprint = new CategoryModel();
+            sprint.setCategoryId(sprintSet.getInt("sprint_id"));
+            sprint.setCategoryName(sprintSet.getString("sprint_version_name"));
+            sprint.setCategoryDescription(sprintSet.getString("sprint_version_description"));
             sprint.setIsDeleted(sprintSet.getBoolean("sprint_isdeleted"));
             sprint.setIsCurrent(true);
             sprint.setProjectFK(sprintSet.getInt("sprint_version_project_fk"));
@@ -84,8 +84,8 @@ public class SprintDAO {
 	 * @return sprint_alist
          * @throws Exception SQL exception en normale exception
 	 */
-	public ArrayList<SprintModel> allSprintsEmployee(int employeeId) throws Exception {
-		ArrayList<SprintModel> sprintList = new ArrayList<SprintModel>();
+	public ArrayList<CategoryModel> allSprintsEmployee(int employeeId) throws Exception {
+		ArrayList<CategoryModel> sprintList = new ArrayList<CategoryModel>();
 
 		String projectsSprintsSql = "SELECT sprint_version_sprint_fk, sprint_version_name, " +
 				"sprint_version_description,sprint_version_startdate, sprint_version_enddate " +
@@ -98,11 +98,11 @@ public class SprintDAO {
 		ResultSet sprintsSets = sprintsStatement.executeQuery();
 
 		while(sprintsSets.next()) {
-                    SprintModel sprintContainer = new SprintModel();
-                                sprintContainer.setSprintId(sprintsSets.getInt("sprint_version_sprint_fk"));
-                    sprintContainer.setSprintName(sprintsSets.getString("sprint_version_name"));
-                    sprintContainer.setSprintStartDate(sprintsSets.getString("sprint_version_startdate"));
-                    sprintContainer.setSprintEndDate(sprintsSets.getString("sprint_version_enddate"));
+                    CategoryModel sprintContainer = new CategoryModel();
+                                sprintContainer.setCategoryId(sprintsSets.getInt("sprint_version_sprint_fk"));
+                    sprintContainer.setCategoryName(sprintsSets.getString("sprint_version_name"));
+                    sprintContainer.setCategoryStartDate(sprintsSets.getString("sprint_version_startdate"));
+                    sprintContainer.setCategoryEndDate(sprintsSets.getString("sprint_version_enddate"));
 
                     sprintList.add(sprintContainer);
                 }
@@ -120,8 +120,8 @@ public class SprintDAO {
 	 * @return sprint_alist lijst van sprints
          * @throws Exception SQL exception en normale exception
 	 */
-	public ArrayList<SprintModel> allSprints() throws Exception {
-            ArrayList<SprintModel> sprintList = new ArrayList<SprintModel>();
+	public ArrayList<CategoryModel> allSprints() throws Exception {
+            ArrayList<CategoryModel> sprintList = new ArrayList<CategoryModel>();
             String projectsSprintsSql = "SELECT *  FROM sprint_version INNER JOIN sprint ON sprint_id=sprint_version_sprint_fk";
             //+ "AND entry_version_current = 'y' ";
             
@@ -130,15 +130,15 @@ public class SprintDAO {
             ResultSet sprintsSets = sprintsStatement.executeQuery();
 
             while(sprintsSets.next()) {
-                SprintModel sprintContainer = new SprintModel();
-                sprintContainer.setSprintId(sprintsSets.getInt("sprint_version_sprint_fk"));
-                sprintContainer.setSprintIsDeleted(sprintsSets.getBoolean("sprint_isdeleted"));
+                CategoryModel sprintContainer = new CategoryModel();
+                sprintContainer.setCategoryId(sprintsSets.getInt("sprint_version_sprint_fk"));
+                sprintContainer.setCategoryIsDeleted(sprintsSets.getBoolean("sprint_isdeleted"));
                 sprintContainer.setProjectFK(sprintsSets.getInt("sprint_version_project_fk"));
-                sprintContainer.setSprintName(sprintsSets.getString("sprint_version_name"));
-                sprintContainer.setSprintDescription(sprintsSets.getString("sprint_version_description"));
-                sprintContainer.setSprintStartDate(sprintsSets.getString("sprint_version_startdate"));
-                sprintContainer.setSprintEndDate(sprintsSets.getString("sprint_version_enddate"));
-                sprintContainer.setSprintEndDate(sprintsSets.getString("sprint_version_enddate"));
+                sprintContainer.setCategoryName(sprintsSets.getString("sprint_version_name"));
+                sprintContainer.setCategoryDescription(sprintsSets.getString("sprint_version_description"));
+                sprintContainer.setCategoryStartDate(sprintsSets.getString("sprint_version_startdate"));
+                sprintContainer.setCategoryEndDate(sprintsSets.getString("sprint_version_enddate"));
+                sprintContainer.setCategoryEndDate(sprintsSets.getString("sprint_version_enddate"));
                 sprintContainer.setIsCurrent(sprintsSets.getBoolean("sprint_version_current"));
                 sprintList.add(sprintContainer);
             }
@@ -155,8 +155,8 @@ public class SprintDAO {
 	 * @param p_id  id van project waar je de sprints voor wilt hebben.
 	 * @return sprint_alist lisjt van sprints
 	 */
-	public ArrayList<SprintModel> sprintsProjects(int p_id){
-		ArrayList<SprintModel> sprint_alist = new ArrayList<SprintModel>();
+	public ArrayList<CategoryModel> sprintsProjects(int p_id){
+		ArrayList<CategoryModel> sprint_alist = new ArrayList<CategoryModel>();
 		String projectsSprintsSql = "SELECT *  FROM sprint_version sv INNER JOIN sprint s ON s.sprint_id=sv.sprint_version_sprint_fk " +
                                 "INNER JOIN project_version pv " +
 				"ON sv.sprint_version_project_fk=pv.project_version_project_fk INNER JOIN project p " +
@@ -169,14 +169,14 @@ public class SprintDAO {
 			sprintsStatement.setInt(1, p_id);
 			ResultSet sprintsSets = sprintsStatement.executeQuery();
 			while(sprintsSets.next()) {
-				SprintModel sprint;
-				sprint = new SprintModel();
-				sprint.setSprintId(sprintsSets.getInt("sprint_version_sprint_fk"));
-				sprint.setSprintName(sprintsSets.getString("sprint_version_name"));
-                                sprint.setSprintDescription(sprintsSets.getString("sprint_version_description"));
-				sprint.setSprintStartDate(sprintsSets.getString("sprint_version_startdate"));
-				sprint.setSprintEndDate(sprintsSets.getString("sprint_version_enddate"));
-				sprint.setSprintIsDeleted(sprintsSets.getBoolean("sprint_isdeleted"));
+				CategoryModel sprint;
+				sprint = new CategoryModel();
+				sprint.setCategoryId(sprintsSets.getInt("sprint_version_sprint_fk"));
+				sprint.setCategoryName(sprintsSets.getString("sprint_version_name"));
+                                sprint.setCategoryDescription(sprintsSets.getString("sprint_version_description"));
+				sprint.setCategoryStartDate(sprintsSets.getString("sprint_version_startdate"));
+				sprint.setCategoryEndDate(sprintsSets.getString("sprint_version_enddate"));
+				sprint.setCategoryIsDeleted(sprintsSets.getBoolean("sprint_isdeleted"));
                                 sprint.setIsCurrent(sprintsSets.getBoolean("sprint_version_current"));
                                 sprint.setProjectFK(sprintsSets.getInt("sprint_version_project_fk"));
 				sprint_alist.add(sprint);
@@ -197,8 +197,8 @@ public class SprintDAO {
 	 * @author Jeroen Zandvliet
 	 * @return sprintList
 	 */
-	public ArrayList<SprintModel> sprintListVersion(){
-		ArrayList<SprintModel> sprintList = new ArrayList<SprintModel>();
+	public ArrayList<CategoryModel> sprintListVersion(){
+		ArrayList<CategoryModel> sprintList = new ArrayList<CategoryModel>();
 		String sprintListSQL = "SELECT * FROM sprint_version "
 				+ "INNER JOIN sprint ON (sprint_id = sprint_version_sprint_fk)"
 				+ "AND sprint_version_current = true "
@@ -208,13 +208,13 @@ public class SprintDAO {
 			PreparedStatement sprint_statement = connection.prepareStatement(sprintListSQL);
 			ResultSet sprint_set = sprint_statement.executeQuery();
 			while(sprint_set.next()) {
-				SprintModel sprintModelContainer = new SprintModel();
-				sprintModelContainer.setSprintId(sprint_set.getInt("sprint_id"));
-				sprintModelContainer.setSprintDescription(sprint_set.getString("sprint_version_description"));
-				sprintModelContainer.setSprintName(sprint_set.getString("sprint_version_name"));
-				sprintModelContainer.setSprintIsDeleted(sprint_set.getBoolean("sprint_isdeleted"));
-				sprintModelContainer.setSprintStartDate(sprint_set.getString("sprint_version_startdate"));
-				sprintModelContainer.setSprintEndDate(sprint_set.getString("sprint_version_enddate"));
+				CategoryModel sprintModelContainer = new CategoryModel();
+				sprintModelContainer.setCategoryId(sprint_set.getInt("sprint_id"));
+				sprintModelContainer.setCategoryDescription(sprint_set.getString("sprint_version_description"));
+				sprintModelContainer.setCategoryName(sprint_set.getString("sprint_version_name"));
+				sprintModelContainer.setCategoryIsDeleted(sprint_set.getBoolean("sprint_isdeleted"));
+				sprintModelContainer.setCategoryStartDate(sprint_set.getString("sprint_version_startdate"));
+				sprintModelContainer.setCategoryEndDate(sprint_set.getString("sprint_version_enddate"));
 				sprintModelContainer.setProjectFK(sprint_set.getInt("sprint_version_project_fk"));
 				sprintList.add(sprintModelContainer);
 			}
@@ -238,8 +238,8 @@ public class SprintDAO {
 	 * @param projectModel  project waar je de sprints voor wilt hebben.
 	 * @return sprint_list  lijst van de sprints
 	 */
-	public ArrayList<SprintModel> sprintListProject(ProjectModel projectModel){
-		ArrayList<SprintModel> sprint_list = new ArrayList<SprintModel>();
+	public ArrayList<CategoryModel> sprintListProject(ProjectModel projectModel){
+		ArrayList<CategoryModel> sprint_list = new ArrayList<CategoryModel>();
 		String sprint_list_sql = "SELECT * FROM sprint_version "
 				+ "INNER JOIN sprint ON (sprint.sprint_id = sprint_version.sprint_version_sprint_fk) "
 				+ "WHERE sprint_version.sprint_version_project_fk="+projectModel.getProjectId()
@@ -249,11 +249,11 @@ public class SprintDAO {
 			PreparedStatement sprint_statement = connection.prepareStatement(sprint_list_sql);
 			ResultSet sprint_set = sprint_statement.executeQuery();
 			while(sprint_set.next()) {
-				SprintModel sprintModelContainer = new SprintModel();
-				sprintModelContainer.setSprintId(sprint_set.getInt("sprint_id"));
-				sprintModelContainer.setSprintDescription(sprint_set.getString("sprint_version_description"));
-				sprintModelContainer.setSprintName(sprint_set.getString("sprint_version_name"));
-				sprintModelContainer.setSprintIsDeleted(sprint_set.getBoolean("sprint_isdeleted"));
+				CategoryModel sprintModelContainer = new CategoryModel();
+				sprintModelContainer.setCategoryId(sprint_set.getInt("sprint_id"));
+				sprintModelContainer.setCategoryDescription(sprint_set.getString("sprint_version_description"));
+				sprintModelContainer.setCategoryName(sprint_set.getString("sprint_version_name"));
+				sprintModelContainer.setCategoryIsDeleted(sprint_set.getBoolean("sprint_isdeleted"));
 				sprint_list.add(sprintModelContainer);
 			}
                         // close alles zodat de connection pool niet op gaat
@@ -276,8 +276,8 @@ public class SprintDAO {
 	 * @param employeeID    employee
 	 * @return sprintList
 	 */
-	public ArrayList<SprintModel> sprintListEmployee(int employeeID){
-		ArrayList<SprintModel> sprint_list = new ArrayList<SprintModel>();
+	public ArrayList<CategoryModel> sprintListEmployee(int employeeID){
+		ArrayList<CategoryModel> sprint_list = new ArrayList<CategoryModel>();
 		String sprint_list_sql = "SELECT * FROM sprint_version";
 		try {
                     Connection connection = this.connect.makeConnection();
@@ -286,13 +286,13 @@ public class SprintDAO {
 			ResultSet sprint_set = sprint_statement.executeQuery();
 			
 			while(sprint_set.next()) {
-				SprintModel sprintModelContainer = new SprintModel();
+				CategoryModel sprintModelContainer = new CategoryModel();
 				
-				sprintModelContainer.setSprintId(sprint_set.getInt("sprint_version_project_fk"));
-				sprintModelContainer.setSprintDescription(sprint_set.getString("sprint_version_description"));
-				sprintModelContainer.setSprintName(sprint_set.getString("sprint_version_name"));
-				sprintModelContainer.setSprintStartDate(sprint_set.getString("sprint_version_startdate"));
-				sprintModelContainer.setSprintEndDate(sprint_set.getString("sprint_version_enddate"));
+				sprintModelContainer.setCategoryId(sprint_set.getInt("sprint_version_project_fk"));
+				sprintModelContainer.setCategoryDescription(sprint_set.getString("sprint_version_description"));
+				sprintModelContainer.setCategoryName(sprint_set.getString("sprint_version_name"));
+				sprintModelContainer.setCategoryStartDate(sprint_set.getString("sprint_version_startdate"));
+				sprintModelContainer.setCategoryEndDate(sprint_set.getString("sprint_version_enddate"));
 				sprint_list.add(sprintModelContainer);
 			}
                         // close alles zodat de connection pool niet op gaat
@@ -336,7 +336,7 @@ public class SprintDAO {
 		return generatedID;
 	}
 
-	public void createSprint(SprintModel sprintModel){
+	public void createSprint(CategoryModel sprintModel){
 		PreparedStatement addSprint;
 		String insertStatement = "SELECT add_sprint(?,?,?,?,?)";
 		
@@ -344,11 +344,11 @@ public class SprintDAO {
                     Connection connection = this.connect.makeConnection();
 			addSprint = connection.prepareStatement(insertStatement);
 			
-                        Date startDateParsed = dateHelper.parseDate(sprintModel.getSprintStartDate(), "yyyy-MM-dd");
-                        Date endDateParsed = dateHelper.parseDate(sprintModel.getSprintEndDate(), "yyyy-MM-dd");
+                        Date startDateParsed = dateHelper.parseDate(sprintModel.getCategoryStartDate(), "yyyy-MM-dd");
+                        Date endDateParsed = dateHelper.parseDate(sprintModel.getCategoryEndDate(), "yyyy-MM-dd");
 			addSprint.setInt(1,  sprintModel.getProjectFK());
-			addSprint.setString(2, sprintModel.getSprintName());
-			addSprint.setString(3, sprintModel.getSprintDescription());
+			addSprint.setString(2, sprintModel.getCategoryName());
+			addSprint.setString(3, sprintModel.getCategoryDescription());
 			addSprint.setDate(4, startDateParsed);
 			addSprint.setDate(5, endDateParsed);
 			
@@ -366,8 +366,8 @@ public class SprintDAO {
 	
 
 
-	public ArrayList <SprintModel> toonUserSprint (int e_id){
-		ArrayList<SprintModel> sprintList = new ArrayList <SprintModel>();
+	public ArrayList <CategoryModel> toonUserSprint (int e_id){
+		ArrayList<CategoryModel> sprintList = new ArrayList <CategoryModel>();
 		String sprintQuery = "SELECT * FROM sprint_version, sprint "
 				+ "WHERE sprint_version_sprint_fk = sprint_id";
 		
@@ -376,10 +376,10 @@ public class SprintDAO {
 			PreparedStatement sprintStatement = connection.prepareStatement(sprintQuery);
 			ResultSet sprint_set = sprintStatement.executeQuery();
 			while(sprint_set.next()){
-				SprintModel model = new SprintModel();
-				model.setSprintName(sprint_set.getString("sprint_version_name"));
-				model.setSprintStartDate(sprint_set.getString("sprint_version_startdate"));
-				model.setSprintEndDate(sprint_set.getString("sprint_version_enddate"));
+				CategoryModel model = new CategoryModel();
+				model.setCategoryName(sprint_set.getString("sprint_version_name"));
+				model.setCategoryStartDate(sprint_set.getString("sprint_version_startdate"));
+				model.setCategoryEndDate(sprint_set.getString("sprint_version_enddate"));
 				sprintList.add(model);
 			}
 			// close alles zodat de connection pool niet op gaat

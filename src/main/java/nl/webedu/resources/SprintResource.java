@@ -24,7 +24,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import nl.webedu.dao.*;
-import nl.webedu.models.SprintModel;
+import nl.webedu.models.CategoryModel;
 import nl.webedu.models.ProjectModel;
 import nl.webedu.helpers.DateHelper;
 import javax.ws.rs.Path;
@@ -35,7 +35,7 @@ import nl.webedu.models.EmployeeModel;
  *
  * @author rezanaser
  */
-@Path("/sprints")
+@Path("/categories")
 public class SprintResource {
     private SprintDAO sprintDao;
 
@@ -48,7 +48,7 @@ public class SprintResource {
     @JsonProperty
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public ArrayList<SprintModel> read(){
+    public ArrayList<CategoryModel> read(){
         try {
             return this.sprintDao.allSprints();
         } catch (Exception ex) {
@@ -62,7 +62,7 @@ public class SprintResource {
     @JsonProperty
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public ArrayList<SprintModel> readByEmployeeByUrl(@QueryParam("empid") Optional<String> employeeId){
+    public ArrayList<CategoryModel> readByEmployeeByUrl(@QueryParam("empid") Optional<String> employeeId){
         try {
             return this.sprintDao.allSprintsEmployee(Integer.parseInt(employeeId.get()));
         } catch (Exception ex) {
@@ -76,7 +76,7 @@ public class SprintResource {
     @JsonProperty
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public ArrayList<SprintModel> readByProjectByUrl(@QueryParam("projid") Optional<String> projectId){
+    public ArrayList<CategoryModel> readByProjectByUrl(@QueryParam("projid") Optional<String> projectId){
         try {
             return this.sprintDao.sprintsProjects(Integer.parseInt(projectId.get()));
         } catch (Exception ex) {
@@ -100,7 +100,7 @@ public class SprintResource {
     @JsonProperty
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public boolean create(@Auth EmployeeModel employeeModel, @Valid SprintModel sprintModel){
+    public boolean create(@Auth EmployeeModel employeeModel, @Valid CategoryModel sprintModel){
         sprintDao.createSprint(sprintModel);
         return true;
     }
