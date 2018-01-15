@@ -11,36 +11,42 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
+import javax.validation.Valid;
+import javax.ws.rs.POST;
+import nl.webedu.services.EmployeeService;
 
 @Path("/login")
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 public class UserResource {
-    private EmployeeDAO employeeDAO;
+    private EmployeeService employeeService;
 
     public UserResource(){
-        this.employeeDAO = new EmployeeDAO();
+        this.employeeService = new EmployeeService();
     }
+    
+    @POST
+    @Path("/create")
+    public boolean createEmployee(@Auth EmployeeModel loggedUser, @Valid EmployeeModel employeeModel){
+        return this.employeeService.createEmployee(employeeModel);
+    }
+    
 
+//    @GET
+//    public ArrayList<EmployeeModel> UserName(@Auth EmployeeModel employeeModel){
+//        try{
+//            return this.employeeService.getAllEmployees();
+//        } catch(Exception e){
+//            e.printStackTrace();
+//        }
+//        return null;
+//    }
+    
     @GET
-    @JsonProperty
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    public ArrayList<EmployeeModel> UserName(@Auth EmployeeModel employeeModel){
-        try{
-            return this.employeeDAO.getAllEmployees();
-        } catch(Exception e){
-            e.printStackTrace();
-        }
-        return null;
-    }
-
     @Path("/users")
-    @GET
-    @JsonProperty
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
     public ArrayList<EmployeeModel> Users() {
         try {
-            return this.employeeDAO.getAllEmployees();
+            return this.employeeService.getAllEmployees();
         } catch (Exception e) {
             e.printStackTrace();
         }
