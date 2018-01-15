@@ -121,39 +121,6 @@ public class EntryResource {
         return true;
     }
     
-//    @POST
-//    @JsonProperty
-//    @Produces(MediaType.APPLICATION_JSON)
-//    @Consumes(MediaType.APPLICATION_JSON)
-//    public boolean create(@FormParam("empid") Optional<String> employeeId,
-//                        @FormParam("projid") Optional<String> projectId,
-//                        @FormParam("sprintid") Optional<String> sprintId,
-//                        @FormParam("date") Optional<String> date,
-//                        @FormParam("description") Optional<String> description,
-//                        @FormParam("starttime") Optional<String> startTime,
-//                        @FormParam("endtime") Optional<String> endTime,
-//                        @FormParam("userstoryid") Optional<String> userstoryId){
-//        
-//        DateHelper dateHelper = new DateHelper();
-//        Date parsedDate = dateHelper.parseDate(date.get(),"dd-MM-yyyy");
-//        Time parsedStartTime = dateHelper.parseTime(startTime.get(), "HH:mm:ss");
-//        Time parsedEndTime = dateHelper.parseTime(endTime.get(), "HH:mm:ss");
-//        try {
-//            entryDao.addEntry(Integer.parseInt(employeeId.get()), 
-//                    Integer.parseInt(projectId.get()), 
-//                    Integer.parseInt(sprintId.get()), 
-//                    parsedDate, 
-//                    description.get(), 
-//                    parsedStartTime, 
-//                    parsedEndTime, 
-//                    Integer.parseInt(userstoryId.get()));
-//        } catch (NumberFormatException ex) {
-//            Logger.getLogger(EntryResource.class.getName()).log(Level.SEVERE, null, ex);
-//            return false;
-//        }
-//        return true;
-//    }
-    
     @POST
     @JsonProperty
     @Produces(MediaType.APPLICATION_JSON)

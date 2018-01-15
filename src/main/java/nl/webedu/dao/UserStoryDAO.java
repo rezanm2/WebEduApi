@@ -1,7 +1,7 @@
 package nl.webedu.dao;
 
 import java.sql.Connection;
-import nl.webedu.models.SprintModel;
+import nl.webedu.models.CategoryModel;
 import nl.webedu.models.UserStoryModel;
 
 import java.sql.PreparedStatement;
