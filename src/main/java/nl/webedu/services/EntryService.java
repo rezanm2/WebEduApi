@@ -185,11 +185,9 @@ public class EntryService {
     
     public void createEntry(EmployeeModel employeeModel, EntryModel entryModel){
         DateHelper dateHelper = new DateHelper();
-        Date parsedDate = dateHelper.parseDate(entryModel.getEntryDate().toString(),"dd-MM-yyyy");
-//        Time parsedStartTime = dateHelper.parseTime(entryModel.getEntryStartTime(), "HH:mm:ss");
+        Time parsedStartTime = dateHelper.parseTime(entryModel.getEntryStartTime(), "HH:mm");
 //        Time parsedEndTime = dateHelper.parseTime(entryModel.getEntryEndTime(), "HH:mm:ss");
-        
-        System.out.println(this.getClass().toString()+": "+parsedDate.toString());
+       System.out.println(this.getClass().toString()+": voor "+entryModel.getEntryStartTime()+" na "+parsedStartTime.toString());
        
 //        try {
 //            entryDao.addEntry(Integer.parseInt(employeeId.get()), 
