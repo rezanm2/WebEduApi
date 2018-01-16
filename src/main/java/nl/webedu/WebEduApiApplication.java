@@ -68,6 +68,7 @@ public class WebEduApiApplication extends Application<WebEduApiConfiguration> {
         environment.jersey().register(new EntryResource());
         environment.jersey().register(new SprintResource());
         environment.jersey().register(new CustomerResource());
+        environment.jersey().register(new UserStoryResource());
         environment.jersey().register(AuthFactory.binder(
                 new BasicAuthFactory<>(
                         new Auth(),

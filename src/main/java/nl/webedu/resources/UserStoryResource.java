@@ -8,9 +8,7 @@ package nl.webedu.resources;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Optional;
 import io.dropwizard.auth.Auth;
-import nl.webedu.dao.ProjectDAO;
 import nl.webedu.models.EmployeeModel;
-import nl.webedu.models.ProjectModel;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
