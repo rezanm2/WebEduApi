@@ -27,6 +27,8 @@ import javax.validation.Valid;
 import javax.ws.rs.Path;
 import nl.webedu.models.EmployeeModel;
 import javax.inject.Inject;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.PUT;
 
 import nl.webedu.models.entrymodels.WeekModel;
 import nl.webedu.services.*;
@@ -127,7 +129,7 @@ public class EntryResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public boolean create(@Valid EntryModel entryModel, @Auth EmployeeModel employeeModel){
         System.out.println(this.getClass().toString()+": "+entryModel.getEntryDescription()+" auth: "+employeeModel.getEmployeeFirstname());
-        if(entryModel.getEmployeeFk()!=employeeModel.getEmployeeId()&&!employeeModel.getEmployeeRole().equals("administration")){
+        if(entryModel.getEmployeeFk()==employeeModel.getEmployeeId()&&!employeeModel.getEmployeeRole().equals("administration")){
             System.out.println(this.getClass().toString()+": non-admins mogen geen entries maken voor anderen.");
            return false;
         }else{
@@ -187,39 +189,53 @@ public class EntryResource {
         return true;
     }
     
-    @POST
-    @Path("/update")
+    @PUT
     @JsonProperty
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public boolean update(@FormParam("empid") Optional<String> employeeId,
-                        @FormParam("projid") Optional<String> projectId,
-                        @FormParam("sprintid") Optional<String> sprintId,
-                        @FormParam("date") Optional<String> date,
-                        @FormParam("description") Optional<String> description,
-                        @FormParam("starttime") Optional<String> startTime,
-                        @FormParam("endtime") Optional<String> endTime,
-                        @FormParam("userstoryid") Optional<String> userstoryId){
-        
-        DateHelper dateHelper = new DateHelper();
-        Date parsedDate = dateHelper.parseDate(date.get(),"dd-MM-yyyy");
-        Time parsedStartTime = dateHelper.parseTime(startTime.get(), "HH:mm:ss");
-        Time parsedEndTime = dateHelper.parseTime(endTime.get(), "HH:mm:ss");
-        try {
-            entryDao.modifyEntry(Integer.parseInt(employeeId.get()), 
-                    Integer.parseInt(projectId.get()), 
-                    Integer.parseInt(sprintId.get()), 
-                    parsedDate, 
-                    description.get(), 
-                    parsedStartTime, 
-                    parsedEndTime, 
-                    Integer.parseInt(userstoryId.get()));
-        } catch (NumberFormatException ex) {
-            Logger.getLogger(EntryResource.class.getName()).log(Level.SEVERE, null, ex);
+    public boolean update(@Valid EntryModel entryModel, @Auth EmployeeModel employeeModel){
+        if(entryModel.getEmployeeFk()==employeeModel.getEmployeeId()
+                &&!employeeModel.getEmployeeRole().equals("administration")){
+            System.out.println(this.getClass().toString()+": non-admins mogen geen entries van anderen bewerken.");
             return false;
+        }else{
+            return this.entryService.updateEntry(entryModel);
         }
-        return true;
     }
+    
+//    @POST
+//    @Path("/update")
+//    @JsonProperty
+//    @Produces(MediaType.APPLICATION_JSON)
+//    @Consumes(MediaType.APPLICATION_JSON)
+//    public boolean update(@FormParam("empid") Optional<String> employeeId,
+//                        @FormParam("projid") Optional<String> projectId,
+//                        @FormParam("sprintid") Optional<String> sprintId,
+//                        @FormParam("date") Optional<String> date,
+//                        @FormParam("description") Optional<String> description,
+//                        @FormParam("starttime") Optional<String> startTime,
+//                        @FormParam("endtime") Optional<String> endTime,
+//                        @FormParam("userstoryid") Optional<String> userstoryId){
+//        
+//        DateHelper dateHelper = new DateHelper();
+//        Date parsedDate = dateHelper.parseDate(date.get(),"dd-MM-yyyy");
+//        Time parsedStartTime = dateHelper.parseTime(startTime.get(), "HH:mm:ss");
+//        Time parsedEndTime = dateHelper.parseTime(endTime.get(), "HH:mm:ss");
+//        try {
+//            entryDao.modifyEntry(Integer.parseInt(employeeId.get()), 
+//                    Integer.parseInt(projectId.get()), 
+//                    Integer.parseInt(sprintId.get()), 
+//                    parsedDate, 
+//                    description.get(), 
+//                    parsedStartTime, 
+//                    parsedEndTime, 
+//                    Integer.parseInt(userstoryId.get()));
+//        } catch (NumberFormatException ex) {
+//            Logger.getLogger(EntryResource.class.getName()).log(Level.SEVERE, null, ex);
+//            return false;
+//        }
+//        return true;
+//    }
     
     @POST
     @Path("/update/url")
@@ -255,20 +271,34 @@ public class EntryResource {
         return true;
     }
     
-    @POST
-    @Path("/delete")
+    @DELETE
     @JsonProperty
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public boolean delete(@FormParam("entryid") Optional<String> entryId){
-        try {
-            entryDao.deleteEntry(Integer.parseInt(entryId.get()));
-        } catch (NumberFormatException ex) {
-            Logger.getLogger(EntryResource.class.getName()).log(Level.SEVERE, null, ex);
+    public boolean delete(@QueryParam("entryid") Optional<String> entryId, @Auth EmployeeModel employeeModel){
+        int parsedId=Integer.parseInt(entryId.get());
+        if(parsedId==employeeModel.getEmployeeId()&&!employeeModel.getEmployeeRole().equals("administration")){
+            System.out.println(this.getClass().toString()+": non-admins mogen geen entries van anderen VERWIJDEREN.");
             return false;
+        }else{
+            return this.entryService.deleteEntry(parsedId);
         }
-        return true;
     }
+    
+//    @POST
+//    @Path("/delete")
+//    @JsonProperty
+//    @Produces(MediaType.APPLICATION_JSON)
+//    @Consumes(MediaType.APPLICATION_JSON)
+//    public boolean delete(@FormParam("entryid") Optional<String> entryId){
+//        try {
+//            entryDao.deleteEntry(Integer.parseInt(entryId.get()));
+//        } catch (NumberFormatException ex) {
+//            Logger.getLogger(EntryResource.class.getName()).log(Level.SEVERE, null, ex);
+//            return false;
+//        }
+//        return true;
+//    }
     
     @POST
     @Path("/delete/url")
