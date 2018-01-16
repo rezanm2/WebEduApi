@@ -27,6 +27,7 @@ import javax.validation.Valid;
 import javax.ws.rs.Path;
 import nl.webedu.models.EmployeeModel;
 import javax.inject.Inject;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.PUT;
 
 import nl.webedu.models.entrymodels.WeekModel;
@@ -193,13 +194,12 @@ public class EntryResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public boolean update(@Valid EntryModel entryModel, @Auth EmployeeModel employeeModel){
-        
         if(entryModel.getEmployeeFk()==employeeModel.getEmployeeId()
                 &&!employeeModel.getEmployeeRole().equals("administration")){
             System.out.println(this.getClass().toString()+": non-admins mogen geen entries van anderen bewerken.");
             return false;
         }else{
-            return this.entryService.createEntry(entryModel);
+            return this.entryService.updateEntry(entryModel);
         }
     }
     
@@ -271,20 +271,34 @@ public class EntryResource {
         return true;
     }
     
-    @POST
-    @Path("/delete")
+    @DELETE
     @JsonProperty
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public boolean delete(@FormParam("entryid") Optional<String> entryId){
-        try {
-            entryDao.deleteEntry(Integer.parseInt(entryId.get()));
-        } catch (NumberFormatException ex) {
-            Logger.getLogger(EntryResource.class.getName()).log(Level.SEVERE, null, ex);
+    public boolean delete(@QueryParam("entryid") Optional<String> entryId, @Auth EmployeeModel employeeModel){
+        int parsedId=Integer.parseInt(entryId.get());
+        if(parsedId==employeeModel.getEmployeeId()&&!employeeModel.getEmployeeRole().equals("administration")){
+            System.out.println(this.getClass().toString()+": non-admins mogen geen entries van anderen VERWIJDEREN.");
             return false;
+        }else{
+            return this.entryService.deleteEntry(parsedId);
         }
-        return true;
     }
+    
+//    @POST
+//    @Path("/delete")
+//    @JsonProperty
+//    @Produces(MediaType.APPLICATION_JSON)
+//    @Consumes(MediaType.APPLICATION_JSON)
+//    public boolean delete(@FormParam("entryid") Optional<String> entryId){
+//        try {
+//            entryDao.deleteEntry(Integer.parseInt(entryId.get()));
+//        } catch (NumberFormatException ex) {
+//            Logger.getLogger(EntryResource.class.getName()).log(Level.SEVERE, null, ex);
+//            return false;
+//        }
+//        return true;
+//    }
     
     @POST
     @Path("/delete/url")
