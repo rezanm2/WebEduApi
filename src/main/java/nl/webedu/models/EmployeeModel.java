@@ -34,7 +34,7 @@ public class EmployeeModel{
 		return employeeFirstName;
 	}
 
-	public String getEmployeeLastName() {
+	public String getEmployeeLastname() {
 		return employeeLastName;
 	}
 	public void setEmployeeFirstname(String employeeFirstName) {
