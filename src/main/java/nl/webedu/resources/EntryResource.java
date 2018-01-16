@@ -127,7 +127,13 @@ public class EntryResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public boolean create(@Valid EntryModel entryModel, @Auth EmployeeModel employeeModel){
         System.out.println(this.getClass().toString()+": "+entryModel.getEntryDescription()+" auth: "+employeeModel.getEmployeeFirstname());
-        this.entryService.createEntry(employeeModel, entryModel);
+        if(entryModel.getEmployeeFk()!=employeeModel.getEmployeeId()&&!employeeModel.getEmployeeRole().equals("administration")){
+            System.out.println(this.getClass().toString()+": non-admins mogen geen entries maken voor anderen.");
+           return false;
+        }else{
+            return this.entryService.createEntry(entryModel);
+        }
+        
 //        DateHelper dateHelper = new DateHelper();
 //        Date parsedDate = dateHelper.parseDate(date.get(),"dd-MM-yyyy");
 //        Time parsedStartTime = dateHelper.parseTime(startTime.get(), "HH:mm:ss");
@@ -145,7 +151,6 @@ public class EntryResource {
 //            Logger.getLogger(EntryResource.class.getName()).log(Level.SEVERE, null, ex);
 //            return false;
 //        }
-        return true;
     }
     
     @POST

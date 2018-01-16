@@ -8,6 +8,9 @@ package nl.webedu.resources;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Optional;
 import io.dropwizard.auth.Auth;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import nl.webedu.dao.ProjectDAO;
 import nl.webedu.models.EmployeeModel;
 import nl.webedu.models.ProjectModel;
@@ -31,7 +34,10 @@ public class ProjectResource {
         projectDAO = new ProjectDAO();
         projectDAO.createAddProjectFunction();
     }
-
+    
+    
+    
+    
     @GET
     @Path("/read")
     @JsonProperty

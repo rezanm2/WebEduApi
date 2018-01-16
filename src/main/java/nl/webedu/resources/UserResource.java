@@ -11,36 +11,44 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
+import javax.validation.Valid;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import nl.webedu.services.EmployeeService;
 
-@Path("/login")
+@Path("/users")
+@Produces(MediaType.APPLICATION_JSON)
 public class UserResource {
-    private EmployeeDAO employeeDAO;
+    private EmployeeService employeeService;
 
     public UserResource(){
-        this.employeeDAO = new EmployeeDAO();
+        this.employeeService = new EmployeeService();
     }
+    
+    @POST
+    @Path("/create")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public boolean createEmployee(@Auth EmployeeModel logegdUser, @Valid EmployeeModel employeeModel){
+        return this.employeeService.createEmployee(employeeModel);
+    }
+    
+    @PUT
+    @Path("/update")
+    public boolean updateEmployee(@Auth EmployeeModel logegdUser, @Valid EmployeeModel employeeModel){
+        return this.employeeService.updateEmployee(employeeModel);
+    }
+    
 
     @GET
-    @JsonProperty
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    public ArrayList<EmployeeModel> UserName(@Auth EmployeeModel employeeModel){
-        try{
-            return this.employeeDAO.getAllEmployees();
-        } catch(Exception e){
-            e.printStackTrace();
-        }
-        return null;
+    @Path("/login")
+    public EmployeeModel UserName(@Auth EmployeeModel employeeModel){
+        return employeeModel;
     }
-
-    @Path("/users")
+    
     @GET
-    @JsonProperty
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    public ArrayList<EmployeeModel> Users() {
+    public ArrayList<EmployeeModel> Users(@Auth EmployeeModel employeeModel) {
         try {
-            return this.employeeDAO.getAllEmployees();
+            return this.employeeService.getAllEmployees();
         } catch (Exception e) {
             e.printStackTrace();
         }
