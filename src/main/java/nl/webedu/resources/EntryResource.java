@@ -27,6 +27,7 @@ import javax.validation.Valid;
 import javax.ws.rs.Path;
 import nl.webedu.models.EmployeeModel;
 import javax.inject.Inject;
+import javax.ws.rs.PUT;
 
 import nl.webedu.models.entrymodels.WeekModel;
 import nl.webedu.services.*;
@@ -127,7 +128,7 @@ public class EntryResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public boolean create(@Valid EntryModel entryModel, @Auth EmployeeModel employeeModel){
         System.out.println(this.getClass().toString()+": "+entryModel.getEntryDescription()+" auth: "+employeeModel.getEmployeeFirstname());
-        if(entryModel.getEmployeeFk()!=employeeModel.getEmployeeId()&&!employeeModel.getEmployeeRole().equals("administration")){
+        if(entryModel.getEmployeeFk()==employeeModel.getEmployeeId()&&!employeeModel.getEmployeeRole().equals("administration")){
             System.out.println(this.getClass().toString()+": non-admins mogen geen entries maken voor anderen.");
            return false;
         }else{
@@ -187,39 +188,54 @@ public class EntryResource {
         return true;
     }
     
-    @POST
-    @Path("/update")
+    @PUT
     @JsonProperty
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public boolean update(@FormParam("empid") Optional<String> employeeId,
-                        @FormParam("projid") Optional<String> projectId,
-                        @FormParam("sprintid") Optional<String> sprintId,
-                        @FormParam("date") Optional<String> date,
-                        @FormParam("description") Optional<String> description,
-                        @FormParam("starttime") Optional<String> startTime,
-                        @FormParam("endtime") Optional<String> endTime,
-                        @FormParam("userstoryid") Optional<String> userstoryId){
+    public boolean update(@Valid EntryModel entryModel, @Auth EmployeeModel employeeModel){
         
-        DateHelper dateHelper = new DateHelper();
-        Date parsedDate = dateHelper.parseDate(date.get(),"dd-MM-yyyy");
-        Time parsedStartTime = dateHelper.parseTime(startTime.get(), "HH:mm:ss");
-        Time parsedEndTime = dateHelper.parseTime(endTime.get(), "HH:mm:ss");
-        try {
-            entryDao.modifyEntry(Integer.parseInt(employeeId.get()), 
-                    Integer.parseInt(projectId.get()), 
-                    Integer.parseInt(sprintId.get()), 
-                    parsedDate, 
-                    description.get(), 
-                    parsedStartTime, 
-                    parsedEndTime, 
-                    Integer.parseInt(userstoryId.get()));
-        } catch (NumberFormatException ex) {
-            Logger.getLogger(EntryResource.class.getName()).log(Level.SEVERE, null, ex);
+        if(entryModel.getEmployeeFk()==employeeModel.getEmployeeId()
+                &&!employeeModel.getEmployeeRole().equals("administration")){
+            System.out.println(this.getClass().toString()+": non-admins mogen geen entries van anderen bewerken.");
             return false;
+        }else{
+            return this.entryService.createEntry(entryModel);
         }
-        return true;
     }
+    
+//    @POST
+//    @Path("/update")
+//    @JsonProperty
+//    @Produces(MediaType.APPLICATION_JSON)
+//    @Consumes(MediaType.APPLICATION_JSON)
+//    public boolean update(@FormParam("empid") Optional<String> employeeId,
+//                        @FormParam("projid") Optional<String> projectId,
+//                        @FormParam("sprintid") Optional<String> sprintId,
+//                        @FormParam("date") Optional<String> date,
+//                        @FormParam("description") Optional<String> description,
+//                        @FormParam("starttime") Optional<String> startTime,
+//                        @FormParam("endtime") Optional<String> endTime,
+//                        @FormParam("userstoryid") Optional<String> userstoryId){
+//        
+//        DateHelper dateHelper = new DateHelper();
+//        Date parsedDate = dateHelper.parseDate(date.get(),"dd-MM-yyyy");
+//        Time parsedStartTime = dateHelper.parseTime(startTime.get(), "HH:mm:ss");
+//        Time parsedEndTime = dateHelper.parseTime(endTime.get(), "HH:mm:ss");
+//        try {
+//            entryDao.modifyEntry(Integer.parseInt(employeeId.get()), 
+//                    Integer.parseInt(projectId.get()), 
+//                    Integer.parseInt(sprintId.get()), 
+//                    parsedDate, 
+//                    description.get(), 
+//                    parsedStartTime, 
+//                    parsedEndTime, 
+//                    Integer.parseInt(userstoryId.get()));
+//        } catch (NumberFormatException ex) {
+//            Logger.getLogger(EntryResource.class.getName()).log(Level.SEVERE, null, ex);
+//            return false;
+//        }
+//        return true;
+//    }
     
     @POST
     @Path("/update/url")

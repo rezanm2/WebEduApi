@@ -203,4 +203,24 @@ public class EntryService {
             return false;
         }
     }
+    
+    public boolean updateEntry(EntryModel entryModel){
+        DateHelper dateHelper = new DateHelper();
+        Time parsedStartTime = dateHelper.parseTime(entryModel.getEntryStartTime(), "HH:mm:ss");
+        Time parsedEndTime = dateHelper.parseTime(entryModel.getEntryEndTime(), "HH:mm:ss");
+        try {
+            entryDao.modifyEntry(entryModel.getEmployeeFk(), 
+                    entryModel.getEntryProjectFk(), 
+                    entryModel.getEntrySprintFk(), 
+                    entryModel.getEntryDate(), 
+                    entryModel.getEntryDescription(), 
+                    parsedStartTime, 
+                    parsedEndTime, 
+                    entryModel.getEntryUserstoryFk());
+        } catch (NumberFormatException ex) {
+            Logger.getLogger(this.getClass().toString()+": ").log(Level.SEVERE, null, ex);
+            return false;
+        }
+        return true;
+    }
 }
