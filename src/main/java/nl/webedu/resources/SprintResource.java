@@ -107,9 +107,9 @@ public class SprintResource {
     
     @DELETE
     @Path("/delete")
-    public boolean delete(@QueryParam("sprintid") Optional<String> sprintId){
+    public boolean delete(@QueryParam("catId") int catId){
         try {
-            sprintDao.removeSprint(Integer.parseInt(sprintId.get()));
+            sprintDao.removeSprint(catId);
         } catch (Exception ex) {
             Logger.getLogger(SprintResource.class.getName()).log(Level.SEVERE, null, ex);
             return false;

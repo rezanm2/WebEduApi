@@ -122,7 +122,8 @@ public class SprintDAO {
 	 */
 	public ArrayList<CategoryModel> allSprints() throws Exception {
             ArrayList<CategoryModel> sprintList = new ArrayList<CategoryModel>();
-            String projectsSprintsSql = "SELECT *  FROM sprint_version INNER JOIN sprint ON sprint_id=sprint_version_sprint_fk WHERE sprint_version_current = true ";
+            String projectsSprintsSql = "SELECT *  FROM sprint_version INNER JOIN sprint ON sprint_id=sprint_version_sprint_fk "
+                                        + "INNER JOIN project_version ON sprint_version_project_fk = project_version_project_fk WHERE sprint_version_current = true AND project_version_current = true ";
             //+ "AND entry_version_current = 'y' ";
             
             Connection connection = this.connect.makeConnection();
@@ -140,6 +141,7 @@ public class SprintDAO {
                 sprintContainer.setCategoryEndDate(sprintsSets.getString("sprint_version_enddate"));
                 sprintContainer.setCategoryEndDate(sprintsSets.getString("sprint_version_enddate"));
                 sprintContainer.setIsCurrent(sprintsSets.getBoolean("sprint_version_current"));
+                sprintContainer.setProjectName(sprintsSets.getString("project_version_name"));
                 sprintList.add(sprintContainer);
             }
             //close alles
@@ -439,11 +441,11 @@ public class SprintDAO {
 	}
 	
 
-	public void removeSprint(int sprintID) throws Exception {
-		String deleteSprint = "UPDATE sprint SET sprint_isdeleted = true WHERE sprint_id = ?";
+	public void removeSprint(int categoryId) throws Exception {
+		String deleteSprint = "UPDATE sprint_version SET sprint_version_current = false WHERE sprint_version_sprint_fk = ?";
                 Connection connection = this.connect.makeConnection();
 		PreparedStatement lockStatement = connection.prepareStatement(deleteSprint);
-		lockStatement.setInt(1, sprintID);
+		lockStatement.setInt(1, categoryId);
 		lockStatement.executeUpdate();
                 // close alles zodat de connection pool niet op gaat
                         lockStatement.close();
