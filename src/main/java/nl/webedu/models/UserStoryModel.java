@@ -9,11 +9,38 @@ public class UserStoryModel {
 	private String userStoryName;
 	private String userStoryDescription;
 	private int sprintFK;
-	private String sprintName;
+	private String categoryName;
+        private int categoryId;
+
+    public int getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(int categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    public int getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(int projectId) {
+        this.projectId = projectId;
+    }
+        private String projectName;
+        private int projectId;
 	private boolean isDeleted;
 	private SprintDAO sprintDAO = new SprintDAO();
         private boolean isCurrent;
 
+        public String getProjectName() {
+            return projectName;
+        }
+        
+        public void setProjectName(String projectName) {
+            this.projectName = projectName;
+        }
+        
 	public int getUserStoryId() {
 		return userStoryId;
 	}
@@ -49,19 +76,19 @@ public class UserStoryModel {
 		{
 			if(sprintFK == sprintDAO.allSprints().get(counter).getCategoryId())
 			{
-				this.setSprintName(sprintDAO.allSprints().get(counter).getCategoryName());
+				this.setCategoryName(sprintDAO.allSprints().get(counter).getCategoryName());
 				System.out.println("sprintDAO.sprint_list().get(counter).getSprintName()");
 			};
 		}
 		
 	}
 
-	public String getSprintName() {
-		return sprintName;
+	public String getCategoryName() {
+		return categoryName;
 	}
 
-	public void setSprintName(String sprintName) {
-		this.sprintName = sprintName;
+	public void setCategoryName(String categoryName) {
+		this.categoryName = categoryName;
 	}
 
 	public boolean isDeleted() {

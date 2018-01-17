@@ -38,7 +38,7 @@ public class UserStoryDAO {
                                     "DECLARE pk INT; " +
                                     "BEGIN " +
                                     "	INSERT INTO sprint(sprint_isdeleted) VALUES(false) " +
-                                    "	RETURNING sprint_id INTO pk; " +
+                                    "	RETURNING sprint_version_sprint_fk INTO pk; " +
                                     "	INSERT INTO sprint_version(sprint_version_sprint_fk, sprint_version_project_fk," +
                                     "    	sprint_version_name, sprint_version_description, sprint_version_startdate, sprint_version_enddate," +
                                     "        sprint_version_current) " +
@@ -200,12 +200,13 @@ public class UserStoryDAO {
 			 */
 			public ArrayList<UserStoryModel> userStory_list(){
 				ArrayList<UserStoryModel> userStoryList = new ArrayList<UserStoryModel>();
-				String userStoryListSQL = "SELECT usv.userstory_version_userstory_fk, usv.userstory_version_name, usv.userstory_version_description, sv.sprint_version_name, u.userstory_isdeleted " +
+				String userStoryListSQL = "SELECT  pv.project_version_project_fk, pv.project_version_name, usv.userstory_version_userstory_fk, usv.userstory_version_name, usv.userstory_version_description,usv.userstory_version_current , sv.sprint_version_name, sv.sprint_version_sprint_fk, u.userstory_isdeleted " +
 					    "FROM sprint_version sv " +
 					    "JOIN sprint s ON sv.sprint_version_sprint_fk=s.sprint_id " +
 					    "JOIN userstory_sprint us ON s.sprint_id=us.userstory_sprint_sprint_fk " +
 					    "JOIN userstory_version usv ON usv.userstory_version_userstory_fk=us.userstory_sprint_userstory_fk " +
 					    "JOIN userstory u ON userstory_id=usv.userstory_version_userstory_fk " +
+                                            "JOIN project_version pv ON  sv.sprint_version_project_fk=pv.project_version_project_fk " +
 					    "WHERE us.userstory_sprint_sprint_fk=sv.sprint_version_sprint_fk " +
 					    "AND usv.userstory_version_current=TRUE AND sv.sprint_version_current=true ";
 			
@@ -216,13 +217,16 @@ public class UserStoryDAO {
 					ResultSet userStory_set = userStory_statement.executeQuery();
 					while(userStory_set.next()) {
 						UserStoryModel userStoryModelContainer = new UserStoryModel();
+                                                userStoryModelContainer.setProjectName(userStory_set.getString("project_version_name"));
+                                                userStoryModelContainer.setProjectId(userStory_set.getInt("project_version_project_fk"));
 						userStoryModelContainer.setUserStoryId(userStory_set.getInt("userstory_version_userstory_fk"));
-						userStoryModelContainer.setUserStoryDescription(userStory_set.getString("userstory_version_description"));
 						userStoryModelContainer.setUserStoryName(userStory_set.getString("userstory_version_name"));
-                                                userStoryModelContainer.setSprintFK(userStory_set.getInt("sprint_id"));
-						userStoryModelContainer.setSprintName(userStory_set.getString("sprint_version_name"));
+                                                userStoryModelContainer.setUserStoryDescription(userStory_set.getString("userstory_version_description"));
+						userStoryModelContainer.setCategoryName(userStory_set.getString("sprint_version_name"));
+                                                userStoryModelContainer.setCategoryId(userStory_set.getInt("sprint_version_sprint_fk"));
 						userStoryModelContainer.setDeleted(userStory_set.getBoolean("userstory_isdeleted"));
                                                 userStoryModelContainer.setIsCurrent(userStory_set.getBoolean("userstory_version_current"));
+                                               
 						
 						userStoryList.add(userStoryModelContainer);
 					}
