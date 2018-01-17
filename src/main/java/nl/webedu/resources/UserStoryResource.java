@@ -52,7 +52,6 @@ public class UserStoryResource {
     }
     
     @POST
-    @Path("/create")
     public boolean createProject(@Valid UserStoryModel userStoryModel){
         userStoryDAO.addUserStory(userStoryModel);
         return true;
