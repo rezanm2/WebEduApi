@@ -176,6 +176,9 @@ public class EntryService {
     
     public boolean createEntry(EntryModel entryModel){
         DateHelper dateHelper = new DateHelper();
+        System.out.println(this.getClass().toString()
+                +": time before parsing raw: "+entryModel.getEntryStartTime()
+                +" toString: "+entryModel.getEntryStartTime().toString());
         Time parsedStartTime = dateHelper.parseTime(entryModel.getEntryStartTime(), "HH:mm");
         Time parsedEndTime = dateHelper.parseTime(entryModel.getEntryEndTime(), "HH:mm");
        
@@ -197,8 +200,8 @@ public class EntryService {
     
     public boolean updateEntry(EntryModel entryModel){
         DateHelper dateHelper = new DateHelper();
-        Time parsedStartTime = dateHelper.parseTime(entryModel.getEntryStartTime(), "HH:mm:ss");
-        Time parsedEndTime = dateHelper.parseTime(entryModel.getEntryEndTime(), "HH:mm:ss");
+        Time parsedStartTime = dateHelper.parseTime(entryModel.getEntryStartTime(), "HH:mm");
+        Time parsedEndTime = dateHelper.parseTime(entryModel.getEntryEndTime(), "HH:mm");
         try {
             entryDao.modifyEntry(entryModel.getEntryId(), 
                     entryModel.getEntryProjectFk(), 
