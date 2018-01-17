@@ -36,6 +36,8 @@ import nl.webedu.models.EmployeeModel;
  * @author rezanaser
  */
 @Path("/categories")
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 public class SprintResource {
     private SprintDAO sprintDao;
 
@@ -45,10 +47,7 @@ public class SprintResource {
 
     @GET
     @Path("/read")
-    @JsonProperty
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    public ArrayList<CategoryModel> read(){
+    public ArrayList<CategoryModel> read(@Auth EmployeeModel loggedUser){
         try {
             return this.sprintDao.allSprints();
         } catch (Exception ex) {
@@ -59,9 +58,6 @@ public class SprintResource {
 
     @PUT
     @Path("/by_employee/url")
-    @JsonProperty
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
     public ArrayList<CategoryModel> readByEmployeeByUrl(@QueryParam("empid") Optional<String> employeeId){
         try {
             return this.sprintDao.allSprintsEmployee(Integer.parseInt(employeeId.get()));
@@ -73,9 +69,6 @@ public class SprintResource {
 
     @PUT
     @Path("/by_project/")
-    @JsonProperty
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
     public ArrayList<CategoryModel> readByProjectByUrl(@QueryParam("projid") Optional<String> projectId){
         try {
             return this.sprintDao.sprintsProjects(Integer.parseInt(projectId.get()));
@@ -97,9 +90,6 @@ public class SprintResource {
      */
     @POST
     @Path("/create")
-    @JsonProperty
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
     public boolean create(@Auth EmployeeModel employeeModel, @Valid CategoryModel sprintModel){
         sprintDao.createSprint(sprintModel);
         return true;
@@ -107,29 +97,16 @@ public class SprintResource {
     
     @PUT
     @Path("/update")
-    @JsonProperty
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    public boolean update(@FormParam("sprintid") Optional<String> sprintId,
-                        @FormParam("projid") Optional<String> projectId,
-                        @FormParam("name") Optional<String> name,
-                        @FormParam("description") Optional<String> description,
-                        @FormParam("startdate") Optional<String> startDate,
-                        @FormParam("endDate") Optional<String> endDate){
+    public boolean update(@Auth EmployeeModel loggedUser, @Valid CategoryModel categoryModel){
         DateHelper dateHelper = new DateHelper();
-        Date startDateParsed = dateHelper.parseDate(startDate.get(), "dd-MM-yyyy");
-        Date endDateParsed = dateHelper.parseDate(endDate.get(), "dd-MM-yyyy");
-        sprintDao.modifySprint(Integer.parseInt(sprintId.get()),
-                name.get(), Integer.parseInt(projectId.get()),  
-                description.get(), startDateParsed, endDateParsed);
+        Date startDateParsed = dateHelper.parseDate(categoryModel.getCategoryStartDate(), "yyyy-MM-dd");
+        Date endDateParsed = dateHelper.parseDate(categoryModel.getCategoryEndDate(), "yyyy-MM-dd");
+        sprintDao.modifySprint(categoryModel, startDateParsed, endDateParsed);
         return true;
     }
     
     @DELETE
     @Path("/delete")
-    @JsonProperty
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
     public boolean delete(@QueryParam("sprintid") Optional<String> sprintId){
         try {
             sprintDao.removeSprint(Integer.parseInt(sprintId.get()));
@@ -142,9 +119,6 @@ public class SprintResource {
     
     @PUT
     @Path("/undelete")
-    @JsonProperty
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
     public boolean unDelete(@QueryParam("sprintid") String sprintId){
         try {
             sprintDao.unRemoveSprint(Integer.parseInt(sprintId));
