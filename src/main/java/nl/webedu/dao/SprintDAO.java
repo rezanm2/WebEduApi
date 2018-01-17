@@ -340,7 +340,7 @@ public class SprintDAO {
 		return generatedID;
 	}
 
-	public void createSprint(CategoryModel sprintModel){
+	public boolean createSprint(CategoryModel sprintModel){
 		PreparedStatement addSprint;
 		String insertStatement = "SELECT add_sprint(?,?,?,?,?)";
 		
@@ -360,11 +360,13 @@ public class SprintDAO {
 			// close alles zodat de connection pool niet op gaat
 			addSprint.close();
                         connection.close();
+                        return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+                return false;
 	}
 	
 	
@@ -409,7 +411,7 @@ public class SprintDAO {
 	 * @param sprintEndDate     lol
 	 */
 	
-	public void modifySprint(CategoryModel categoryModel, Date startDate, Date endDate) {
+	public boolean modifySprint(CategoryModel categoryModel, Date startDate, Date endDate) {
 		String changePreviousVersion = "UPDATE sprint_version SET sprint_version_current = false WHERE sprint_version_sprint_fk = ?";
 		String change_sprint = "INSERT INTO sprint_version(sprint_version_sprint_fk, sprint_version_name, sprint_version_project_fk, sprint_version_description, sprint_version_startdate, sprint_version_enddate, sprint_version_current)"
 				+ "VALUES(?, ?, ?, ?, ?, ?, true)";
@@ -435,21 +437,24 @@ public class SprintDAO {
 			// close alles zodat de connection pool niet op gaat
                         changeSprint.close();
                         connection.close();
+                        return true;
 		} catch (Exception e) {
 			e.getMessage();
 		}
+                return false;
 	}
 	
 
-	public void removeSprint(int categoryId) throws Exception {
+	public boolean removeSprint(int categoryId) throws Exception {
 		String deleteSprint = "UPDATE sprint_version SET sprint_version_current = false WHERE sprint_version_sprint_fk = ?";
                 Connection connection = this.connect.makeConnection();
 		PreparedStatement lockStatement = connection.prepareStatement(deleteSprint);
 		lockStatement.setInt(1, categoryId);
 		lockStatement.executeUpdate();
                 // close alles zodat de connection pool niet op gaat
-                        lockStatement.close();
-                        connection.close();
+                lockStatement.close();
+                connection.close();
+                return true;
 	}
         public void unRemoveSprint(int sprintID) throws Exception {
 		String deleteSprint = "UPDATE sprint SET sprint_isdeleted = false WHERE sprint_id = ?";
