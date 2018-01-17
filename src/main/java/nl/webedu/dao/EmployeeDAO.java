@@ -56,11 +56,6 @@ public class EmployeeDAO {
 	/**Deze methode voegt een nieuwe user toe. In tegenstelling tot createEmployee()
 	 * voegt hij een version toe
 	 *
-	 * @param firstName firstname
-	 * @param lastName  lastname
-	 * @param role  role
-	 * @param email email
-	 * @param password password
 	 */
 	public boolean createEmployeeVersion(EmployeeModel employeeModel){
             String insertEmployee_sql = "insert into employee (employee_isdeleted)values(false)returning employee_id";

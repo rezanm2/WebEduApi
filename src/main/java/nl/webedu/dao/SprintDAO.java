@@ -122,7 +122,8 @@ public class SprintDAO {
 	 */
 	public ArrayList<CategoryModel> allSprints() throws Exception {
             ArrayList<CategoryModel> sprintList = new ArrayList<CategoryModel>();
-            String projectsSprintsSql = "SELECT *  FROM sprint_version INNER JOIN sprint ON sprint_id=sprint_version_sprint_fk";
+            String projectsSprintsSql = "SELECT *  FROM sprint_version INNER JOIN sprint ON sprint_id=sprint_version_sprint_fk "
+                                        + "INNER JOIN project_version ON sprint_version_project_fk = project_version_project_fk WHERE sprint_version_current = true AND project_version_current = true ";
             //+ "AND entry_version_current = 'y' ";
             
             Connection connection = this.connect.makeConnection();
@@ -140,6 +141,7 @@ public class SprintDAO {
                 sprintContainer.setCategoryEndDate(sprintsSets.getString("sprint_version_enddate"));
                 sprintContainer.setCategoryEndDate(sprintsSets.getString("sprint_version_enddate"));
                 sprintContainer.setIsCurrent(sprintsSets.getBoolean("sprint_version_current"));
+                sprintContainer.setProjectName(sprintsSets.getString("project_version_name"));
                 sprintList.add(sprintContainer);
             }
             //close alles
@@ -198,9 +200,10 @@ public class SprintDAO {
 	 * @return sprintList
 	 */
 	public ArrayList<CategoryModel> sprintListVersion(){
-		ArrayList<CategoryModel> sprintList = new ArrayList<CategoryModel>();
+		ArrayList<CategoryModel> sprintList = new ArrayList<>();
 		String sprintListSQL = "SELECT * FROM sprint_version "
-				+ "INNER JOIN sprint ON (sprint_id = sprint_version_sprint_fk)"
+				+ "INNER JOIN sprint ON (sprint_id = sprint_version_sprint_fk"
+                                + "INNER JOIN project_version ON sprint_version_project_fk = project_version_project_fk"
 				+ "AND sprint_version_current = true "
 				+ "ORDER BY sprint_version.sprint_version_sprint_fk ASC";
 		try {
@@ -216,6 +219,7 @@ public class SprintDAO {
 				sprintModelContainer.setCategoryStartDate(sprint_set.getString("sprint_version_startdate"));
 				sprintModelContainer.setCategoryEndDate(sprint_set.getString("sprint_version_enddate"));
 				sprintModelContainer.setProjectFK(sprint_set.getInt("sprint_version_project_fk"));
+                                sprintModelContainer.setProjectName(sprint_set.getString("project_version_name"));
 				sprintList.add(sprintModelContainer);
 			}
                         // close alles zodat de connection pool niet op gaat
@@ -405,9 +409,8 @@ public class SprintDAO {
 	 * @param sprintEndDate     lol
 	 */
 	
-	public void modifySprint(int sprintID, String sprintName, int projectID, String sprintDescription, Date sprintStartDate, Date sprintEndDate) {
-		String changePreviousVersion = "UPDATE sprint_version SET sprint_version_current = 'n' "
-				+ "WHERE sprint_version_sprint_fk = ? AND sprint_version_current= true";
+	public void modifySprint(CategoryModel categoryModel, Date startDate, Date endDate) {
+		String changePreviousVersion = "UPDATE sprint_version SET sprint_version_current = false WHERE sprint_version_sprint_fk = ?";
 		String change_sprint = "INSERT INTO sprint_version(sprint_version_sprint_fk, sprint_version_name, sprint_version_project_fk, sprint_version_description, sprint_version_startdate, sprint_version_enddate, sprint_version_current)"
 				+ "VALUES(?, ?, ?, ?, ?, ?, true)";
 		
@@ -415,18 +418,18 @@ public class SprintDAO {
 		try {
                     Connection connection = this.connect.makeConnection();
 			PreparedStatement changeVersions= connection.prepareStatement(changePreviousVersion);
-			changeVersions.setInt(1, sprintID);
+			changeVersions.setInt(1, categoryModel.getCategoryId());
 			changeVersions.executeUpdate();
 			// close alles zodat de connection pool niet op gaat
                         changeVersions.close();
                         
 			PreparedStatement changeSprint = this.connect.makeConnection().prepareStatement(change_sprint);
-			changeSprint.setInt(1, sprintID);
-			changeSprint.setString(2, sprintName);
-			changeSprint.setInt(3, projectID);
-			changeSprint.setString(4, sprintDescription);
-			changeSprint.setDate(5, sprintStartDate);
-			changeSprint.setDate(6, sprintEndDate);
+			changeSprint.setInt(1, categoryModel.getCategoryId());
+			changeSprint.setString(2, categoryModel.getCategoryName());
+			changeSprint.setInt(3, categoryModel.getProjectFK());
+			changeSprint.setString(4, categoryModel.getCategoryDescription());
+			changeSprint.setDate(5, startDate);
+			changeSprint.setDate(6, endDate);
 			changeSprint.executeQuery();
 			
 			// close alles zodat de connection pool niet op gaat
@@ -438,11 +441,11 @@ public class SprintDAO {
 	}
 	
 
-	public void removeSprint(int sprintID) throws Exception {
-		String deleteSprint = "UPDATE sprint SET sprint_isdeleted = true WHERE sprint_id = ?";
+	public void removeSprint(int categoryId) throws Exception {
+		String deleteSprint = "UPDATE sprint_version SET sprint_version_current = false WHERE sprint_version_sprint_fk = ?";
                 Connection connection = this.connect.makeConnection();
 		PreparedStatement lockStatement = connection.prepareStatement(deleteSprint);
-		lockStatement.setInt(1, sprintID);
+		lockStatement.setInt(1, categoryId);
 		lockStatement.executeUpdate();
                 // close alles zodat de connection pool niet op gaat
                         lockStatement.close();
