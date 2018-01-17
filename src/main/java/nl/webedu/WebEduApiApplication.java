@@ -11,7 +11,7 @@ import nl.webedu.auth.Auth;
 import nl.webedu.healthchecks.DatabaseHealthCheck;
 import nl.webedu.models.EmployeeModel;
 import nl.webedu.resources.ProjectResource;
-import nl.webedu.resources.UserResource;
+import nl.webedu.resources.EmployeeResource;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
 import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration;
@@ -63,7 +63,7 @@ public class WebEduApiApplication extends Application<WebEduApiConfiguration> {
          */
         System.out.println("Opstarten 2");
         environment.healthChecks().register("database", new DatabaseHealthCheck());//Voert healthcheck uit(controlleer de connectie met de database)
-        environment.jersey().register(new UserResource());
+        environment.jersey().register(new EmployeeResource());
         environment.jersey().register(new ProjectResource());
         environment.jersey().register(new EntryResource());
         environment.jersey().register(new SprintResource());

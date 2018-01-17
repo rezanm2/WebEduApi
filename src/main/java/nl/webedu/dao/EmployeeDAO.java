@@ -156,14 +156,15 @@ public class EmployeeDAO {
 	 * @param emp_id id to lock
          * @throws Exception een SQL exceptione n normale exception
 	 */
-	public void lockEmployee(int emp_id) throws Exception {
-		String lock_query = "UPDATE employee SET employee_isdeleted = true WHERE employee_id = ?";
+	public boolean lockEmployee(int emp_id) throws Exception {
+		String lock_query = "UPDATE employee_version SET employee_isdeleted = true WHERE employee_id = ?";
                 Connection connection = this.connect.makeConnection();
 		PreparedStatement lock_statement = connection.prepareStatement(lock_query);
 		lock_statement.setInt(1, emp_id);
 		lock_statement.executeUpdate();
                 lock_statement.close();
                 connection.close();
+                return true;
 	}
 
         /**
