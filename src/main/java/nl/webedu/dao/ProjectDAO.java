@@ -41,20 +41,23 @@ public class ProjectDAO {
             projectStatement.setInt(1,projectId);
             ResultSet projectSet = projectStatement.executeQuery();
             
-            projectSet.next();
             ProjectModel project = new ProjectModel();
-            project.setProjectId(projectSet.getInt("project_id"));
-            project.setProjectName(projectSet.getString("project_version_name"));
-            project.setProjectDescription(projectSet.getString("project_version_description"));
-            project.setProjectIsDeleted(projectSet.getBoolean("project_isdeleted"));
-            project.setIsCurrent(true);
-            project.setProjectCustomerFk(projectSet.getInt("project_version_customer_fk"));
-            
-            //close alles zodat de connection pool niet op gaat.
-            projectSet.close();
-            projectStatement.close();
-            connection.close();
-            
+            try{
+                projectSet.next();
+                project.setProjectId(projectSet.getInt("project_id"));
+                project.setProjectName(projectSet.getString("project_version_name"));
+                project.setProjectDescription(projectSet.getString("project_version_description"));
+                project.setProjectIsDeleted(projectSet.getBoolean("project_isdeleted"));
+                project.setIsCurrent(true);
+                project.setProjectCustomerFk(projectSet.getInt("project_version_customer_fk"));
+            } catch(SQLException e){
+                e.printStackTrace();
+            } finally{
+                //close alles zodat de connection pool niet op gaat.
+                projectSet.close();
+                projectStatement.close();
+                connection.close();
+            }
             return project; 
     }
 
