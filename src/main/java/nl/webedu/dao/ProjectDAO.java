@@ -44,7 +44,9 @@ public class ProjectDAO {
             ProjectModel project = new ProjectModel();
             try{
                 projectSet.next();
-                project.setProjectId(projectSet.getInt("project_id"));
+                //dit geeft een error: Resultset not positioned properly,
+                // perhaps you need to call next.
+                project.setProjectId(projectSet.getInt("project_id")); 
                 project.setProjectName(projectSet.getString("project_version_name"));
                 project.setProjectDescription(projectSet.getString("project_version_description"));
                 project.setProjectIsDeleted(projectSet.getBoolean("project_isdeleted"));
