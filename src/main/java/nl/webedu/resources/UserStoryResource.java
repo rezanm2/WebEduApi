@@ -52,6 +52,7 @@ public class UserStoryResource {
     }
     
     @POST
+    @Path("/create")
     public boolean createProject(@Valid UserStoryModel userStoryModel){
         userStoryDAO.addUserStory(userStoryModel);
         return true;
@@ -73,6 +74,7 @@ public class UserStoryResource {
             userStoryDAO.modifyUserStory(userStoryModel);
         } catch (Exception ex) {
             Logger.getLogger(ProjectResource.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println(this.getClass().toString()+": update werkt niet!: ");
             return false;
         }
         System.out.println(this.getClass().toString()+": update werkt!: ");

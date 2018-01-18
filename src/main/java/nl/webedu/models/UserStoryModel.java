@@ -11,6 +11,11 @@ public class UserStoryModel {
 	private int sprintFK;
 	private String categoryName;
         private int categoryId;
+        private String projectName;
+        private int projectId;
+	private boolean isDeleted;
+	private SprintDAO sprintDAO = new SprintDAO();
+        private boolean isCurrent;
 
     public int getCategoryId() {
         return categoryId;
@@ -27,11 +32,6 @@ public class UserStoryModel {
     public void setProjectId(int projectId) {
         this.projectId = projectId;
     }
-        private String projectName;
-        private int projectId;
-	private boolean isDeleted;
-	private SprintDAO sprintDAO = new SprintDAO();
-        private boolean isCurrent;
 
         public String getProjectName() {
             return projectName;

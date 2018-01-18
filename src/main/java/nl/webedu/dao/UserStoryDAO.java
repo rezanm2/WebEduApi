@@ -226,8 +226,7 @@ public class UserStoryDAO {
                                                 userStoryModelContainer.setCategoryId(userStory_set.getInt("sprint_version_sprint_fk"));
 						userStoryModelContainer.setDeleted(userStory_set.getBoolean("userstory_isdeleted"));
                                                 userStoryModelContainer.setIsCurrent(userStory_set.getBoolean("userstory_version_current"));
-                                               
-						
+                                                userStoryModelContainer.setSprintFK(userStory_set.getInt("sprint_version_sprint_fk"));
 						userStoryList.add(userStoryModelContainer);
 					}
 				} catch (SQLException e) {
@@ -465,11 +464,17 @@ public class UserStoryDAO {
 			
 			public void modifyUserStory(UserStoryModel userStoryModel)
 			{
+                                        System.out.println("Category ID before added block of code: " + userStoryModel.getCategoryId());
+                                        System.out.println("UserStory ID before added block of code: " + userStoryModel.getCategoryId());
 				String changePreviousVersion = "UPDATE userstory_version SET userstory_version_current = false "
 						+ "WHERE userstory_version_userstory_fk = ? AND userstory_version_current= true";
 				
 				String change_userStory = "INSERT INTO userstory_version(userstory_version_userstory_fk, userstory_version_name, userstory_version_description, userstory_version_current)"
 						+ "VALUES(?, ?, ?, true)";
+                                //Added Jeroen
+                                String change_userStory_sprint = "UPDATE userstory_sprint " +
+                                                "SET userstory_sprint_sprint_fk = ? " +
+                                                "WHERE userstory_sprint_userstory_fk = ? ";
 				
 				
 				try {
@@ -484,10 +489,19 @@ public class UserStoryDAO {
 					changeUserStory.executeQuery();
 					
 					changeUserStory.close();
+                            
+                                        
+                                        PreparedStatement changeUserStorySprint = connect.makeConnection().prepareStatement(change_userStory_sprint);
+                                        changeUserStorySprint.setInt(1, userStoryModel.getCategoryId());
+                                        changeUserStorySprint.setInt(2, userStoryModel.getUserStoryId());
+					changeUserStorySprint.executeQuery();
+					changeUserStorySprint.close();
+                                        
 				} catch (Exception e) {
 					System.out.println(e.getMessage());
 				}
-				
+				        System.out.println("Category ID after added block of code: " + userStoryModel.getCategoryId());
+                                        System.out.println("UserStory ID after added block of code: " + userStoryModel.getCategoryId());
 				
 			}
 			
