@@ -430,7 +430,7 @@ public class TaskDAO {
 			
                         
                         
-                        	public void addUserStory(TaskModel userStoryModel) {
+              public boolean addUserStory(TaskModel userStoryModel) {
 		String login_sql = "SELECT add_userstory(?,?,?)";
 		PreparedStatement userStory_statement;
 
@@ -444,9 +444,11 @@ public class TaskDAO {
 			//close alles zodat de connection pool niet op gaat.
                         userStory_statement.close();
                         connection.close();
+                        return true;
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+                        return false;
 		}
 	}
 
@@ -462,7 +464,7 @@ public class TaskDAO {
 			 * @param userStoryEndDate
 			 */
 			
-			public void modifyUserStory(TaskModel userStoryModel)
+			public boolean modifyUserStory(TaskModel userStoryModel)
 			{
                                         System.out.println("Category ID before added block of code: " + userStoryModel.getCategoryId());
                                         System.out.println("UserStory ID before added block of code: " + userStoryModel.getCategoryId());
@@ -496,16 +498,15 @@ public class TaskDAO {
                                         changeUserStorySprint.setInt(2, userStoryModel.getUserStoryId());
 					changeUserStorySprint.executeQuery();
 					changeUserStorySprint.close();
+                                        return true;
                                         
 				} catch (Exception e) {
 					System.out.println(e.getMessage());
+                                        return false;
 				}
-				        System.out.println("Category ID after added block of code: " + userStoryModel.getCategoryId());
-                                        System.out.println("UserStory ID after added block of code: " + userStoryModel.getCategoryId());
-				
 			}
 			
-			public void removeUserStory(int userStoryID) 
+			public boolean removeUserStory(int userStoryID) 
 			{
 				String deleteUserStory = "UPDATE userStory "
 					+ "SET userStory_isdeleted = true "
@@ -515,9 +516,11 @@ public class TaskDAO {
 					PreparedStatement lockStatement = connect.makeConnection().prepareStatement(deleteUserStory);
 					lockStatement.setInt(1, userStoryID);
 					lockStatement.executeUpdate();
+                                        return true;
 				} catch (Exception e) 
 				{
 					System.out.println(e.getMessage());
+                                        return false;
 				}
 			}
 			
@@ -557,7 +560,7 @@ public class TaskDAO {
             return userstory;
         }
 
-         public void unRemoveUserStory(int userStoryId) {
+         public boolean unRemoveUserStory(int userStoryId) {
 		String remove_project = "UPDATE project "
 				+ "SET project_isdeleted = false "
 				+ "WHERE project_id = ? AND project_isdeleted=true";
@@ -568,8 +571,10 @@ public class TaskDAO {
 			lock_statement.executeUpdate();
                         lock_statement.close();
                         connection.close();
+                        return true;
 		} catch (Exception e) {
 			e.printStackTrace();
+                        return false;
 		}
 	}
 		}

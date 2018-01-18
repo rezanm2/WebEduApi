@@ -16,8 +16,7 @@ public class TaskService {
     
     public boolean create(EmployeeModel employeeModel, TaskModel userStoryModel){
         if(employeeModel.getEmployeeRole().equals("administration")){
-        taskDao.addUserStory(userStoryModel);
-        return true;
+        return taskDao.addUserStory(userStoryModel);
         }else{return false;}
         
     }
@@ -25,24 +24,21 @@ public class TaskService {
    
     public boolean update(EmployeeModel employeeModel, TaskModel userStoryModel){
         if(employeeModel.getEmployeeRole().equals("administration")){
-         taskDao.modifyUserStory(userStoryModel);
-        return true;
+         return taskDao.modifyUserStory(userStoryModel);
         }else{return false;}
         
     }
 
     public boolean delete(EmployeeModel employeeModel, TaskModel userStoryModel){
         if(employeeModel.getEmployeeRole().equals("administration")){
-        taskDao.removeUserStory(userStoryModel.getUserStoryId());
-        return true;
+        return taskDao.removeUserStory(userStoryModel.getUserStoryId());
         }else{return false;}
         
     }
 
     public boolean unDeleteByUrl(EmployeeModel employeeModel, int projectId){
         if(employeeModel.getEmployeeRole().equals("administration")){
-        this.taskDao.unRemoveUserStory(projectId);
-        return true;
+        return this.taskDao.unRemoveUserStory(projectId);
         }else{return false;}
         
     }
