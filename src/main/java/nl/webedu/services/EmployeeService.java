@@ -8,20 +8,29 @@ public class EmployeeService {
     
     private EmployeeDAO employeeDao = new EmployeeDAO(); 
     
-    public boolean createEmployee(EmployeeModel employeeModel){
-       return this.employeeDao.createEmployeeVersion(employeeModel);
+    public boolean createEmployee(EmployeeModel employeeModel, EmployeeModel loggedUser){
+        if(loggedUser.getEmployeeRole().equals("administration")){
+            return this.employeeDao.createEmployeeVersion(employeeModel);
+        }else{return false;}
+       
     }
     
     public ArrayList<EmployeeModel> getAllEmployees(){
         return this.employeeDao.getAllEmployees();
     }
     
-    public boolean updateEmployee(EmployeeModel employeeModel){
-        return this.employeeDao.updateEmployee(employeeModel);
+    public boolean updateEmployee(EmployeeModel employeeModel, EmployeeModel loggedUser){
+        if(loggedUser.getEmployeeRole().equals("administration")){
+            return this.employeeDao.updateEmployee(employeeModel);
+        }else{return false;}
+        
     }
     
-    public boolean deleteEmployee(int employeeId) throws Exception{
-        return this.employeeDao.lockEmployee(employeeId);
+    public boolean deleteEmployee(int employeeId, EmployeeModel loggedUser) throws Exception{
+        if(loggedUser.getEmployeeRole().equals("administration")){
+            return this.employeeDao.lockEmployee(employeeId);
+        }else{return false;}
+        
     }
     
 }

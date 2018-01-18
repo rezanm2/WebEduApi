@@ -4,7 +4,7 @@ import nl.webedu.dao.SprintDAO;
 
 import java.lang.Exception;
 
-public class UserStoryModel {
+public class TaskModel {
 	private int userStoryId;
 	private String userStoryName;
 	private String userStoryDescription;
