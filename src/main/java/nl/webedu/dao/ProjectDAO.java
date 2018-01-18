@@ -41,20 +41,25 @@ public class ProjectDAO {
             projectStatement.setInt(1,projectId);
             ResultSet projectSet = projectStatement.executeQuery();
             
-            projectSet.next();
             ProjectModel project = new ProjectModel();
-            project.setProjectId(projectSet.getInt("project_id"));
-            project.setProjectName(projectSet.getString("project_version_name"));
-            project.setProjectDescription(projectSet.getString("project_version_description"));
-            project.setProjectIsDeleted(projectSet.getBoolean("project_isdeleted"));
-            project.setIsCurrent(true);
-            project.setProjectCustomerFk(projectSet.getInt("project_version_customer_fk"));
-            
-            //close alles zodat de connection pool niet op gaat.
-            projectSet.close();
-            projectStatement.close();
-            connection.close();
-            
+            try{
+                projectSet.next();
+                //dit geeft een error: Resultset not positioned properly,
+                // perhaps you need to call next.
+                project.setProjectId(projectSet.getInt("project_id")); 
+                project.setProjectName(projectSet.getString("project_version_name"));
+                project.setProjectDescription(projectSet.getString("project_version_description"));
+                project.setProjectIsDeleted(projectSet.getBoolean("project_isdeleted"));
+                project.setIsCurrent(true);
+                project.setProjectCustomerFk(projectSet.getInt("project_version_customer_fk"));
+            } catch(SQLException e){
+                e.printStackTrace();
+            } finally{
+                //close alles zodat de connection pool niet op gaat.
+                projectSet.close();
+                projectStatement.close();
+                connection.close();
+            }
             return project; 
     }
 
@@ -285,7 +290,7 @@ public class ProjectDAO {
 	 * @author Robert den Blaauwe
 	 * @param projectModel  het projectModel meegekregen van front-end
 	 */
-	public void addProject(ProjectModel projectModel) {
+	public boolean addProject(ProjectModel projectModel) {
 		String login_sql = "SELECT add_project(?,?,?)";
 		PreparedStatement project_statement;
 
@@ -299,9 +304,11 @@ public class ProjectDAO {
 			//close alles zodat de connection pool niet op gaat.
                         project_statement.close();
                         connection.close();
+                        return true;
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+                    e.printStackTrace();
+                    return false;
 		}
 	}
 
@@ -311,7 +318,7 @@ public class ProjectDAO {
      * @author rezanaser
      * @throws Exception SQL exception en normale exception
      */
-	public void modifyProject(ProjectModel projectModel) throws Exception {
+	public boolean modifyProject(ProjectModel projectModel) throws Exception {
 		String changePreviousVersion = "UPDATE project_version set project_version_current = false "
 				+ "WHERE project_version_project_fk = ? AND project_version_current= true";
 
@@ -332,9 +339,10 @@ public class ProjectDAO {
                 changeProject.setInt(4, projectModel.getProjectCustomerFk());
 		changeProject.executeUpdate();
 		//close alles zodat de connection pool niet op gaat.
-                        changeProject.close();
-                        connection.close();
-                        connection2.close();
+                changeProject.close();
+                connection.close();
+                connection2.close();
+                return true;
 	}
 	
 	/**
@@ -342,7 +350,7 @@ public class ProjectDAO {
 	 * @param projectModel het projectModel meegekregen van front-end
 	 * @author rezanaser
 	 */
-	public void removeProject(ProjectModel projectModel) {
+	public boolean removeProject(ProjectModel projectModel) {
 		String remove_project = "UPDATE project SET project_isdeleted = true WHERE project_id = ?";
                 String setCurrentOnFalse = "UPDATE project_version set project_version_current = false WHERE project_version_project_fk = ?";
 		try {
@@ -356,13 +364,15 @@ public class ProjectDAO {
                         //close
                         lock_statement.close();
                         connection.close();
+                        return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+                return false;
 	}
-        public void unRemoveProject(int projectId) {
+        public boolean unRemoveProject(int projectId) {
 		String remove_project = "UPDATE project "
 				+ "SET project_isdeleted = false "
 				+ "WHERE project_id = ? AND project_isdeleted=true";
@@ -373,8 +383,10 @@ public class ProjectDAO {
 			lock_statement.executeUpdate();
                         lock_statement.close();
                         connection.close();
+                        return true;
 		} catch (Exception e) {
 			e.printStackTrace();
+                        return false;
 		}
 	}
 }

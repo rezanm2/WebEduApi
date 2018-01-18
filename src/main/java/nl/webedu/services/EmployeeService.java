@@ -20,4 +20,8 @@ public class EmployeeService {
         return this.employeeDao.updateEmployee(employeeModel);
     }
     
+    public boolean deleteEmployee(int employeeId) throws Exception{
+        return this.employeeDao.lockEmployee(employeeId);
+    }
+    
 }

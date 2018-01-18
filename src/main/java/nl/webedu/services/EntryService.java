@@ -17,6 +17,7 @@ import nl.webedu.models.*;
 import nl.webedu.dao.*;
 import nl.webedu.models.entrymodels.DayModel;
 import nl.webedu.models.entrymodels.WeekModel;
+import nl.webedu.resources.EntryResource;
 
 /**
  *
@@ -32,14 +33,12 @@ public class EntryService {
     public ArrayList<EntryModel> getEntries(EmployeeModel loggedInEmployee){
         ArrayList<EntryModel> entries = entryDao.getEntriesFull();
         
-        System.out.println("enployee id: "+loggedInEmployee.getEmployeeId());
         if(loggedInEmployee.getEmployeeRole().equals("employee")){
             ArrayList<EntryModel> entriesDelete = new ArrayList<EntryModel>();
             // Verwijder alle entries die niet van de employees zijn en die niet 
             // up-to-date zijn
             for (int i=0; i<entries.size();i++) {
                 EntryModel entry = entries.get(i);
-                System.out.println("employeefk"+entry.getEmployeeFk()+"iscurrent: "+entry.getIsCurrent()+" isdeleted: "+entry.getIsDeleted());
                 if(entry.getEmployeeFk()!=loggedInEmployee.getEmployeeId()||!entry.getIsCurrent()||entry.getIsDeleted()){
 //                    entries.remove(entry);
                     entriesDelete.add(entry);
@@ -48,8 +47,6 @@ public class EntryService {
             entries.removeAll(entriesDelete);
         }
         //deze lijst wordt straks doorzocht om te kijken of er employees bij zitten die ook in de 
-//        ArrayList<SprintModel> sprints = sprintDao.allSprints();
-//        ArrayList<ProjectModel> projects = projectDao.getAllProjects();
         for(EntryModel entry: entries){
             
             //als de entry een userstoryb heeft dan is de waarde boven 0. 
@@ -100,9 +97,7 @@ public class EntryService {
         DateHelper dateHelper = new DateHelper();
         Date endDate = dateHelper.incrementDays(startDate, 6);
         ArrayList<EntryModel> entries = entryDao.getEntriesWithinTimePeriod(startDate, endDate);
-        System.out.println(this.getClass().toString()+": entries size: "+entries.size());
-
-        System.out.println(this.getClass().toString()+": employee id: "+loggedInEmployee.getEmployeeId());
+        
         if(loggedInEmployee.getEmployeeRole().equals("employee")){
             entries=removeWrongEntries(entries, loggedInEmployee);
         }
@@ -140,17 +135,14 @@ public class EntryService {
             }
         }
 
-        System.out.println(this.getClass().toString()+": entries size: "+entries.size());
         Date dayDate = new Date(startDate.getTime());
         WeekModel weekModel = new WeekModel(startDate,endDate);
         while (dayDate.compareTo(endDate)<=0){
-            System.out.println(this.getClass().toString()+": weekModel creation");
             ArrayList<EntryModel> entriesDelete = new ArrayList<EntryModel>();
             //maak de dag
             DayModel dayModel = new DayModel(dayDate);
             for (EntryModel entry: entries) {
                 if(entry.getEntryDate().compareTo(dayDate)==0){
-                    System.out.println(this.getClass().toString()+": add entry!");
                     dayModel.getEntryModels().add(entry);
                     entriesDelete.add(entry);
                 }
@@ -174,7 +166,6 @@ public class EntryService {
         ArrayList<EntryModel> entriesDelete = new ArrayList<EntryModel>();
             for (int i=0; i<entries.size();i++) {
                 EntryModel entry = entries.get(i);
-                System.out.println("employeefk"+entry.getEmployeeFk()+"iscurrent: "+entry.getIsCurrent()+" isdeleted: "+entry.getIsDeleted());
                 if(entry.getEmployeeFk()!=loggedInEmployee.getEmployeeId()||!entry.getIsCurrent()||entry.getIsDeleted()){
                     entriesDelete.add(entry);
                 }
@@ -185,6 +176,9 @@ public class EntryService {
     
     public boolean createEntry(EntryModel entryModel){
         DateHelper dateHelper = new DateHelper();
+        System.out.println(this.getClass().toString()
+                +": time before parsing raw: "+entryModel.getEntryStartTime()
+                +" toString: "+entryModel.getEntryStartTime().toString());
         Time parsedStartTime = dateHelper.parseTime(entryModel.getEntryStartTime(), "HH:mm");
         Time parsedEndTime = dateHelper.parseTime(entryModel.getEntryEndTime(), "HH:mm");
        
@@ -200,6 +194,37 @@ public class EntryService {
             return true;
         } catch (NumberFormatException ex) {
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+    }
+    
+    public boolean updateEntry(EntryModel entryModel){
+        DateHelper dateHelper = new DateHelper();
+        Time parsedStartTime = dateHelper.parseTime(entryModel.getEntryStartTime(), "HH:mm");
+        Time parsedEndTime = dateHelper.parseTime(entryModel.getEntryEndTime(), "HH:mm");
+        try {
+            entryDao.modifyEntry(entryModel.getEntryId(), 
+                    entryModel.getEntryProjectFk(), 
+                    entryModel.getEntrySprintFk(), 
+                    entryModel.getEntryDate(), 
+                    entryModel.getEntryDescription(), 
+                    parsedStartTime, 
+                    parsedEndTime, 
+                    entryModel.getEntryUserstoryFk());
+            System.out.println(this.getClass().toString()+": UPDATEENTRY--------------------------------");
+        } catch (NumberFormatException ex) {
+            Logger.getLogger(this.getClass().toString()+": ").log(Level.SEVERE, null, ex);
+            return false;
+        }
+        return true;
+    }
+    
+    public boolean deleteEntry(int entryId){
+        try {
+            entryDao.deleteEntry(entryId);
+            return true;
+        } catch (NumberFormatException ex) {
+            Logger.getLogger(this.getClass().toString()).log(Level.SEVERE, null, ex);
             return false;
         }
     }

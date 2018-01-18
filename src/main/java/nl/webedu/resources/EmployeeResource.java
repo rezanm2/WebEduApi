@@ -1,8 +1,6 @@
 package nl.webedu.resources;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import io.dropwizard.auth.Auth;
-import nl.webedu.dao.EmployeeDAO;
 import nl.webedu.models.EmployeeModel;
 
 import javax.ws.rs.Consumes;
@@ -12,16 +10,18 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
 import javax.validation.Valid;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
+import javax.ws.rs.QueryParam;
 import nl.webedu.services.EmployeeService;
 
 @Path("/users")
 @Produces(MediaType.APPLICATION_JSON)
-public class UserResource {
+public class EmployeeResource {
     private EmployeeService employeeService;
 
-    public UserResource(){
+    public EmployeeResource(){
         this.employeeService = new EmployeeService();
     }
     
@@ -43,6 +43,12 @@ public class UserResource {
     @Path("/login")
     public EmployeeModel UserName(@Auth EmployeeModel employeeModel){
         return employeeModel;
+    }
+    
+    @DELETE
+    @Path("delete")
+    public boolean removeEmployee(@QueryParam("emId") int employeeId) throws Exception{
+        return this.employeeService.deleteEmployee(employeeId);
     }
     
     @GET
