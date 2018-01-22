@@ -3,13 +3,14 @@ package nl.webedu.services;
 import java.util.ArrayList;
 import nl.webedu.dao.EmployeeDAO;
 import nl.webedu.models.EmployeeModel;
+import nl.webedu.models.Role;
 
 public class EmployeeService {
     
     private EmployeeDAO employeeDao = new EmployeeDAO(); 
     
     public boolean createEmployee(EmployeeModel employeeModel, EmployeeModel loggedUser){
-        if(loggedUser.getEmployeeRole().equals("administration")){
+        if(loggedUser.getEmployeeRole().equals(Role.ADMINISTRATION.toString())){
             return this.employeeDao.createEmployeeVersion(employeeModel);
         }else{return false;}
        
@@ -20,14 +21,14 @@ public class EmployeeService {
     }
     
     public boolean updateEmployee(EmployeeModel employeeModel, EmployeeModel loggedUser){
-        if(loggedUser.getEmployeeRole().equals("administration")){
+        if(loggedUser.getEmployeeRole().equals(Role.ADMINISTRATION.toString())){
             return this.employeeDao.updateEmployee(employeeModel);
         }else{return false;}
         
     }
     
     public boolean deleteEmployee(int employeeId, EmployeeModel loggedUser) throws Exception{
-        if(loggedUser.getEmployeeRole().equals("administration")){
+        if(loggedUser.getEmployeeRole().equals(Role.ADMINISTRATION.toString())){
             return this.employeeDao.lockEmployee(employeeId);
         }else{return false;}
         
