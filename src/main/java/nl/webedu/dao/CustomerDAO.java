@@ -112,7 +112,7 @@ public class CustomerDAO {
 	}
 
 
-	public void addCustomer(String name, String description) {
+	public boolean addCustomer(String name, String description) {
 		String login_sql = "SELECT add_customer('"+name+"','"+description+"')";
 		PreparedStatement customer_statement;
 
@@ -120,9 +120,11 @@ public class CustomerDAO {
 			customer_statement = this.connect.makeConnection().prepareStatement(login_sql);
 			ResultSet customer_set = customer_statement.executeQuery();
 			customer_statement.close();
+                        return true;
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+                        return false;
 		}
 	}
 	
@@ -134,7 +136,7 @@ public class CustomerDAO {
 	 * @param description   lol
 	 * @author rezanaser
 	 */
-	public void modifyCustomer(int cID, String name, String description) {
+	public boolean modifyCustomer(int cID, String name, String description) {
 		String changePreviousVersion = "UPDATE customer_version set customer_version_current = false "
 				+ "WHERE customer_version_customer_fk = ?";
 		String change_customer = "INSERT INTO customer_version(customer_version_customer_fk, customer_version_name, customer_version_description, customer_version_current)"
@@ -151,8 +153,10 @@ public class CustomerDAO {
 			changeCustomer.executeQuery();
 			
 			changeCustomer.close();
+                        return true;
 		} catch (Exception e) {
 			e.getMessage();
+                        return false;
 		}
 		
 	}
@@ -164,7 +168,7 @@ public class CustomerDAO {
 	 * @author rezanaser
 	 */
 
-	public void removeCustomer(int cId) {
+	public boolean removeCustomer(int cId) {
 		String remove_customer = "UPDATE customer SET customer_isdeleted = true WHERE customer_id = ?";
                 String setCurrentOnFalse = "UPDATE customer_version set customer_version_current = false WHERE customer_version_customer_fk = ?";
 		try {
@@ -175,8 +179,10 @@ public class CustomerDAO {
                         lock_version_statement.setInt(1, cId);
                         lock_version_statement.executeUpdate();
                         lock_version_statement.close();
+                        return true;
 		} catch (Exception e) {
 			e.printStackTrace();
+                        return false;
 		}
 	}
 	 /**

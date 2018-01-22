@@ -16,19 +16,19 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.validation.Valid;
-import nl.webedu.dao.UserStoryDAO;
-import nl.webedu.models.UserStoryModel;
+import nl.webedu.dao.TaskDAO;
+import nl.webedu.models.TaskModel;
 
 /**
  *
  * @author rezanaser
  */
 @Path("/userstories")
-public class UserStoryResource {
-    private UserStoryDAO userStoryDAO;
+public class TaskResource {
+    private TaskDAO userStoryDAO;
 
-    public UserStoryResource(){
-        userStoryDAO = new UserStoryDAO();
+    public TaskResource(){
+        userStoryDAO = new TaskDAO();
         userStoryDAO.createAddUserStoryFunction();
     }
 
@@ -37,7 +37,7 @@ public class UserStoryResource {
     @JsonProperty
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public ArrayList<UserStoryModel> read(@Auth EmployeeModel employeeModel){
+    public ArrayList<TaskModel> read(@Auth EmployeeModel employeeModel){
         return this.userStoryDAO.userStory_list();
     }
 
@@ -46,14 +46,14 @@ public class UserStoryResource {
     @JsonProperty
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public ArrayList<UserStoryModel> readFromUrl(@QueryParam("empid") Optional<String> employeeId){
+    public ArrayList<TaskModel> readFromUrl(@QueryParam("empid") Optional<String> employeeId){
         int employeeId_parse = Integer.parseInt(employeeId.get());
         return this.userStoryDAO.userStory_list_employee(employeeId_parse);
     }
     
     @POST
     @Path("/create")
-    public boolean createProject(@Valid UserStoryModel userStoryModel){
+    public boolean createProject(@Valid TaskModel userStoryModel){
         userStoryDAO.addUserStory(userStoryModel);
         return true;
     }
@@ -69,11 +69,11 @@ public class UserStoryResource {
     @Path("/update")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public boolean update(@Valid UserStoryModel userStoryModel){
+    public boolean update(@Valid TaskModel userStoryModel){
         try {
             userStoryDAO.modifyUserStory(userStoryModel);
         } catch (Exception ex) {
-            Logger.getLogger(UserStoryResource.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(TaskResource.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println(this.getClass().toString()+": update werkt niet!: ");
             return false;
         }
@@ -85,7 +85,7 @@ public class UserStoryResource {
     @Path("/delete")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public boolean delete(@Valid UserStoryModel userStoryModel){
+    public boolean delete(@Valid TaskModel userStoryModel){
         userStoryDAO.removeUserStory(userStoryModel);
         System.out.println(this.getClass().toString()+": delete werkt!: ");
         return true;

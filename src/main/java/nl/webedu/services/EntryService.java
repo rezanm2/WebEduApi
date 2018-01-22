@@ -25,7 +25,7 @@ import nl.webedu.resources.EntryResource;
  */
 public class EntryService {
     private EntryDAO entryDao = new EntryDAO();
-    private UserStoryDAO userstoryDao = new UserStoryDAO();
+    private TaskDAO userstoryDao = new TaskDAO();
     private ProjectDAO projectDao =  new ProjectDAO();
     private SprintDAO sprintDao = new SprintDAO();
     private EmployeeDAO employeeDao = new EmployeeDAO();

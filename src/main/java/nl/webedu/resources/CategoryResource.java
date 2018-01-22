@@ -6,9 +6,7 @@
 package nl.webedu.resources;
 import java.util.ArrayList;
 import javax.ws.rs.QueryParam;
-import com.google.common.base.Optional;
 import io.dropwizard.auth.Auth;
-import java.sql.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.validation.Valid;
@@ -19,9 +17,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import nl.webedu.models.CategoryModel;
-import nl.webedu.helpers.DateHelper;
 import javax.ws.rs.Path;
-import nl.webedu.dao.SprintDAO;
 import nl.webedu.models.EmployeeModel;
 import nl.webedu.services.CategoryService;
 
@@ -32,10 +28,10 @@ import nl.webedu.services.CategoryService;
 @Path("/categories")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class SprintResource {
+public class CategoryResource {
     private CategoryService categoryService;
 
-    public SprintResource(){
+    public CategoryResource(){
         categoryService = new CategoryService();
     }
 
@@ -45,7 +41,7 @@ public class SprintResource {
         try {
             return this.categoryService.getAllCategories();
         } catch (Exception ex) {
-            Logger.getLogger(SprintResource.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CategoryResource.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
     }
@@ -53,24 +49,24 @@ public class SprintResource {
     @POST
     @Path("/create")
     public boolean create(@Auth EmployeeModel employeeModel, @Valid CategoryModel sprintModel){
-        return categoryService.create(sprintModel);
+        return categoryService.create(sprintModel, employeeModel);
     }
     
     @PUT
     @Path("/update")
     public boolean update(@Auth EmployeeModel loggedUser, @Valid CategoryModel categoryModel){
-        return this.categoryService.updateCategory(categoryModel);
+        return this.categoryService.updateCategory(categoryModel, loggedUser);
     }
     
     @DELETE
     @Path("/delete")
-    public boolean delete(@QueryParam("catId") int catId) throws Exception{
-        return categoryService.deleteCategory(catId);
+    public boolean delete(@QueryParam("catId") int catId, @Auth EmployeeModel employeeModel) throws Exception{
+        return categoryService.deleteCategory(catId, employeeModel);
     }
     
     @PUT
     @Path("/undelete")
-    public boolean unDelete(@QueryParam("sprintid") int sprintId) throws Exception{
-      return categoryService.unDelete(sprintId);
+    public boolean unDelete(@Auth EmployeeModel employeeModel, @QueryParam("sprintid") int sprintId) throws Exception{
+      return categoryService.unDelete(sprintId, employeeModel);
     }
 }

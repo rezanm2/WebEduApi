@@ -5,18 +5,13 @@
  */
 package nl.webedu.resources;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.base.Optional;
 import io.dropwizard.auth.Auth;
-import nl.webedu.dao.ProjectDAO;
 import nl.webedu.models.EmployeeModel;
 import nl.webedu.models.ProjectModel;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.validation.Valid;
 import nl.webedu.services.ProjectService;
 
@@ -26,7 +21,7 @@ import nl.webedu.services.ProjectService;
  */
 @Path("/projects")
 @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 public class ProjectResource {
     private ProjectService projectService;
 
@@ -49,24 +44,24 @@ public class ProjectResource {
     
     @POST
     @Path("/create")
-    public boolean createProject(@Valid ProjectModel projectModel){
-        return projectService.createProject(projectModel);
+    public boolean createProject(@Valid ProjectModel projectModel, @Auth EmployeeModel loggedUser){
+        return projectService.createProject(projectModel, loggedUser);
     }
     @PUT
     @Path("/update")
-    public boolean update(@Valid ProjectModel projectModel) throws Exception{
-        return projectService.update(projectModel);
+    public boolean update(@Valid ProjectModel projectModel, @Auth EmployeeModel loggedUser) throws Exception{
+        return projectService.update(projectModel, loggedUser);
     }
 
     @POST
     @Path("/delete")
-    public boolean delete(@Valid ProjectModel projectModel){
-        return projectService.delete(projectModel);
+    public boolean delete(@Valid ProjectModel projectModel, @Auth EmployeeModel loggedUser){
+        return projectService.delete(projectModel, loggedUser);
     }
 
     @POST
     @Path("/undelete/url")
-    public boolean unDeleteByUrl(@QueryParam("pid") int projectId){
-        return projectService.unDeleteByUrl(projectId);
+    public boolean unDeleteByUrl(@QueryParam("pid") int projectId, @Auth EmployeeModel loggedUser){
+        return projectService.unDeleteByUrl(projectId, loggedUser);
     }
 }
