@@ -73,7 +73,7 @@ public class UserStoryResource {
         try {
             userStoryDAO.modifyUserStory(userStoryModel);
         } catch (Exception ex) {
-            Logger.getLogger(ProjectResource.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(UserStoryResource.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println(this.getClass().toString()+": update werkt niet!: ");
             return false;
         }
@@ -86,8 +86,8 @@ public class UserStoryResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public boolean delete(@Valid UserStoryModel userStoryModel){
-        userStoryDAO.removeUserStory(userStoryModel.getUserStoryId());
-        System.out.println(this.getClass().toString()+": update werkt!: ");
+        userStoryDAO.removeUserStory(userStoryModel);
+        System.out.println(this.getClass().toString()+": delete werkt!: ");
         return true;
     }
 

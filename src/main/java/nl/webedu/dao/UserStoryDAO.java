@@ -33,27 +33,26 @@ public class UserStoryDAO {
      * @author Robert den Blaauwen
      */
     public void createAddUserStoryFunction(){
-	String sprintProcedureSql = "CREATE OR REPLACE FUNCTION add_userstory(project_id INT4, sprint_name TEXT, description TEXT, startdate DATE, enddate DATE) " +
-                                    "RETURNS void AS $$ " +
+	String userStoryProcedureSql = "CREATE OR REPLACE FUNCTION add_userstory(name TEXT, description TEXT, sprintId INT4) " +
+                                    "RETURNS void AS $$  " +
                                     "DECLARE pk INT; " +
                                     "BEGIN " +
-                                    "	INSERT INTO sprint(sprint_isdeleted) VALUES(false) " +
-                                    "	RETURNING sprint_version_sprint_fk INTO pk; " +
-                                    "	INSERT INTO sprint_version(sprint_version_sprint_fk, sprint_version_project_fk," +
-                                    "    	sprint_version_name, sprint_version_description, sprint_version_startdate, sprint_version_enddate," +
-                                    "        sprint_version_current) " +
-                                    "    VALUES(pk,project_id,sprint_name,description,startdate,enddate, true); " +
-                                    "END $$ LANGUAGE plpgsql;";
+                                        "INSERT INTO userstory(userstory_isdeleted) VALUES(false) " +
+                                        "RETURNING userstory_id INTO pk; " +
+                                        "INSERT INTO userstory_version(userstory_version_userstory_fk, userstory_version_name, userstory_version_description, userstory_version_current) " +
+                                        "VALUES(pk, name, description, true); " +
+                                        "INSERT INTO userstory_sprint(userstory_sprint_userstory_fk, userstory_sprint_sprint_fk) " +
+                                        "VALUES(pk, sprintId); " +
+                                    "END $$ LANGUAGE plpgsql; ";
 	try {
             Connection connection = this.connect.makeConnection();
-            PreparedStatement sprintProcedureStatement = connection.prepareStatement(sprintProcedureSql);
-            sprintProcedureStatement.executeUpdate();
+            PreparedStatement userStoryProcedureStatement = connection.prepareStatement(userStoryProcedureSql);
+            userStoryProcedureStatement.executeUpdate();
  
             //close alles
-            sprintProcedureStatement.close();
+            userStoryProcedureStatement.close();
             connection.close();
-            //System.out.println(this.getClass().toString()+": constructor: FUNCTION add_project(name, description, customer) has been created!");
-	} catch (SQLException e) {
+            } catch (SQLException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
 	} catch (Exception e) {
@@ -208,7 +207,8 @@ public class UserStoryDAO {
 					    "JOIN userstory u ON userstory_id=usv.userstory_version_userstory_fk " +
                                             "JOIN project_version pv ON  sv.sprint_version_project_fk=pv.project_version_project_fk " +
 					    "WHERE us.userstory_sprint_sprint_fk=sv.sprint_version_sprint_fk " +
-					    "AND usv.userstory_version_current=TRUE AND sv.sprint_version_current=true ";
+					    "AND usv.userstory_version_current=TRUE AND sv.sprint_version_current=true " +
+                                            "AND s.sprint_isdeleted=false";
 			
 				
 				
@@ -430,7 +430,7 @@ public class UserStoryDAO {
 			
                         
                         
-                        	public void addUserStory(UserStoryModel userStoryModel) {
+                public void addUserStory(UserStoryModel userStoryModel) {
 		String login_sql = "SELECT add_userstory(?,?,?)";
 		PreparedStatement userStory_statement;
 
@@ -439,7 +439,7 @@ public class UserStoryDAO {
 			userStory_statement = connection.prepareStatement(login_sql);
                         userStory_statement.setString(1, userStoryModel.getUserStoryName());
                         userStory_statement.setString(2, userStoryModel.getUserStoryDescription());
-                        userStory_statement.setInt(3, userStoryModel.getSprintFK());
+                        userStory_statement.setInt(3, userStoryModel.getCategoryId());
 			userStory_statement.executeQuery();
 			//close alles zodat de connection pool niet op gaat.
                         userStory_statement.close();
@@ -464,29 +464,29 @@ public class UserStoryDAO {
 			
 			public void modifyUserStory(UserStoryModel userStoryModel)
 			{
-                                        System.out.println("Category ID before added block of code: " + userStoryModel.getCategoryId());
-                                        System.out.println("UserStory ID before added block of code: " + userStoryModel.getCategoryId());
+                            System.out.println(userStoryModel.getUserStoryId());
 				String changePreviousVersion = "UPDATE userstory_version SET userstory_version_current = false "
 						+ "WHERE userstory_version_userstory_fk = ? AND userstory_version_current= true";
 				
 				String change_userStory = "INSERT INTO userstory_version(userstory_version_userstory_fk, userstory_version_name, userstory_version_description, userstory_version_current)"
 						+ "VALUES(?, ?, ?, true)";
                                 //Added Jeroen
-                                String change_userStory_sprint = "UPDATE userstory_sprint " +
-                                                "SET userstory_sprint_sprint_fk = ? " +
-                                                "WHERE userstory_sprint_userstory_fk = ? ";
-				
+                                String change_userStory_sprint = "UPDATE userstory_sprint SET userstory_sprint_sprint_fk = ? WHERE userstory_sprint_userstory_fk = ? ";
+                                
+                                
 				
 				try {
 					PreparedStatement changeVersions= connect.makeConnection().prepareStatement(changePreviousVersion);
 					changeVersions.setInt(1, userStoryModel.getUserStoryId());
 					changeVersions.executeUpdate();
 					changeVersions.close();
+                                        
+                                        
 					PreparedStatement changeUserStory = connect.makeConnection().prepareStatement(change_userStory);
 					changeUserStory.setInt(1, userStoryModel.getUserStoryId());
 					changeUserStory.setString(2, userStoryModel.getUserStoryName());
 					changeUserStory.setString(3, userStoryModel.getUserStoryDescription());
-					changeUserStory.executeQuery();
+					changeUserStory.executeUpdate();
 					
 					changeUserStory.close();
                             
@@ -494,27 +494,33 @@ public class UserStoryDAO {
                                         PreparedStatement changeUserStorySprint = connect.makeConnection().prepareStatement(change_userStory_sprint);
                                         changeUserStorySprint.setInt(1, userStoryModel.getCategoryId());
                                         changeUserStorySprint.setInt(2, userStoryModel.getUserStoryId());
-					changeUserStorySprint.executeQuery();
+					changeUserStorySprint.executeUpdate();
 					changeUserStorySprint.close();
                                         
+//                 
+                                        
 				} catch (Exception e) {
-					System.out.println(e.getMessage());
+					e.printStackTrace();
 				}
-				        System.out.println("Category ID after added block of code: " + userStoryModel.getCategoryId());
-                                        System.out.println("UserStory ID after added block of code: " + userStoryModel.getCategoryId());
 				
 			}
 			
-			public void removeUserStory(int userStoryID) 
+			public void removeUserStory(UserStoryModel userStoryModel) 
 			{
 				String deleteUserStory = "UPDATE userStory "
 					+ "SET userStory_isdeleted = true "
 					+ "WHERE userStory_id = ?";
+                                String setCurrentOnFalse = "UPDATE userstory_version set userstory_version_current = false WHERE userstory_version_userstory_fk = ?";
 				try 
 				{
 					PreparedStatement lockStatement = connect.makeConnection().prepareStatement(deleteUserStory);
-					lockStatement.setInt(1, userStoryID);
+                                        System.out.println("NEW" + userStoryModel.getUserStoryId());
+					lockStatement.setInt(1, userStoryModel.getUserStoryId());
 					lockStatement.executeUpdate();
+                                        
+                                        PreparedStatement unCurrent = connect.makeConnection().prepareStatement(setCurrentOnFalse);
+					unCurrent.setInt(1, userStoryModel.getUserStoryId());
+					unCurrent.executeUpdate();
 				} catch (Exception e) 
 				{
 					System.out.println(e.getMessage());
