@@ -11,6 +11,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
 import javax.validation.Valid;
+import nl.webedu.models.CategoryModel;
 import nl.webedu.models.TaskModel;
 import nl.webedu.services.TaskService;
 
@@ -32,6 +33,13 @@ public class TaskResource {
     @Path("/read")
     public ArrayList<TaskModel> read(@Auth EmployeeModel employeeModel){
         return this.taskService.read(employeeModel);
+    }
+    
+    @GET
+    @Path("/getTasksByCategory")
+    public ArrayList<TaskModel> getTasksByCategory(@Auth EmployeeModel employeeModel, @QueryParam("catId") int categoryId){
+        System.out.println(this.taskService.getTasksByCategory(categoryId));
+        return this.taskService.getTasksByCategory(categoryId);
     }
 
     @GET
@@ -63,5 +71,11 @@ public class TaskResource {
     @Path("/undelete/url")
     public boolean unDeleteByUrl(@Auth EmployeeModel employeeModel,@QueryParam("pid") int projectId){
         return this.taskService.unDeleteByUrl(employeeModel, projectId);
+    }
+    
+    @GET
+    @Path("/getCategoriesByProject")
+    public ArrayList<CategoryModel> getCategoriesByProject(@Auth EmployeeModel loggedUser, @QueryParam("pId") int projectId){
+        return this.taskService.getCategoriesByProject(loggedUser, projectId);
     }
 }

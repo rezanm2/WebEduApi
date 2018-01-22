@@ -2,6 +2,7 @@ package nl.webedu.services;
 
 import java.util.ArrayList;
 import nl.webedu.dao.TaskDAO;
+import nl.webedu.models.CategoryModel;
 import nl.webedu.models.EmployeeModel;
 import nl.webedu.models.TaskModel;
 
@@ -14,6 +15,14 @@ public class TaskService {
         return this.taskDao.userStory_list_employee(employeeId);
     }
     
+    public ArrayList<TaskModel> getTasksByCategory(int categoryId){
+        return this.taskDao.getTasksByCategory(categoryId);
+    }
+    
+    public ArrayList<CategoryModel> getCategoriesByProject(EmployeeModel employeeModel, int projectId){
+        return this.taskDao.categoriesProject(projectId);
+    }
+    
     public boolean create(EmployeeModel employeeModel, TaskModel userStoryModel){
         if(employeeModel.getEmployeeRole().equals("administration")){
             taskDao.addUserStory(userStoryModel);
@@ -21,14 +30,11 @@ public class TaskService {
         }else{return false;}
         
     }
-        
-   
     public boolean update(EmployeeModel employeeModel, TaskModel userStoryModel){
         if(employeeModel.getEmployeeRole().equals("administration")){
             taskDao.modifyUserStory(userStoryModel);
          return true;
         }else{return false;}
-        
     }
 
     public boolean delete(EmployeeModel employeeModel, TaskModel userStoryModel){
@@ -36,9 +42,7 @@ public class TaskService {
             taskDao.removeUserStory(userStoryModel);
         return true;
         }else{return false;}
-        
     }
-
     public boolean unDeleteByUrl(EmployeeModel employeeModel, int projectId){
         if(employeeModel.getEmployeeRole().equals("administration")){
             this.taskDao.unRemoveUserStory(projectId);

@@ -21,28 +21,28 @@ public class ProjectService {
     }
     
     public boolean createProject(ProjectModel projectModel, EmployeeModel loggedUser){
-        if(loggedUser.getEmployeeRole().equals(Role.ADMINISTRATION.toString())){
+        if(loggedUser.getEmployeeRole().equals(Role.administration.toString())){
             return projectDAO.addProject(projectModel);
         }else{return false;}
         
     }
         
     public boolean update(ProjectModel projectModel, EmployeeModel loggedUser) throws Exception{
-        if(loggedUser.getEmployeeRole().equals(Role.ADMINISTRATION.toString())){
+        if(loggedUser.getEmployeeRole().equals(Role.administration.toString())){
            return projectDAO.modifyProject(projectModel); 
         }else{return false;}
          
     }
 
     public boolean delete(ProjectModel projectModel, EmployeeModel loggedUser){
-        if(loggedUser.getEmployeeRole().equals(Role.ADMINISTRATION.toString())){
+        if(loggedUser.getEmployeeRole().equals(Role.administration.toString())){
             return projectDAO.removeProject(projectModel);
         }else{return false;}
         
     }
 
     public boolean unDeleteByUrl(int projectId, EmployeeModel loggedUser){
-        if(loggedUser.getEmployeeRole().equals(Role.ADMINISTRATION.toString())){
+        if(loggedUser.getEmployeeRole().equals(Role.administration.toString())){
             return this.projectDAO.unRemoveProject(projectId);
         }else{return false;}
         

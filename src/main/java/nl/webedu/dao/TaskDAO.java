@@ -8,7 +8,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import nl.webedu.helpers.DateHelper;
 import nl.webedu.models.CategoryModel;
-import nl.webedu.models.ProjectModel;
 import nl.webedu.models.TaskModel;
 
 
@@ -138,13 +137,15 @@ public class TaskDAO {
 		 * @author rezanaser
 		 * @return
 		 */
-		public ArrayList<TaskModel> userStorysSprints(int userStoryID){
+		public ArrayList<TaskModel> userStorysSprints(int categoryId){
 			ArrayList<TaskModel> userStory_alist = new ArrayList<TaskModel>();
-			String sprints_userStorys_sql = "SELECT *  FROM userStory_version where userStory_version_sprint_fk = ? ";
-					//+ "AND entry_version_current = 'y' ";
+			String sprints_userStorys_sql = "SELECT *  FROM userStory_version "
+                                + "INNER JOIN userstory ON userstory_version_userstory_fk = userstory_id "
+                                + "INNER JOIN sprint ON userStory_version_sprint_fk = sprint_id "
+                                + "WHERE userStory_version_sprint_fk = ? AND sprint.sprint_isdeleted = FALSE";
 			try {
 				PreparedStatement userStorys_statement = connect.makeConnection().prepareStatement(sprints_userStorys_sql);
-				userStorys_statement.setInt(1, userStoryID);
+				userStorys_statement.setInt(1, categoryId);
 				ResultSet userStorys_sets = userStorys_statement.executeQuery();
 				while(userStorys_sets.next()) {
 					TaskModel userStory = new TaskModel();
@@ -168,17 +169,21 @@ public class TaskDAO {
 			 * @author rezanaser
 			 * @return
 			 */
-			public ArrayList<TaskModel> userStorysUserStorys(int p_id){
+			public ArrayList<TaskModel> getTasksByCategory(int categoryId){
 				ArrayList<TaskModel> userStory_alist = new ArrayList<TaskModel>();
-				String userStorys_userStorys_sql = "SELECT *  FROM userStory_version where userStory_version_userStory_fk = ? ";
+				String userStorys_userStorys_sql = "SELECT * FROM userstory_sprint " +
+                                                                    "INNER JOIN userstory_version ON userstory_sprint_userstory_fk = userstory_version_userstory_fk " +
+                                                                    "INNER JOIN sprint ON userstory_sprint_sprint_fk = sprint_id " +
+                                                                    "WHERE userstory_version_current = true AND sprint_isdeleted = false"
+                                                                    + " AND sprint.sprint_id = ? ";
 						//+ "AND entry_version_current = 'y' ";
 				try {
 					PreparedStatement userStorys_statement = connect.makeConnection().prepareStatement(userStorys_userStorys_sql);
-					userStorys_statement.setInt(1, p_id);
+					userStorys_statement.setInt(1, categoryId);
 					ResultSet userStorys_sets = userStorys_statement.executeQuery();
 					while(userStorys_sets.next()) {
 						TaskModel userStory = new TaskModel();
-						userStory.setUserStoryId(userStorys_sets.getInt("userStory_version_userStory_fk"));
+						userStory.setUserStoryId(userStorys_sets.getInt("userStory_version_userstory_fk"));
 						userStory.setUserStoryName(userStorys_sets.getString("userStory_version_name"));
 						userStory_alist.add(userStory);
 					}
@@ -208,7 +213,7 @@ public class TaskDAO {
                                             "JOIN project_version pv ON  sv.sprint_version_project_fk=pv.project_version_project_fk " +
 					    "WHERE us.userstory_sprint_sprint_fk=sv.sprint_version_sprint_fk " +
 					    "AND usv.userstory_version_current=TRUE AND sv.sprint_version_current=true " +
-                                            "AND s.sprint_isdeleted=false";
+                                            "AND s.sprint_isdeleted=false AND pv.project_version_current = TRUE";
 			
 				
 				
@@ -303,104 +308,7 @@ public class TaskDAO {
 				}
 				return userStory_list;
 			}
-
-
-			/**
-			 * Deze methode geeft het gegenereerde ID van een userStory terug
-			 * @author Jeroen Zandvliet
-			 * @return generatedID
-			 */
-			public int createNewUserStory()
-				{
-					generatedID = 0;
-					PreparedStatement createUserStory;
-					ResultSet userStoryID = null;
-					String insertUserStoryStatement = "INSERT INTO userStory(userstory_isdeleted) VALUES(?)";
-					
-					try 
-					{
-						createUserStory = connect.makeConnection().prepareStatement(insertUserStoryStatement, Statement.RETURN_GENERATED_KEYS);
-						
-						createUserStory.setBoolean(1, false);
-						createUserStory.executeUpdate();
-			//			createUserStory.getGeneratedKeys();
-						userStoryID = createUserStory.getGeneratedKeys();
-						
-						
-						while(userStoryID.next())
-						{
-							generatedID = userStoryID.getInt(1);
-						}
-					
-					} catch (Exception e) 
-					{
-						System.out.println(e.getMessage());
-					}
-						return generatedID;
-				}
-
-
-			/**
-			 * Deze methode voegt een gekozen userStory aan de database toe.
-			 * @author Jeroen Zandvliet
-			 * @param userStoryName
-			 * @param userStoryID
-			 * @param userStoryDescription
-			 * @param userStoryStartDate
-			 * @param userStoryEndDate
-			 */
-			public void addUserStoryToDatabase(int sprintID, String userStoryName, String userStoryDescription)
-			{
-				PreparedStatement addUserStory;
-				String insertStatement = "INSERT INTO userstory_version(userstory_version_userstory_fk, userstory_version_name, userstory_version_description, userstory_version_current) " 
-						+ "VALUES(?,?,?, true)";
-		
-				try 
-				{
-					addUserStory = connect.makeConnection().prepareStatement(insertStatement);
-					
-					addUserStory.setInt(1, createNewUserStory());
-					addUserStory.setString(2, userStoryName);
-					addUserStory.setString(3, userStoryDescription);
-					
-					addUserStory.executeQuery();
-					addUserStory.close();			
-					
-				} catch (SQLException e) {
-
-					System.out.println(e.getMessage());
-				} catch (Exception e) {
-					System.out.println(e.getMessage());
-					
-				} 
-				
-				
-				
-				PreparedStatement linkUserStorySprint;
-				String linkStatement = "INSERT INTO userstory_sprint(userstory_sprint_userstory_fk, userstory_sprint_sprint_fk) " 
-						+ "VALUES(?,?)";
-				
-				try 
-				{
-					linkUserStorySprint = connect.makeConnection().prepareStatement(linkStatement);
-					
-					linkUserStorySprint.setInt(1, generatedID);
-					linkUserStorySprint.setInt(2,  sprintID);
-					
-					linkUserStorySprint.executeQuery();
-					linkUserStorySprint.close();			
-					
-				} catch (SQLException e) {
-					System.out.println(e.getMessage());
-				} catch (Exception e) {
-					System.out.println(e.getMessage());
-					
-				} 
-				
-			}
 			
-			
-
 
 			public ArrayList <TaskModel> toonUserUserStory (int e_id)
 			{
@@ -504,11 +412,10 @@ public class TaskDAO {
 				}
 				
 			}
-			
 			public void removeUserStory(TaskModel userStoryModel) 
 			{
-				String deleteUserStory = "UPDATE userStory "
-					+ "SET userStory_isdeleted = true "
+				String deleteUserStory = "UPDATE userstory "
+					+ "SET userstory_isdeleted = true "
 					+ "WHERE userStory_id = ?";
                                 String setCurrentOnFalse = "UPDATE userstory_version set userstory_version_current = false WHERE userstory_version_userstory_fk = ?";
 				try 
@@ -578,5 +485,40 @@ public class TaskDAO {
 			e.printStackTrace();
 		}
 	}
+         	public ArrayList<CategoryModel> categoriesProject(int p_id){
+		ArrayList<CategoryModel> sprint_alist = new ArrayList<CategoryModel>();
+		String projectsSprintsSql = "SELECT *  FROM sprint_version sv INNER JOIN sprint s ON s.sprint_id=sv.sprint_version_sprint_fk " +
+                                "INNER JOIN project_version pv " +
+				"ON sv.sprint_version_project_fk=pv.project_version_project_fk INNER JOIN project p " +
+				"ON p.project_id=pv.project_version_project_fk WHERE pv.project_version_project_fk= ? " +
+				"AND sv.sprint_version_current=TRUE AND project_isdeleted=FALSE AND pv.project_version_current = true";
+				//+ "AND entry_version_current = 'y' ";
+		try {
+                        Connection connection = this.connect.makeConnection();
+			PreparedStatement sprintsStatement = connection.prepareStatement(projectsSprintsSql);
+			sprintsStatement.setInt(1, p_id);
+			ResultSet sprintsSets = sprintsStatement.executeQuery();
+			while(sprintsSets.next()) {
+				CategoryModel sprint;
+				sprint = new CategoryModel();
+				sprint.setCategoryId(sprintsSets.getInt("sprint_version_sprint_fk"));
+				sprint.setCategoryName(sprintsSets.getString("sprint_version_name"));
+                                sprint.setCategoryDescription(sprintsSets.getString("sprint_version_description"));
+				sprint.setCategoryStartDate(sprintsSets.getString("sprint_version_startdate"));
+				sprint.setCategoryEndDate(sprintsSets.getString("sprint_version_enddate"));
+				sprint.setCategoryIsDeleted(sprintsSets.getBoolean("sprint_isdeleted"));
+                                sprint.setIsCurrent(sprintsSets.getBoolean("sprint_version_current"));
+                                sprint.setProjectFK(sprintsSets.getInt("sprint_version_project_fk"));
+				sprint_alist.add(sprint);
+			}
+                        // close alles zodat de connection pool niet op gaat
+                        sprintsSets.close();
+			sprintsStatement.close();
+                        connection.close();
+		}catch(Exception e) {
+			e.printStackTrace();
 		}
+		return sprint_alist;
+	  }
+}
 

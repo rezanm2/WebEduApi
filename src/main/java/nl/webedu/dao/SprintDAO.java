@@ -150,49 +150,6 @@ public class SprintDAO {
             connection.close();
             return sprintList;
 	}
-	
-	/**
-	 * Deze methode vult de combobox met de sprints van het gevraagde project
-	 * @author rezanaser
-	 * @param p_id  id van project waar je de sprints voor wilt hebben.
-	 * @return sprint_alist lisjt van sprints
-	 */
-	public ArrayList<CategoryModel> sprintsProjects(int p_id){
-		ArrayList<CategoryModel> sprint_alist = new ArrayList<CategoryModel>();
-		String projectsSprintsSql = "SELECT *  FROM sprint_version sv INNER JOIN sprint s ON s.sprint_id=sv.sprint_version_sprint_fk " +
-                                "INNER JOIN project_version pv " +
-				"ON sv.sprint_version_project_fk=pv.project_version_project_fk INNER JOIN project p " +
-				"ON p.project_id=pv.project_version_project_fk WHERE pv.project_version_project_fk= ?" +
-				"AND sv.sprint_version_current=TRUE AND project_isdeleted=FALSE";
-				//+ "AND entry_version_current = 'y' ";
-		try {
-                        Connection connection = this.connect.makeConnection();
-			PreparedStatement sprintsStatement = connection.prepareStatement(projectsSprintsSql);
-			sprintsStatement.setInt(1, p_id);
-			ResultSet sprintsSets = sprintsStatement.executeQuery();
-			while(sprintsSets.next()) {
-				CategoryModel sprint;
-				sprint = new CategoryModel();
-				sprint.setCategoryId(sprintsSets.getInt("sprint_version_sprint_fk"));
-				sprint.setCategoryName(sprintsSets.getString("sprint_version_name"));
-                                sprint.setCategoryDescription(sprintsSets.getString("sprint_version_description"));
-				sprint.setCategoryStartDate(sprintsSets.getString("sprint_version_startdate"));
-				sprint.setCategoryEndDate(sprintsSets.getString("sprint_version_enddate"));
-				sprint.setCategoryIsDeleted(sprintsSets.getBoolean("sprint_isdeleted"));
-                                sprint.setIsCurrent(sprintsSets.getBoolean("sprint_version_current"));
-                                sprint.setProjectFK(sprintsSets.getInt("sprint_version_project_fk"));
-				sprint_alist.add(sprint);
-			}
-                        // close alles zodat de connection pool niet op gaat
-                        sprintsSets.close();
-			sprintsStatement.close();
-                        connection.close();
-		}catch(Exception e) {
-			e.printStackTrace();
-		}
-		return sprint_alist;
-	  }
-
 
 	/**
 	 * Deze methode laat alleen de current version zien van een sprint.
@@ -446,11 +403,17 @@ public class SprintDAO {
 	
 
 	public boolean removeSprint(int categoryId) throws Exception {
-		String deleteSprint = "UPDATE sprint_version SET sprint_version_current = false WHERE sprint_version_sprint_fk = ?";
+		String deleteSprintVersion = "UPDATE sprint_version SET sprint_version_current = false WHERE sprint_version_sprint_fk = ?";
+                String deleteSprint = "UPDATE sprint SET sprint_isdeleted = true WHERE sprint_id = ? ";
                 Connection connection = this.connect.makeConnection();
-		PreparedStatement lockStatement = connection.prepareStatement(deleteSprint);
+		PreparedStatement lockStatement = connection.prepareStatement(deleteSprintVersion);
 		lockStatement.setInt(1, categoryId);
 		lockStatement.executeUpdate();
+                
+                PreparedStatement removeSprint = connection.prepareStatement(deleteSprint);
+		removeSprint.setInt(1, categoryId);
+		removeSprint.executeUpdate();
+                removeSprint.close();
                 // close alles zodat de connection pool niet op gaat
                 lockStatement.close();
                 connection.close();

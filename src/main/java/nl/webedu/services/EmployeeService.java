@@ -10,7 +10,7 @@ public class EmployeeService {
     private EmployeeDAO employeeDao = new EmployeeDAO(); 
     
     public boolean createEmployee(EmployeeModel employeeModel, EmployeeModel loggedUser){
-        if(loggedUser.getEmployeeRole().equals(Role.ADMINISTRATION.toString())){
+        if(loggedUser.getEmployeeRole().equals(Role.administration.toString())){
             return this.employeeDao.createEmployeeVersion(employeeModel);
         }else{return false;}
        
@@ -21,14 +21,14 @@ public class EmployeeService {
     }
     
     public boolean updateEmployee(EmployeeModel employeeModel, EmployeeModel loggedUser){
-        if(loggedUser.getEmployeeRole().equals(Role.ADMINISTRATION.toString())){
+        if(loggedUser.getEmployeeRole().equals(Role.administration.toString())){
             return this.employeeDao.updateEmployee(employeeModel);
         }else{return false;}
         
     }
     
     public boolean deleteEmployee(int employeeId, EmployeeModel loggedUser) throws Exception{
-        if(loggedUser.getEmployeeRole().equals(Role.ADMINISTRATION.toString())){
+        if(loggedUser.getEmployeeRole().equals(Role.administration.toString())){
             return this.employeeDao.lockEmployee(employeeId);
         }else{return false;}
         
