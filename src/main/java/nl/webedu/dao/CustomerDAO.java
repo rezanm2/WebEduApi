@@ -139,6 +139,10 @@ public class CustomerDAO {
 	public boolean modifyCustomer(int cID, String name, String description) {
 		String changePreviousVersion = "UPDATE customer_version set customer_version_current = false "
 				+ "WHERE customer_version_customer_fk = ?";
+                
+                String changeCustomerTabel = "UPDATE customer set customer_isdeleted = true "
+				+ "WHERE customer_id = ? ";
+                
 		String change_customer = "INSERT INTO customer_version(customer_version_customer_fk, customer_version_name, customer_version_description, customer_version_current)"
 				+ "VALUES(?, ?, ?, true)";
 		try {
@@ -146,11 +150,18 @@ public class CustomerDAO {
 			changeVersions.setInt(1, cID);
 			changeVersions.executeUpdate();
 			changeVersions.close();
+                        
+                        PreparedStatement changeCustomerTable= this.connect.makeConnection().prepareStatement(changeCustomerTabel);
+			changeCustomerTable.setInt(1, cID);
+			changeCustomerTable.executeUpdate();
+			changeCustomerTable.close();
+                        
+                        
 			PreparedStatement changeCustomer = this.connect.makeConnection().prepareStatement(change_customer);
 			changeCustomer.setInt(1, cID);
 			changeCustomer.setString(2, name);
 			changeCustomer.setString(3, description);
-			changeCustomer.executeQuery();
+			changeCustomer.executeUpdate();
 			
 			changeCustomer.close();
                         return true;

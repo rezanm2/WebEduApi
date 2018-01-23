@@ -29,13 +29,13 @@ public class EmployeeResource {
     @POST
     @Path("/create")
     public boolean createEmployee(@Auth EmployeeModel logegdUser, @Valid EmployeeModel employeeModel){
-        return this.employeeService.createEmployee(employeeModel, employeeModel);
+        return this.employeeService.createEmployee(logegdUser, employeeModel);
     }
     
     @PUT
     @Path("/update")
     public boolean updateEmployee(@Auth EmployeeModel logegdUser, @Valid EmployeeModel employeeModel){
-        return this.employeeService.updateEmployee(employeeModel, employeeModel);
+        return this.employeeService.updateEmployee(logegdUser, employeeModel);
     }
     
 
@@ -46,9 +46,9 @@ public class EmployeeResource {
     }
     
     @DELETE
-    @Path("delete")
-    public boolean removeEmployee(@QueryParam("emId") int employeeId , @Valid EmployeeModel employeeModel) throws Exception{
-        return this.employeeService.deleteEmployee(employeeId, employeeModel);
+    @Path("/delete")
+    public boolean removeEmployee(@Auth EmployeeModel employeeModel, @QueryParam("emId") int employeeId) throws Exception{
+        return this.employeeService.deleteEmployee(employeeModel, employeeId);
     }
     
     @GET
