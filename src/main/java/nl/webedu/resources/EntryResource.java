@@ -128,7 +128,9 @@ public class EntryResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public boolean create(@Valid EntryModel entryModel, @Auth EmployeeModel employeeModel){
-        System.out.println(this.getClass().toString()+": "+entryModel.getEntryDescription()+" auth: "+employeeModel.getEmployeeFirstname());
+        System.out.println(this.getClass().toString()+": "+entryModel.getEntryDescription()
+                +" auth: "+employeeModel.getEmployeeFirstname()
+                +" date: "+entryModel.getEntryDate());
         if(entryModel.getEmployeeFk()==employeeModel.getEmployeeId()&&!employeeModel.getEmployeeRole().equals("administration")){
             System.out.println(this.getClass().toString()+": non-admins mogen geen entries maken voor anderen.");
            return false;

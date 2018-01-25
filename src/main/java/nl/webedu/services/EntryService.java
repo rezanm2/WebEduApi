@@ -177,8 +177,7 @@ public class EntryService {
     public boolean createEntry(EntryModel entryModel){
         DateHelper dateHelper = new DateHelper();
         System.out.println(this.getClass().toString()
-                +": time before parsing raw: "+entryModel.getEntryStartTime()
-                +" toString: "+entryModel.getEntryStartTime().toString());
+                +": time before parsing raw: "+entryModel.getEntryStartTime());
         Time parsedStartTime = dateHelper.parseTime(entryModel.getEntryStartTime(), "HH:mm");
         Time parsedEndTime = dateHelper.parseTime(entryModel.getEntryEndTime(), "HH:mm");
        
