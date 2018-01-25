@@ -18,6 +18,7 @@ import nl.webedu.services.EmployeeService;
 
 @Path("/users")
 @Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 public class EmployeeResource {
     private EmployeeService employeeService;
 
@@ -27,15 +28,14 @@ public class EmployeeResource {
     
     @POST
     @Path("/create")
-    @Consumes(MediaType.APPLICATION_JSON)
     public boolean createEmployee(@Auth EmployeeModel logegdUser, @Valid EmployeeModel employeeModel){
-        return this.employeeService.createEmployee(employeeModel);
+        return this.employeeService.createEmployee(logegdUser, employeeModel);
     }
     
     @PUT
     @Path("/update")
     public boolean updateEmployee(@Auth EmployeeModel logegdUser, @Valid EmployeeModel employeeModel){
-        return this.employeeService.updateEmployee(employeeModel);
+        return this.employeeService.updateEmployee(logegdUser, employeeModel);
     }
     
 
@@ -46,9 +46,9 @@ public class EmployeeResource {
     }
     
     @DELETE
-    @Path("delete")
-    public boolean removeEmployee(@QueryParam("emId") int employeeId) throws Exception{
-        return this.employeeService.deleteEmployee(employeeId);
+    @Path("/delete")
+    public boolean removeEmployee(@Auth EmployeeModel employeeModel, @QueryParam("emId") int employeeId) throws Exception{
+        return this.employeeService.deleteEmployee(employeeModel, employeeId);
     }
     
     @GET

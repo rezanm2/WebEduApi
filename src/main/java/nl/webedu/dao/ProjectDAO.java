@@ -104,7 +104,7 @@ public class ProjectDAO {
         try {
             String getUserQuery = "SELECT * FROM project_version pv JOIN project p on pv.project_version_project_fk=p.project_id "
                                 + "JOIN customer_version cm on pv.project_version_customer_fk = cm.customer_version_customer_fk "
-                                + "WHERE customer_version_current = true;";
+                                + "WHERE customer_version_current = true AND project_version_current = true;";
                             //  + "project_version_current = true AND project_isdeleted=false;";
             Connection connection = this.connect.makeConnection();
             PreparedStatement projectStatement = connection.prepareStatement(getUserQuery);

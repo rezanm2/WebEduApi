@@ -8,8 +8,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import nl.webedu.helpers.DateHelper;
 import nl.webedu.models.CategoryModel;
-import nl.webedu.models.ProjectModel;
-import nl.webedu.models.UserStoryModel;
+import nl.webedu.models.TaskModel;
 
 
 /**
@@ -17,11 +16,11 @@ import nl.webedu.models.UserStoryModel;
  * @author rezanaser
  *
  */
-public class UserStoryDAO {
+public class TaskDAO {
         private int generatedID;
 	private ConnectDAO connect;
         DateHelper dateHelper = new DateHelper();
-        public UserStoryDAO(){
+        public TaskDAO(){
     	this.connect = new ConnectDAO();
         this.createAddUserStoryFunction();
     }
@@ -33,27 +32,26 @@ public class UserStoryDAO {
      * @author Robert den Blaauwen
      */
     public void createAddUserStoryFunction(){
-	String sprintProcedureSql = "CREATE OR REPLACE FUNCTION add_userstory(project_id INT4, sprint_name TEXT, description TEXT, startdate DATE, enddate DATE) " +
-                                    "RETURNS void AS $$ " +
+	String userStoryProcedureSql = "CREATE OR REPLACE FUNCTION add_userstory(name TEXT, description TEXT, sprintId INT4) " +
+                                    "RETURNS void AS $$  " +
                                     "DECLARE pk INT; " +
                                     "BEGIN " +
-                                    "	INSERT INTO sprint(sprint_isdeleted) VALUES(false) " +
-                                    "	RETURNING sprint_version_sprint_fk INTO pk; " +
-                                    "	INSERT INTO sprint_version(sprint_version_sprint_fk, sprint_version_project_fk," +
-                                    "    	sprint_version_name, sprint_version_description, sprint_version_startdate, sprint_version_enddate," +
-                                    "        sprint_version_current) " +
-                                    "    VALUES(pk,project_id,sprint_name,description,startdate,enddate, true); " +
-                                    "END $$ LANGUAGE plpgsql;";
+                                        "INSERT INTO userstory(userstory_isdeleted) VALUES(false) " +
+                                        "RETURNING userstory_id INTO pk; " +
+                                        "INSERT INTO userstory_version(userstory_version_userstory_fk, userstory_version_name, userstory_version_description, userstory_version_current) " +
+                                        "VALUES(pk, name, description, true); " +
+                                        "INSERT INTO userstory_sprint(userstory_sprint_userstory_fk, userstory_sprint_sprint_fk) " +
+                                        "VALUES(pk, sprintId); " +
+                                    "END $$ LANGUAGE plpgsql; ";
 	try {
             Connection connection = this.connect.makeConnection();
-            PreparedStatement sprintProcedureStatement = connection.prepareStatement(sprintProcedureSql);
-            sprintProcedureStatement.executeUpdate();
+            PreparedStatement userStoryProcedureStatement = connection.prepareStatement(userStoryProcedureSql);
+            userStoryProcedureStatement.executeUpdate();
  
             //close alles
-            sprintProcedureStatement.close();
+            userStoryProcedureStatement.close();
             connection.close();
-            //System.out.println(this.getClass().toString()+": constructor: FUNCTION add_project(name, description, customer) has been created!");
-	} catch (SQLException e) {
+            } catch (SQLException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
 	} catch (Exception e) {
@@ -69,8 +67,8 @@ public class UserStoryDAO {
 	 * @author rezanaser
 	 * @return p_id >het project nummer
 	 */
-	public ArrayList<UserStoryModel> userstoriesProjects(int p_id){
-		ArrayList<UserStoryModel> userstory_alist = new ArrayList<UserStoryModel>();
+	public ArrayList<TaskModel> userstoriesProjects(int p_id){
+		ArrayList<TaskModel> userstory_alist = new ArrayList<TaskModel>();
 		String projects_userstories_sql = "SELECT *  "
 				+ "FROM userstory_sprint, userstory_version "
 				+ "WHERE userstory_sprint_sprint_fk = ? "
@@ -81,7 +79,7 @@ public class UserStoryDAO {
 			userstories_statement.setInt(1, p_id);
 			ResultSet userstories_sets = userstories_statement.executeQuery();
 			while(userstories_sets.next()) {
-				UserStoryModel userstory = new UserStoryModel();
+				TaskModel userstory = new TaskModel();
 				userstory.setUserStoryId(userstories_sets.getInt("userstory_version_userstory_fk"));
 				userstory.setUserStoryName(userstories_sets.getString("userstory_version_name"));
 				userstory_alist.add(userstory);
@@ -139,16 +137,18 @@ public class UserStoryDAO {
 		 * @author rezanaser
 		 * @return
 		 */
-		public ArrayList<UserStoryModel> userStorysSprints(int userStoryID){
-			ArrayList<UserStoryModel> userStory_alist = new ArrayList<UserStoryModel>();
-			String sprints_userStorys_sql = "SELECT *  FROM userStory_version where userStory_version_sprint_fk = ? ";
-					//+ "AND entry_version_current = 'y' ";
+		public ArrayList<TaskModel> userStorysSprints(int categoryId){
+			ArrayList<TaskModel> userStory_alist = new ArrayList<TaskModel>();
+			String sprints_userStorys_sql = "SELECT *  FROM userStory_version "
+                                + "INNER JOIN userstory ON userstory_version_userstory_fk = userstory_id "
+                                + "INNER JOIN sprint ON userStory_version_sprint_fk = sprint_id "
+                                + "WHERE userStory_version_sprint_fk = ? AND sprint.sprint_isdeleted = FALSE";
 			try {
 				PreparedStatement userStorys_statement = connect.makeConnection().prepareStatement(sprints_userStorys_sql);
-				userStorys_statement.setInt(1, userStoryID);
+				userStorys_statement.setInt(1, categoryId);
 				ResultSet userStorys_sets = userStorys_statement.executeQuery();
 				while(userStorys_sets.next()) {
-					UserStoryModel userStory = new UserStoryModel();
+					TaskModel userStory = new TaskModel();
 					userStory.setUserStoryId(userStorys_sets.getInt("userStory_version_userStory_fk"));
 					userStory.setUserStoryName(userStorys_sets.getString("userStory_version_name"));
 					userStory_alist.add(userStory);
@@ -169,17 +169,21 @@ public class UserStoryDAO {
 			 * @author rezanaser
 			 * @return
 			 */
-			public ArrayList<UserStoryModel> userStorysUserStorys(int p_id){
-				ArrayList<UserStoryModel> userStory_alist = new ArrayList<UserStoryModel>();
-				String userStorys_userStorys_sql = "SELECT *  FROM userStory_version where userStory_version_userStory_fk = ? ";
+			public ArrayList<TaskModel> getTasksByCategory(int categoryId){
+				ArrayList<TaskModel> userStory_alist = new ArrayList<TaskModel>();
+				String userStorys_userStorys_sql = "SELECT * FROM userstory_sprint " +
+                                                                    "INNER JOIN userstory_version ON userstory_sprint_userstory_fk = userstory_version_userstory_fk " +
+                                                                    "INNER JOIN sprint ON userstory_sprint_sprint_fk = sprint_id " +
+                                                                    "WHERE userstory_version_current = true AND sprint_isdeleted = false"
+                                                                    + " AND sprint.sprint_id = ? ";
 						//+ "AND entry_version_current = 'y' ";
 				try {
 					PreparedStatement userStorys_statement = connect.makeConnection().prepareStatement(userStorys_userStorys_sql);
-					userStorys_statement.setInt(1, p_id);
+					userStorys_statement.setInt(1, categoryId);
 					ResultSet userStorys_sets = userStorys_statement.executeQuery();
 					while(userStorys_sets.next()) {
-						UserStoryModel userStory = new UserStoryModel();
-						userStory.setUserStoryId(userStorys_sets.getInt("userStory_version_userStory_fk"));
+						TaskModel userStory = new TaskModel();
+						userStory.setUserStoryId(userStorys_sets.getInt("userStory_version_userstory_fk"));
 						userStory.setUserStoryName(userStorys_sets.getString("userStory_version_name"));
 						userStory_alist.add(userStory);
 					}
@@ -198,8 +202,8 @@ public class UserStoryDAO {
 			 * 
 			 * @return userStoryList
 			 */
-			public ArrayList<UserStoryModel> userStory_list(){
-				ArrayList<UserStoryModel> userStoryList = new ArrayList<UserStoryModel>();
+			public ArrayList<TaskModel> userStory_list(){
+				ArrayList<TaskModel> userStoryList = new ArrayList<TaskModel>();
 				String userStoryListSQL = "SELECT  pv.project_version_project_fk, pv.project_version_name, usv.userstory_version_userstory_fk, usv.userstory_version_name, usv.userstory_version_description,usv.userstory_version_current , sv.sprint_version_name, sv.sprint_version_sprint_fk, u.userstory_isdeleted " +
 					    "FROM sprint_version sv " +
 					    "JOIN sprint s ON sv.sprint_version_sprint_fk=s.sprint_id " +
@@ -208,7 +212,8 @@ public class UserStoryDAO {
 					    "JOIN userstory u ON userstory_id=usv.userstory_version_userstory_fk " +
                                             "JOIN project_version pv ON  sv.sprint_version_project_fk=pv.project_version_project_fk " +
 					    "WHERE us.userstory_sprint_sprint_fk=sv.sprint_version_sprint_fk " +
-					    "AND usv.userstory_version_current=TRUE AND sv.sprint_version_current=true ";
+					    "AND usv.userstory_version_current=TRUE AND sv.sprint_version_current=true " +
+                                            "AND s.sprint_isdeleted=false AND pv.project_version_current = TRUE";
 			
 				
 				
@@ -216,7 +221,7 @@ public class UserStoryDAO {
 					PreparedStatement userStory_statement = connect.makeConnection().prepareStatement(userStoryListSQL);
 					ResultSet userStory_set = userStory_statement.executeQuery();
 					while(userStory_set.next()) {
-						UserStoryModel userStoryModelContainer = new UserStoryModel();
+						TaskModel userStoryModelContainer = new TaskModel();
                                                 userStoryModelContainer.setProjectName(userStory_set.getString("project_version_name"));
                                                 userStoryModelContainer.setProjectId(userStory_set.getInt("project_version_project_fk"));
 						userStoryModelContainer.setUserStoryId(userStory_set.getInt("userstory_version_userstory_fk"));
@@ -226,8 +231,7 @@ public class UserStoryDAO {
                                                 userStoryModelContainer.setCategoryId(userStory_set.getInt("sprint_version_sprint_fk"));
 						userStoryModelContainer.setDeleted(userStory_set.getBoolean("userstory_isdeleted"));
                                                 userStoryModelContainer.setIsCurrent(userStory_set.getBoolean("userstory_version_current"));
-                                               
-						
+                                                userStoryModelContainer.setSprintFK(userStory_set.getInt("sprint_version_sprint_fk"));
 						userStoryList.add(userStoryModelContainer);
 					}
 				} catch (SQLException e) {
@@ -247,8 +251,8 @@ public class UserStoryDAO {
 			 * @return
 			 */
 			
-			public ArrayList<UserStoryModel> userStory_list(UserStoryModel userStoryModel){
-				ArrayList<UserStoryModel> userStory_list = new ArrayList<UserStoryModel>();
+			public ArrayList<TaskModel> userStory_list(TaskModel userStoryModel){
+				ArrayList<TaskModel> userStory_list = new ArrayList<TaskModel>();
 				String userStory_list_sql = "SELECT * FROM userStory_version "
 						+ "INNER JOIN userStory ON (userStory.userStory_id = userStory_version.userStory_version_userStory_fk) "
 						+ "WHERE userStory_version.userStory_version_userStory_fk="+userStoryModel.getUserStoryId()
@@ -257,7 +261,7 @@ public class UserStoryDAO {
 					PreparedStatement userStory_statement = connect.makeConnection().prepareStatement(userStory_list_sql);
 					ResultSet userStory_set = userStory_statement.executeQuery();
 					while(userStory_set.next()) {
-						UserStoryModel userStoryModelContainer = new UserStoryModel();
+						TaskModel userStoryModelContainer = new TaskModel();
 						userStoryModelContainer.setUserStoryId(userStory_set.getInt("userStory_id"));
 						userStoryModelContainer.setUserStoryDescription(userStory_set.getString("userStory_version_description"));
 						userStoryModelContainer.setUserStoryName(userStory_set.getString("userStory_version_name"));
@@ -279,8 +283,8 @@ public class UserStoryDAO {
 			 * @return userStoryList
 			 */
 			
-			public ArrayList<UserStoryModel> userStory_list_employee(int employeeID){
-				ArrayList<UserStoryModel> userStory_list = new ArrayList<UserStoryModel>();
+			public ArrayList<TaskModel> userStory_list_employee(int employeeID){
+				ArrayList<TaskModel> userStory_list = new ArrayList<TaskModel>();
 				String userStory_list_sql = "SELECT * FROM userStory_version";
 				try {
 					PreparedStatement userStory_statement = connect.makeConnection().prepareStatement(userStory_list_sql);
@@ -288,7 +292,7 @@ public class UserStoryDAO {
 					ResultSet userStory_set = userStory_statement.executeQuery();
 					
 					while(userStory_set.next()) {
-						UserStoryModel userStoryModelContainer = new UserStoryModel();
+						TaskModel userStoryModelContainer = new TaskModel();
 						
 						userStoryModelContainer.setUserStoryId(userStory_set.getInt("userStory_version_userStory_fk"));
 						userStoryModelContainer.setUserStoryDescription(userStory_set.getString("userStory_version_description"));
@@ -304,108 +308,11 @@ public class UserStoryDAO {
 				}
 				return userStory_list;
 			}
-
-
-			/**
-			 * Deze methode geeft het gegenereerde ID van een userStory terug
-			 * @author Jeroen Zandvliet
-			 * @return generatedID
-			 */
-			public int createNewUserStory()
-				{
-					generatedID = 0;
-					PreparedStatement createUserStory;
-					ResultSet userStoryID = null;
-					String insertUserStoryStatement = "INSERT INTO userStory(userstory_isdeleted) VALUES(?)";
-					
-					try 
-					{
-						createUserStory = connect.makeConnection().prepareStatement(insertUserStoryStatement, Statement.RETURN_GENERATED_KEYS);
-						
-						createUserStory.setBoolean(1, false);
-						createUserStory.executeUpdate();
-			//			createUserStory.getGeneratedKeys();
-						userStoryID = createUserStory.getGeneratedKeys();
-						
-						
-						while(userStoryID.next())
-						{
-							generatedID = userStoryID.getInt(1);
-						}
-					
-					} catch (Exception e) 
-					{
-						System.out.println(e.getMessage());
-					}
-						return generatedID;
-				}
-
-
-			/**
-			 * Deze methode voegt een gekozen userStory aan de database toe.
-			 * @author Jeroen Zandvliet
-			 * @param userStoryName
-			 * @param userStoryID
-			 * @param userStoryDescription
-			 * @param userStoryStartDate
-			 * @param userStoryEndDate
-			 */
-			public void addUserStoryToDatabase(int sprintID, String userStoryName, String userStoryDescription)
-			{
-				PreparedStatement addUserStory;
-				String insertStatement = "INSERT INTO userstory_version(userstory_version_userstory_fk, userstory_version_name, userstory_version_description, userstory_version_current) " 
-						+ "VALUES(?,?,?, true)";
-		
-				try 
-				{
-					addUserStory = connect.makeConnection().prepareStatement(insertStatement);
-					
-					addUserStory.setInt(1, createNewUserStory());
-					addUserStory.setString(2, userStoryName);
-					addUserStory.setString(3, userStoryDescription);
-					
-					addUserStory.executeQuery();
-					addUserStory.close();			
-					
-				} catch (SQLException e) {
-
-					System.out.println(e.getMessage());
-				} catch (Exception e) {
-					System.out.println(e.getMessage());
-					
-				} 
-				
-				
-				
-				PreparedStatement linkUserStorySprint;
-				String linkStatement = "INSERT INTO userstory_sprint(userstory_sprint_userstory_fk, userstory_sprint_sprint_fk) " 
-						+ "VALUES(?,?)";
-				
-				try 
-				{
-					linkUserStorySprint = connect.makeConnection().prepareStatement(linkStatement);
-					
-					linkUserStorySprint.setInt(1, generatedID);
-					linkUserStorySprint.setInt(2,  sprintID);
-					
-					linkUserStorySprint.executeQuery();
-					linkUserStorySprint.close();			
-					
-				} catch (SQLException e) {
-					System.out.println(e.getMessage());
-				} catch (Exception e) {
-					System.out.println(e.getMessage());
-					
-				} 
-				
-			}
-			
 			
 
-
-			public ArrayList <UserStoryModel> toonUserUserStory (int e_id)
+			public ArrayList <TaskModel> toonUserUserStory (int e_id)
 			{
-				ArrayList<UserStoryModel> userStoryList = new ArrayList <UserStoryModel>();
+				ArrayList<TaskModel> userStoryList = new ArrayList <TaskModel>();
 				String userStoryQuery = "SELECT * FROM userStory_version, userStory "
 						+ "WHERE userStory_version_userStory_fk = userStory_id";
 				
@@ -415,7 +322,7 @@ public class UserStoryDAO {
 					ResultSet userStory_set = userStoryStatement.executeQuery();
 					while(userStory_set.next())
 					{
-						UserStoryModel model = new UserStoryModel();
+						TaskModel model = new TaskModel();
 						model.setUserStoryName(userStory_set.getString("userStory_version_name"));
 						userStoryList.add(model);
 					}
@@ -431,7 +338,7 @@ public class UserStoryDAO {
 			
                         
                         
-                        	public void addUserStory(UserStoryModel userStoryModel) {
+                public void addUserStory(TaskModel userStoryModel) {
 		String login_sql = "SELECT add_userstory(?,?,?)";
 		PreparedStatement userStory_statement;
 
@@ -440,7 +347,7 @@ public class UserStoryDAO {
 			userStory_statement = connection.prepareStatement(login_sql);
                         userStory_statement.setString(1, userStoryModel.getUserStoryName());
                         userStory_statement.setString(2, userStoryModel.getUserStoryDescription());
-                        userStory_statement.setInt(3, userStoryModel.getSprintFK());
+                        userStory_statement.setInt(3, userStoryModel.getCategoryId());
 			userStory_statement.executeQuery();
 			//close alles zodat de connection pool niet op gaat.
                         userStory_statement.close();
@@ -463,44 +370,64 @@ public class UserStoryDAO {
 			 * @param userStoryEndDate
 			 */
 			
-			public void modifyUserStory(UserStoryModel userStoryModel)
+			public void modifyUserStory(TaskModel userStoryModel)
 			{
+                            System.out.println(userStoryModel.getUserStoryId());
 				String changePreviousVersion = "UPDATE userstory_version SET userstory_version_current = false "
 						+ "WHERE userstory_version_userstory_fk = ? AND userstory_version_current= true";
 				
 				String change_userStory = "INSERT INTO userstory_version(userstory_version_userstory_fk, userstory_version_name, userstory_version_description, userstory_version_current)"
 						+ "VALUES(?, ?, ?, true)";
-				
+                                //Added Jeroen
+                                String change_userStory_sprint = "UPDATE userstory_sprint SET userstory_sprint_sprint_fk = ? WHERE userstory_sprint_userstory_fk = ? ";
+                                
+                                
 				
 				try {
 					PreparedStatement changeVersions= connect.makeConnection().prepareStatement(changePreviousVersion);
 					changeVersions.setInt(1, userStoryModel.getUserStoryId());
 					changeVersions.executeUpdate();
 					changeVersions.close();
+                                        
+                                        
 					PreparedStatement changeUserStory = connect.makeConnection().prepareStatement(change_userStory);
 					changeUserStory.setInt(1, userStoryModel.getUserStoryId());
 					changeUserStory.setString(2, userStoryModel.getUserStoryName());
 					changeUserStory.setString(3, userStoryModel.getUserStoryDescription());
-					changeUserStory.executeQuery();
+					changeUserStory.executeUpdate();
 					
 					changeUserStory.close();
+                            
+                                        
+                                        PreparedStatement changeUserStorySprint = connect.makeConnection().prepareStatement(change_userStory_sprint);
+                                        changeUserStorySprint.setInt(1, userStoryModel.getCategoryId());
+                                        changeUserStorySprint.setInt(2, userStoryModel.getUserStoryId());
+					changeUserStorySprint.executeUpdate();
+					changeUserStorySprint.close();
+                                        
+//                 
+                                        
 				} catch (Exception e) {
-					System.out.println(e.getMessage());
+					e.printStackTrace();
 				}
 				
-				
 			}
-			
-			public void removeUserStory(int userStoryID) 
+			public void removeUserStory(TaskModel userStoryModel) 
 			{
-				String deleteUserStory = "UPDATE userStory "
-					+ "SET userStory_isdeleted = true "
+				String deleteUserStory = "UPDATE userstory "
+					+ "SET userstory_isdeleted = true "
 					+ "WHERE userStory_id = ?";
+                                String setCurrentOnFalse = "UPDATE userstory_version set userstory_version_current = false WHERE userstory_version_userstory_fk = ?";
 				try 
 				{
 					PreparedStatement lockStatement = connect.makeConnection().prepareStatement(deleteUserStory);
-					lockStatement.setInt(1, userStoryID);
+                                        System.out.println("NEW" + userStoryModel.getUserStoryId());
+					lockStatement.setInt(1, userStoryModel.getUserStoryId());
 					lockStatement.executeUpdate();
+                                        
+                                        PreparedStatement unCurrent = connect.makeConnection().prepareStatement(setCurrentOnFalse);
+					unCurrent.setInt(1, userStoryModel.getUserStoryId());
+					unCurrent.executeUpdate();
 				} catch (Exception e) 
 				{
 					System.out.println(e.getMessage());
@@ -516,7 +443,7 @@ public class UserStoryDAO {
          * @param userstoryId   id van userstory
          * @return  userstory
          */
-        public UserStoryModel getUserstory(int userstoryId) throws Exception{
+        public TaskModel getUserstory(int userstoryId) throws Exception{
             String userstorySql = "SELECT * FROM userstory INNER JOIN userstory_version " + 
                                 "ON userstory_id=userstory_version_userstory_fk " +
                                 "WHERE userstory_id=? AND userstory_version_current=true;";
@@ -528,7 +455,7 @@ public class UserStoryDAO {
             ResultSet userstorySet = userstoryStatement.executeQuery();
             
             userstorySet.next();
-            UserStoryModel userstory = new UserStoryModel();
+            TaskModel userstory = new TaskModel();
             userstory.setUserStoryId(userstorySet.getInt("userstory_id"));
             userstory.setUserStoryName(userstorySet.getString("userstory_version_name"));
             userstory.setUserStoryDescription(userstorySet.getString("userstory_version_description"));
@@ -558,5 +485,40 @@ public class UserStoryDAO {
 			e.printStackTrace();
 		}
 	}
+         	public ArrayList<CategoryModel> categoriesProject(int p_id){
+		ArrayList<CategoryModel> sprint_alist = new ArrayList<CategoryModel>();
+		String projectsSprintsSql = "SELECT *  FROM sprint_version sv INNER JOIN sprint s ON s.sprint_id=sv.sprint_version_sprint_fk " +
+                                "INNER JOIN project_version pv " +
+				"ON sv.sprint_version_project_fk=pv.project_version_project_fk INNER JOIN project p " +
+				"ON p.project_id=pv.project_version_project_fk WHERE pv.project_version_project_fk= ? " +
+				"AND sv.sprint_version_current=TRUE AND project_isdeleted=FALSE AND pv.project_version_current = true";
+				//+ "AND entry_version_current = 'y' ";
+		try {
+                        Connection connection = this.connect.makeConnection();
+			PreparedStatement sprintsStatement = connection.prepareStatement(projectsSprintsSql);
+			sprintsStatement.setInt(1, p_id);
+			ResultSet sprintsSets = sprintsStatement.executeQuery();
+			while(sprintsSets.next()) {
+				CategoryModel sprint;
+				sprint = new CategoryModel();
+				sprint.setCategoryId(sprintsSets.getInt("sprint_version_sprint_fk"));
+				sprint.setCategoryName(sprintsSets.getString("sprint_version_name"));
+                                sprint.setCategoryDescription(sprintsSets.getString("sprint_version_description"));
+				sprint.setCategoryStartDate(sprintsSets.getString("sprint_version_startdate"));
+				sprint.setCategoryEndDate(sprintsSets.getString("sprint_version_enddate"));
+				sprint.setCategoryIsDeleted(sprintsSets.getBoolean("sprint_isdeleted"));
+                                sprint.setIsCurrent(sprintsSets.getBoolean("sprint_version_current"));
+                                sprint.setProjectFK(sprintsSets.getInt("sprint_version_project_fk"));
+				sprint_alist.add(sprint);
+			}
+                        // close alles zodat de connection pool niet op gaat
+                        sprintsSets.close();
+			sprintsStatement.close();
+                        connection.close();
+		}catch(Exception e) {
+			e.printStackTrace();
 		}
+		return sprint_alist;
+	  }
+}
 

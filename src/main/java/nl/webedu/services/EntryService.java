@@ -4,7 +4,6 @@
  * and open the template in the editor.
  */
 package nl.webedu.services;
-
 import nl.webedu.dao.ProjectDAO;
 import java.sql.Date;
 import java.sql.Time;
@@ -17,7 +16,6 @@ import nl.webedu.models.*;
 import nl.webedu.dao.*;
 import nl.webedu.models.entrymodels.DayModel;
 import nl.webedu.models.entrymodels.WeekModel;
-import nl.webedu.resources.EntryResource;
 
 /**
  *
@@ -25,7 +23,7 @@ import nl.webedu.resources.EntryResource;
  */
 public class EntryService {
     private EntryDAO entryDao = new EntryDAO();
-    private UserStoryDAO userstoryDao = new UserStoryDAO();
+    private TaskDAO userstoryDao = new TaskDAO();
     private ProjectDAO projectDao =  new ProjectDAO();
     private SprintDAO sprintDao = new SprintDAO();
     private EmployeeDAO employeeDao = new EmployeeDAO();
