@@ -289,6 +289,7 @@ public class ProjectDAO {
 	 *
 	 * @author Robert den Blaauwe
 	 * @param projectModel  het projectModel meegekregen van front-end
+         * @return boolean
 	 */
 	public boolean addProject(ProjectModel projectModel) {
 		String login_sql = "SELECT add_project(?,?,?)";
@@ -317,6 +318,7 @@ public class ProjectDAO {
      * @param projectModel    het projectModel meegekregen van front-end
      * @author rezanaser
      * @throws Exception SQL exception en normale exception
+     * @return boolean
      */
 	public boolean modifyProject(ProjectModel projectModel) throws Exception {
 		String changePreviousVersion = "UPDATE project_version set project_version_current = false "
@@ -349,6 +351,7 @@ public class ProjectDAO {
 	 * Deze methode zet het project op inactive
 	 * @param projectModel het projectModel meegekregen van front-end
 	 * @author rezanaser
+         * @return boolean
 	 */
 	public boolean removeProject(ProjectModel projectModel) {
 		String remove_project = "UPDATE project SET project_isdeleted = true WHERE project_id = ?";

@@ -39,8 +39,7 @@ import nl.webedu.services.*;
  */
 @Path("/entries")
 public class EntryResource {
-    private EntryDAO entryDao;
-    
+    private EntryDAO entryDao;    
     private EntryService entryService;
 
     @Inject

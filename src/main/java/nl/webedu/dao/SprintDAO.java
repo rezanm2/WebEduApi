@@ -360,12 +360,10 @@ public class SprintDAO {
 /**
 	 * Deze methode past een eerder gemaakte sprint aan en zet de vorige versie op nonactief.
 	 * @author Jeroen Zandvliet
-	 * @param sprintID          lol
-	 * @param sprintName        lol
-	 * @param projectID         lol
-	 * @param sprintDescription lol
-	 * @param sprintStartDate   lol
-	 * @param sprintEndDate     lol
+	 * @param categoryModel          lol
+	 * @param startDate        lol
+	 * @param endDate         lol
+         * @return boolean
 	 */
 	
 	public boolean modifySprint(CategoryModel categoryModel, Date startDate, Date endDate) {
