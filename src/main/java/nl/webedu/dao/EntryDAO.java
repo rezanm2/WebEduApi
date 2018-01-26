@@ -25,7 +25,6 @@ public class EntryDAO {
 				entry.setEntryId(entrySet.getInt("entry_id"));
                                 
                                 entry.setEmployeeFk(entrySet.getInt("entry_employee_fk"));
-                                System.out.println(this.getClass()+": "+entry.getEmployeeFk());
                                 entry.setEntryIsLocked(entrySet.getBoolean("entry_islocked"));
                                 entry.setIsDeleted(entrySet.getBoolean("entry_isdeleted"));
                                 
@@ -205,13 +204,14 @@ public class EntryDAO {
 	 * @param e_id dunno lol
 	 * @return entry_alist lijst van alle entry's die in de wachtrij staan
 	 */
-	public ArrayList<EntryModel> entry_queued_list(int e_id){
+	public ArrayList<EntryModel> entry_queued_list(){
 		ArrayList<EntryModel> entry_alist = new ArrayList<EntryModel>();
 		String employee_entry_sql = "SELECT * FROM entry " +
                                             "JOIN entry_version ON entry_id=entry_version_entry_fk INNER JOIN employee ON employee_id=entry_employee_fk " +
                                             "JOIN employee_version ON employee_id=employee_version_employee_fk " +
                                             "WHERE entry_version_current=true AND entry_status = 'queued' " + 
-                                            "AND entry_isdeleted=false AND employee_version_current=true AND employee_isdeleted=false;";
+                                            "AND entry_isdeleted=false AND employee_version_current=true AND employee_isdeleted=false"
+                                            + " ORDER BY entry_version_date,entry_version_starttime;";
 		try {
 			PreparedStatement entries_statement = this.connect.makeConnection().prepareStatement(employee_entry_sql);
 			

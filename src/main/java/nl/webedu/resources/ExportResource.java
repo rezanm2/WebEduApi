@@ -13,6 +13,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import nl.webedu.models.CSVModel;
 import nl.webedu.models.EmployeeModel;
 import nl.webedu.services.ExportService;
 
@@ -28,14 +29,14 @@ public class ExportResource {
     public ExportResource(){
         this.exportService=new ExportService();
     }
+    
     @GET
-//    @JsonProperty
-//    @Produces(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.TEXT_PLAIN)
-    public String read(@Auth EmployeeModel employeeModel){
+    @JsonProperty
+    @Produces(MediaType.APPLICATION_JSON)
+    public CSVModel read(@Auth EmployeeModel employeeModel){
         System.out.println(this.getClass().toString()+": read "+employeeModel.getEmployeeRole());
         if(employeeModel.getEmployeeRole().equals("employee")){
-            return "U heeft geen toegang tot deze gegevens.";
+            return null;
         }
         return this.exportService.read();
     }

@@ -3,6 +3,7 @@ package nl.webedu.dao;
 import java.io.FileWriter;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import nl.webedu.models.CSVModel;
 
 public class DataDAO {
 	private ConnectDAO connect;
@@ -107,7 +108,7 @@ public class DataDAO {
 	    }
 	}
         
-        public String getCsvData(){
+        public CSVModel getCsvData(){
                 String result = "";
 	    try {
 	        String query = "SELECT entry_version_date, entry_version_starttime, entry_version_endtime, entry_version_description, project_version_name, (entry_version_endtime - entry_version_starttime) AS Uren "
@@ -192,7 +193,7 @@ public class DataDAO {
 	    } catch (Exception e) {
 	        e.printStackTrace();
 	    }
-            return result;
+            return new CSVModel(result);
 	}
 	
 }

@@ -6,6 +6,7 @@
 package nl.webedu.services;
 
 import nl.webedu.dao.DataDAO;
+import nl.webedu.models.CSVModel;
 
 /**
  *
@@ -14,7 +15,7 @@ import nl.webedu.dao.DataDAO;
 public class ExportService {
     private DataDAO dataDao = new DataDAO();
     
-    public String read(){
+    public CSVModel read(){
         return dataDao.getCsvData();
 //        return "test";
     }
