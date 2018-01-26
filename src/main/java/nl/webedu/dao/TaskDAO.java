@@ -59,9 +59,8 @@ public class TaskDAO {
 	} catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-	}
+		}
     }
-        
         
         
 	/**
@@ -76,7 +75,6 @@ public class TaskDAO {
 				+ "FROM userstory_sprint, userstory_version "
 				+ "WHERE userstory_sprint_sprint_fk = ? "
 				+ "AND userstory_version_current = true";
-				//+ "AND entry_version_current = 'y' ";
 		try {
 			PreparedStatement userstories_statement = connect.makeConnection().prepareStatement(projects_userstories_sql);
 			userstories_statement.setInt(1, p_id);
@@ -124,8 +122,6 @@ public class TaskDAO {
 			return sprint_alist;
 		  }
 
-//--------------------------------------------------------------------------------------
-		
 
 		/**
 		 * Deze methode vult de combobox met de userStorys van het gevraagde sprint

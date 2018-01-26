@@ -104,16 +104,6 @@ public class EntryService {
             fillEntryWithTaskName(entry);            
             fillEntryWithProjectName(entry);
             fillEntryWithCategoryName(entry);
-            
-//            if(entry.getEmployeeFk()==loggedInEmployee.getEmployeeId()){
-//                entry.setEntryEmployeeName(loggedInEmployee.getEmployeeFirstname()+" "+loggedInEmployee.getEmployeeLastName());
-//            }else{
-//                for(EmployeeModel employee:employees){
-//                    if(employee.getEmployeeId()==entry.getEmployeeFk()){
-//                        entry.setEntryEmployeeName(employee.getEmployeeFirstname()+" "+employee.getEmployeeLastName());
-//                    }
-//                }
-//            }
         }
         
         return entries;

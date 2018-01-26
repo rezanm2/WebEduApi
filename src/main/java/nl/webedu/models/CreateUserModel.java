@@ -72,10 +72,5 @@ public class CreateUserModel {
 	public String getEmail() {
 		return this.email;
 	}
-	
-	public void createUser() { 
-		//EmployeeDAO doa = new EmployeeDAO();
-                //doa.createEmployeeVersion(getFirstName(), getLastName(), getRol(), getEmail(), getPassword());
-	}
 
 }

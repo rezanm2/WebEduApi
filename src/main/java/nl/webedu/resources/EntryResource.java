@@ -160,21 +160,6 @@ public class EntryResource {
         }
     }
     
-//    @POST
-//    @Path("/delete")
-//    @JsonProperty
-//    @Produces(MediaType.APPLICATION_JSON)
-//    @Consumes(MediaType.APPLICATION_JSON)
-//    public boolean delete(@FormParam("entryid") Optional<String> entryId){
-//        try {
-//            entryDao.deleteEntry(Integer.parseInt(entryId.get()));
-//        } catch (NumberFormatException ex) {
-//            Logger.getLogger(EntryResource.class.getName()).log(Level.SEVERE, null, ex);
-//            return false;
-//        }
-//        return true;
-//    }
-    
     @POST
     @Path("/delete/url")
     @JsonProperty

@@ -217,19 +217,6 @@ public class EntryDAO {
 			
 			ResultSet entry_set = entries_statement.executeQuery();
                         entry_alist = fillModels(entry_set);
-//			while(entry_set.next()) {
-//				EntryModel dummy = new EntryModel();
-//				dummy.setEntryId(entry_set.getInt("entry_id"));
-//				dummy.setEntryDescription(entry_set.getString("entry_version_description"));
-//				dummy.setEntryStartTime(entry_set.getString("entry_version_starttime"));
-//				dummy.setEntryEndTime(entry_set.getString("entry_version_endtime"));
-//				dummy.setEntryDate(entry_set.getString("entry_version_date"));
-//				dummy.setEntryProjectFk(entry_set.getInt("entry_version_project_fk"));
-//				dummy.setEntryIsLocked(entry_set.getBoolean("entry_islocked"));
-//				dummy.setEntrySprintFk(entry_set.getInt("entry_version_sprint_fk"));
-//				dummy.setEntryUserstoryFk(entry_set.getInt("entry_version_userstory_fk"));
-//				entry_alist.add(dummy);
-//			}
 			entries_statement.close();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
