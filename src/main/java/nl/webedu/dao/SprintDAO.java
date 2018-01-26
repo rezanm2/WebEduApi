@@ -249,7 +249,7 @@ public class SprintDAO {
 			while(sprint_set.next()) {
 				CategoryModel sprintModelContainer = new CategoryModel();
 				
-				sprintModelContainer.setCategoryId(sprint_set.getInt("sprint_version_project_fk"));
+				sprintModelContainer.setCategoryId(sprint_set.getInt("sprint_version_sprint_fk"));
 				sprintModelContainer.setCategoryDescription(sprint_set.getString("sprint_version_description"));
 				sprintModelContainer.setCategoryName(sprint_set.getString("sprint_version_name"));
 				sprintModelContainer.setCategoryStartDate(sprint_set.getString("sprint_version_startdate"));
@@ -269,7 +269,43 @@ public class SprintDAO {
 		}
 		return sprint_list;
 	}
-
+        
+        public CategoryModel sprintListTask(int TaskId){
+		CategoryModel sprint = new CategoryModel();
+		String sprint_list_sql = "SELECT * FROM sprint_version " +
+                                        "JOIN sprint ON sprint_id=sprint_version_sprint_fk " +
+                                        "JOIN userstory_sprint ON userstory_sprint_sprint_fk=sprint_id " +
+                                        "WHERE userstory_sprint_userstory_fk= ? AND sprint_version_current=true " +
+                                        "AND sprint_isdeleted=false;";
+		try {
+                    Connection connection = this.connect.makeConnection();
+			PreparedStatement sprint_statement = connection.prepareStatement(sprint_list_sql);
+			sprint_statement.setInt(1, TaskId);
+			ResultSet sprint_set = sprint_statement.executeQuery();
+			
+			while(sprint_set.next()) {
+				CategoryModel sprintModelContainer = new CategoryModel();
+                                sprintModelContainer.setProjectFK(sprint_set.getInt("sprint_version_project_fk"));
+				sprintModelContainer.setCategoryId(sprint_set.getInt("sprint_version_sprint_fk"));
+				sprintModelContainer.setCategoryDescription(sprint_set.getString("sprint_version_description"));
+				sprintModelContainer.setCategoryName(sprint_set.getString("sprint_version_name"));
+				sprintModelContainer.setCategoryStartDate(sprint_set.getString("sprint_version_startdate"));
+				sprintModelContainer.setCategoryEndDate(sprint_set.getString("sprint_version_enddate"));
+				sprint=sprintModelContainer;
+			}
+                        // close alles zodat de connection pool niet op gaat
+                        sprint_set.close();
+			sprint_statement.close();
+                        connection.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return sprint;
+	}
 
 	/**
 	 * Deze methode geeft het gegenereerde ID van een sprint terug
