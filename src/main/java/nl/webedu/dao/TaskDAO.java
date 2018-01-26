@@ -65,7 +65,8 @@ public class TaskDAO {
 	/**
 	 * Deze methode vult de combobox met de userstories van het gevraagde project
 	 * @author rezanaser
-	 * @return p_id >het project nummer
+         * @param p_id project id
+	 * @return p_id het project nummer
 	 */
 	public ArrayList<TaskModel> userstoriesProjects(int p_id){
 		ArrayList<TaskModel> userstory_alist = new ArrayList<TaskModel>();
@@ -91,19 +92,11 @@ public class TaskDAO {
 		}
 		return userstory_alist;
 	  }
-	
-
-	/**
-	 * 
-	 * @author Fardin Samandar
-	 * @date 24-10-2017
-	 */
-
-		
 		/**
 		 * Deze methode vult de combobox met de sprints van het gevraagde project
 		 * @author rezanaser
-		 * @return
+                 * @param sprintID bar
+		 * @return sprint_alist
 		 */
 		public ArrayList<CategoryModel> sprintsProjects(int sprintID){
 			ArrayList<CategoryModel> sprint_alist = new ArrayList<CategoryModel>();
@@ -135,7 +128,8 @@ public class TaskDAO {
 		/**
 		 * Deze methode vult de combobox met de userStorys van het gevraagde sprint
 		 * @author rezanaser
-		 * @return
+                 * @param categoryId foo
+		 * @return userStory_alist
 		 */
 		public ArrayList<TaskModel> userStorysSprints(int categoryId){
 			ArrayList<TaskModel> userStory_alist = new ArrayList<TaskModel>();
@@ -167,7 +161,8 @@ public class TaskDAO {
 			/**
 			 * Deze methode vult de combobox met de userStorys van het gevraagde userStory
 			 * @author rezanaser
-			 * @return
+                         * @param categoryId    foo
+			 * @return userStory_alist
 			 */
 			public ArrayList<TaskModel> getTasksByCategory(int categoryId){
 				ArrayList<TaskModel> userStory_alist = new ArrayList<TaskModel>();
@@ -247,8 +242,8 @@ public class TaskDAO {
 
 			/**
 			 * Deze methode geeft een lijst van userStorys die bij een userStory horen
-			 * @param userStoryModel
-			 * @return
+			 * @param userStoryModel model van taak
+			 * @return userStory_list
 			 */
 			
 			public ArrayList<TaskModel> userStory_list(TaskModel userStoryModel){
@@ -279,7 +274,7 @@ public class TaskDAO {
 			/**
 			 * Deze methode geeft alleen de userStorys terug van de meegegeven medewerker.
 			 * @author Jeroen Zandvliet
-			 * @param employeeID
+			 * @param employeeID id van medewerker
 			 * @return userStoryList
 			 */
 			
@@ -362,12 +357,7 @@ public class TaskDAO {
 		/**
 			 * Deze methode past een eerder gemaakte userStory aan en zet de vorige versie op nonactief.
 			 * @author Jeroen Zandvliet
-			 * @param userStoryID
-			 * @param userStoryName
-			 * @param userStoryID
-			 * @param userStoryDescription
-			 * @param userStoryStartDate
-			 * @param userStoryEndDate
+			 * @param userStoryModel model van Taak
 			 */
 			
 			public void modifyUserStory(TaskModel userStoryModel)

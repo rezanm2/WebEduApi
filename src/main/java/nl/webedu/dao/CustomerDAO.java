@@ -112,6 +112,13 @@ public class CustomerDAO {
 	}
 
 
+        /**
+         * add a customer I suppose
+         * 
+         * @param name  foo
+         * @param description   bar
+         * @return boolean
+         */
 	public boolean addCustomer(String name, String description) {
 		String login_sql = "SELECT add_customer('"+name+"','"+description+"')";
 		PreparedStatement customer_statement;
@@ -135,6 +142,7 @@ public class CustomerDAO {
 	 * @param name          lol
 	 * @param description   lol
 	 * @author rezanaser
+         * @return  boolean
 	 */
 	public boolean modifyCustomer(int cID, String name, String description) {
 		String changePreviousVersion = "UPDATE customer_version set customer_version_current = false "
@@ -177,6 +185,7 @@ public class CustomerDAO {
 	 * cId wordt meegekregen van CustomerManagementViewController
 	 * @param cId   customer id
 	 * @author rezanaser
+         * @return boolean
 	 */
 
 	public boolean removeCustomer(int cId) {

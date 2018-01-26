@@ -55,7 +55,8 @@ public class EmployeeDAO {
         
 	/**Deze methode voegt een nieuwe user toe. In tegenstelling tot createEmployee()
 	 * voegt hij een version toe
-	 *
+         * @param employeeModel de employee die je toe wilt voegen
+         * @return boolean
 	 */
 	public boolean createEmployeeVersion(EmployeeModel employeeModel){
             String insertEmployee_sql = "insert into employee (employee_isdeleted)values(false)returning employee_id";
@@ -155,6 +156,7 @@ public class EmployeeDAO {
 	 * Lock an employee
 	 * @param emp_id id to lock
          * @throws Exception een SQL exceptione n normale exception
+         * @return boolean
 	 */
 	public boolean lockEmployee(int emp_id) throws Exception {
 		String lock_query = "UPDATE employee SET employee_isdeleted = true WHERE employee_id = ?";
@@ -270,7 +272,7 @@ public class EmployeeDAO {
 	/**
 	 * Return a employee model filled with information relating to given employee id
 	 * @param e_id - use the employee ID to link user to model
-	 * @return employee model with given information
+	 * @return null of user employee model with given information
 	 */
 	public EmployeeModel employee_information(int e_id) {
 		String employee_sql = "SELECT * FROM employee, employee_version WHERE employee_id = ?";
@@ -303,6 +305,11 @@ public class EmployeeDAO {
 		return null;
 	}
 
+        /**
+         * Bewerken employee
+         * 
+         * @param employeeModel model van de medewerker
+         */
 	public void editEmployee(EmployeeModel employeeModel){
 		String oldVersionDisableSql = "UPDATE employee_version SET employee_version_current=false" +
 				" WHERE employee_version_employee_fk = ? AND employee_version_current = true";

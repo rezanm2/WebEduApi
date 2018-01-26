@@ -46,46 +46,9 @@ public class EntryService {
         }
         //deze lijst wordt straks doorzocht om te kijken of er employees bij zitten die ook in de 
         for(EntryModel entry: entries){
-            
-            //als de entry een userstoryb heeft dan is de waarde boven 0. 
-            //Dan vraag je userstoryDao om een enkele instantie van de userstory en dan om zijn naam
-            if(entry.getEntryUserstoryFk() > 0){
-                try {
-                    entry.setEntryUserstoryName(userstoryDao.getUserstory(entry.getEntryUserstoryFk()).getUserStoryName());
-                } catch (java.lang.Exception ex) {
-                    Logger.getLogger(EntryService.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-            
-            //als de entry een project heeft dan is de waarde boven 0. 
-            //Dan vraag je projectDao om een enkele instantie van de userstorye n dan om zijn naam
-            if(entry.getEntryProjectFk()> 0){
-                try {
-                    entry.setEntryProjectName(projectDao.getProject(entry.getEntryProjectFk()).getProjectName());
-                } catch (java.lang.Exception ex) {
-                    Logger.getLogger(EntryService.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-            
-            //als de entry een project heeft dan is de waarde boven 0. 
-            //Dan vraag je projectDao om een enkele instantie van de userstorye n dan om zijn naam
-            if(entry.getEntrySprintFk()> 0){
-                try {
-                    entry.setEntrySprintName(sprintDao.getSprint(entry.getEntrySprintFk()).getCategoryName());
-                } catch (java.lang.Exception ex) {
-                    Logger.getLogger(EntryService.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-            
-//            if(entry.getEmployeeFk()==loggedInEmployee.getEmployeeId()){
-//                entry.setEntryEmployeeName(loggedInEmployee.getEmployeeFirstname()+" "+loggedInEmployee.getEmployeeLastName());
-//            }else{
-//                for(EmployeeModel employee:employees){
-//                    if(employee.getEmployeeId()==entry.getEmployeeFk()){
-//                        entry.setEntryEmployeeName(employee.getEmployeeFirstname()+" "+employee.getEmployeeLastName());
-//                    }
-//                }
-//            }
+            fillEntryWithTaskName(entry);            
+            fillEntryWithProjectName(entry);
+            fillEntryWithCategoryName(entry);
         }
         
         return entries;
@@ -101,38 +64,12 @@ public class EntryService {
         }
         //deze lijst wordt straks doorzocht om te kijken of er employees bij zitten die ook in de
         for(EntryModel entry: entries){
-
-            //als de entry een userstoryb heeft dan is de waarde boven 0.
-            //Dan vraag je userstoryDao om een enkele instantie van de userstory en dan om zijn naam
-            if(entry.getEntryUserstoryFk() > 0){
-                try {
-                    entry.setEntryUserstoryName(userstoryDao.getUserstory(entry.getEntryUserstoryFk()).getUserStoryName());
-                } catch (java.lang.Exception ex) {
-                    Logger.getLogger(EntryService.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-
-            //als de entry een project heeft dan is de waarde boven 0.
-            //Dan vraag je projectDao om een enkele instantie van de userstorye n dan om zijn naam
-            if(entry.getEntryProjectFk()> 0){
-                try {
-                    entry.setEntryProjectName(projectDao.getProject(entry.getEntryProjectFk()).getProjectName());
-                } catch (java.lang.Exception ex) {
-                    Logger.getLogger(EntryService.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-
-            //als de entry een project heeft dan is de waarde boven 0.
-            //Dan vraag je projectDao om een enkele instantie van de userstorye n dan om zijn naam
-            if(entry.getEntrySprintFk()> 0){
-                try {
-                    entry.setEntrySprintName(sprintDao.getSprint(entry.getEntrySprintFk()).getCategoryName());
-                } catch (java.lang.Exception ex) {
-                    Logger.getLogger(EntryService.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
+            fillEntryWithTaskName(entry);            
+            fillEntryWithProjectName(entry);
+            fillEntryWithCategoryName(entry);
         }
 
+        //Stop de entries in de juiste Days en die in de juiste weeks.
         Date dayDate = new Date(startDate.getTime());
         WeekModel weekModel = new WeekModel(startDate,endDate);
         while (dayDate.compareTo(endDate)<=0){
@@ -152,6 +89,74 @@ public class EntryService {
         return weekModel;
     }
     
+    public ArrayList<EntryModel> getEntriesQueued(EmployeeModel loggedInEmployee){
+        if(loggedInEmployee.getEmployeeRole().equals("employee")){
+            //Normale medewerkers mogen deze data sowiezo niet hebben, 
+            // dus breek je de operatie af met null
+            return null;
+        }
+        //Haal de data uit de DAO
+        ArrayList<EntryModel> entries = entryDao.entry_queued_list();
+        
+        
+        //deze lijst wordt straks doorzocht om te kijken of er employees bij zitten die ook in de 
+        for(EntryModel entry: entries){
+            fillEntryWithTaskName(entry);            
+            fillEntryWithProjectName(entry);
+            fillEntryWithCategoryName(entry);
+            
+//            if(entry.getEmployeeFk()==loggedInEmployee.getEmployeeId()){
+//                entry.setEntryEmployeeName(loggedInEmployee.getEmployeeFirstname()+" "+loggedInEmployee.getEmployeeLastName());
+//            }else{
+//                for(EmployeeModel employee:employees){
+//                    if(employee.getEmployeeId()==entry.getEmployeeFk()){
+//                        entry.setEntryEmployeeName(employee.getEmployeeFirstname()+" "+employee.getEmployeeLastName());
+//                    }
+//                }
+//            }
+        }
+        
+        return entries;
+    }
+    
+    private EntryModel fillEntryWithTaskName(EntryModel entry){
+        //als de entry een task heeft dan is de waarde boven 0.
+            //Dan vraag je userstoryDao om een enkele instantie van de userstory en dan om zijn naam
+        if(entry.getEntryUserstoryFk() > 0){
+                try {
+                    entry.setEntryUserstoryName(userstoryDao.getUserstory(entry.getEntryUserstoryFk()).getUserStoryName());
+                } catch (java.lang.Exception ex) {
+                    Logger.getLogger(EntryService.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        return entry;
+    }
+    
+    private EntryModel fillEntryWithProjectName(EntryModel entry){
+        //als de entry een project heeft dan is de waarde boven 0.
+            //Dan vraag je projectDao om een enkele instantie van de userstorye n dan om zijn naam
+        if(entry.getEntryProjectFk()> 0){
+            try {
+                entry.setEntryProjectName(projectDao.getProject(entry.getEntryProjectFk()).getProjectName());
+            } catch (java.lang.Exception ex) {
+                Logger.getLogger(EntryService.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return entry;
+    }
+    
+    private EntryModel fillEntryWithCategoryName(EntryModel entry){
+        //als de entry een category heeft dan is de waarde boven 0. 
+            //Dan vraag je SprintDao om een enkele instantie van de userstorye n dan om zijn naam
+        if(entry.getEntrySprintFk()> 0){
+                try {
+                    entry.setEntrySprintName(sprintDao.getSprint(entry.getEntrySprintFk()).getCategoryName());
+                } catch (java.lang.Exception ex) {
+                    Logger.getLogger(EntryService.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        return entry;
+    }
     /**
      * Verwijder alle entries die niet van de employees zijn en die niet up-to-date zijn.
      * 
@@ -172,11 +177,39 @@ public class EntryService {
             return entries;
     }
     
+    public boolean approveEntries(int[] entryIds, EmployeeModel loggedInEmployee){
+        if(loggedInEmployee.getEmployeeRole().equals("employee")){
+            return false;
+        }
+        try {
+            for(int i:entryIds){
+                    this.entryDao.approveHours(i);
+            }
+            return true;
+        } catch (java.lang.Exception ex) {
+            Logger.getLogger(EntryService.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+    }
+    public boolean rejectEntries(int[] entryIds, EmployeeModel loggedInEmployee){
+        if(loggedInEmployee.getEmployeeRole().equals("employee")){
+            return false;
+        }
+        try {
+            for(int i:entryIds){
+                    this.entryDao.rejectHours(i);
+            }
+            return true;
+        } catch (java.lang.Exception ex) {
+            Logger.getLogger(EntryService.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+    }
+    
     public boolean createEntry(EntryModel entryModel){
         DateHelper dateHelper = new DateHelper();
         System.out.println(this.getClass().toString()
-                +": time before parsing raw: "+entryModel.getEntryStartTime()
-                +" toString: "+entryModel.getEntryStartTime().toString());
+                +": time before parsing raw: "+entryModel.getEntryStartTime());
         Time parsedStartTime = dateHelper.parseTime(entryModel.getEntryStartTime(), "HH:mm");
         Time parsedEndTime = dateHelper.parseTime(entryModel.getEntryEndTime(), "HH:mm");
        
