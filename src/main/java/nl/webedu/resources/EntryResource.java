@@ -90,7 +90,7 @@ public class EntryResource {
         System.out.println(this.getClass().toString()+": "+entryModel.getEntryDescription()
                 +" auth: "+employeeModel.getEmployeeFirstname()
                 +" date: "+entryModel.getEntryDate());
-        if(entryModel.getEmployeeFk()==employeeModel.getEmployeeId()&&!employeeModel.getEmployeeRole().equals("administration")){
+        if(entryModel.getEmployeeFk()!=employeeModel.getEmployeeId()&&!employeeModel.getEmployeeRole().equals("administration")){
             System.out.println(this.getClass().toString()+": non-admins mogen geen entries maken voor anderen.");
            return false;
         }else{
